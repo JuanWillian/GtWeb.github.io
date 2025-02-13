@@ -1,0 +1,21 @@
+.fotoAurora {
+  opacity: 60%;
+}
+.sidebar {
+  width: 400px;
+  height: 100vh;
+  position: fixed;
+  border-right: 1px solid #0000007c;
+}
+.conteudo{
+  margin-left: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+}
+#jstree .jstree-icon {
+  width: 20px; 
+  height: 20px;
+}
+
