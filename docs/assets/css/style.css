@@ -1,3 +1,11 @@
+:root {
+  --cor-principal-gt: #194278;
+}
+main {
+
+  background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(25,66,120,0.8) 90%);
+
+}
 .fotoAurora {
   opacity: 60%;
 }
@@ -7,7 +15,7 @@
   position: fixed;
   border-right: 1px solid #0000007c;
 }
-.conteudo{
+.conteudo {
   margin-left: 450px;
   display: flex;
   flex-direction: column;
@@ -15,7 +23,6 @@
   height: 100vh;
 }
 #jstree .jstree-icon {
-  width: 20px; 
+  width: 20px;
   height: 20px;
 }
-
