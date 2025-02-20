@@ -35,140 +35,142 @@
       <div class="d-flex justify-content-between">
         <!-- Sidebar fixo à esquerda com borda à direita e fundo branco -->
         <div id="sidebar" class="sidebar fixed-start bg-white p-3  ">
-          <div class="d-flex justify-content-start mb-3">
-            <img
-              src="assets/img/GtLogo.jpg"
-              alt=""
-              class="fotoGt"
-              width="200"
-            />
-          </div>
-          <div id="jstree">
-            <ul>
-              <li>
-                Cadastros
-                <ul>
-                  <li id="child_node_1">
-                    Empresa
-                    <ul>
-                      <li
-                        data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
-                        onclick="formUnidade()"
-                      >
-                        <u>Unidades</u>
-                      </li>
-                      <li
-                        data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
-                        onclick="formSetor()"
-                      >
-                        <u>Setores</u>
-                      </li>
-                      <li
-                        data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
-                        onclick="formPerfilUsuario()"
-                      >
-                        <u>Perfil de Usuário</u>
-                      </li>
-                      <li
-                        data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
-                        onclick="formUsuario()"
-                      >
-                        <u>Usuário</u>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    Atividades Laborais
-                    <ul>
-                      <li
-                        data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
-                        onclick="formExecucao()"
-                      >
-                        <u>Execuções</u>
-                      </li>
-                      <li
-                        onclick="formAtvd()"
-                        data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
-                      >
-                        <u>Atividades</u>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    Almoxarifado
-                    <ul>
-                      <li
-                        data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
-                        onclick="formSetor()"
-                      >
-                        <u>Grupo de produto</u>
-                      </li>
-                      <li
-                        data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
-                        onclick="formSetor()"
-                      >
-                        <u>Subgrupo de produto</u>
-                      </li>
-                      <li
-                        data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
-                        onclick="formGpProduto()"
-                      >
-                        <u>Produto</u>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                Estoque
-                <ul>
-                  <li
-                    data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
-                    onclick="formEntradaProduto()"
-                  >
-                    <u>Entrada de Produtos</u>
-                  </li>
-                  <li
-                    data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
-                    onclick="formBaixaProduto()"
-                  >
-                    <u>Baixa de Produtos</u>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                Dashboard
-                <ul>
-                  <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
-                    <u>Estado de atividades por usuário</u>
-                  </li>
-                  <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
-                    <u>Estado de atividades por setor</u>
-                  </li>
-                  <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
-                    <u>Estado de status de atividades</u>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                Relatórios
-                <ul>
-                  <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
-                    <u>Atividades por Usuário</u>
-                  </li>
-                  <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
-                    <u>Atividades por Setor</u>
-                  </li>
-                  <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
-                    <u>Status de Atividades</u>
-                  </li>
-                  <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
-                    <u>Material Utilizado</u>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
+          <section>
+            <div class="d-flex justify-content-start mb-3">
+              <img
+                src="assets/img/GtLogo.jpg"
+                alt=""
+                class="fotoGt"
+                width="200"
+              />
+            </div>
+            <div id="jstree">
+              <ul>
+                <li>
+                  Cadastros
+                  <ul>
+                    <li id="child_node_1">
+                      Empresa
+                      <ul>
+                        <li
+                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          onclick="formUnidade()"
+                        >
+                          <u>Unidades</u>
+                        </li>
+                        <li
+                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          onclick="formSetor()"
+                        >
+                          <u>Setores</u>
+                        </li>
+                        <li
+                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          onclick="formPerfilUsuario()"
+                        >
+                          <u>Perfil de Usuário</u>
+                        </li>
+                        <li
+                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          onclick="formUsuario()"
+                        >
+                          <u>Usuário</u>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      Atividades Laborais
+                      <ul>
+                        <li
+                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          onclick="formExecucao()"
+                        >
+                          <u>Execuções</u>
+                        </li>
+                        <li
+                          onclick="formAtvd()"
+                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                        >
+                          <u>Atividades</u>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      Almoxarifado
+                      <ul>
+                        <li
+                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          onclick="formSetor()"
+                        >
+                          <u>Grupo de produto</u>
+                        </li>
+                        <li
+                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          onclick="formSetor()"
+                        >
+                          <u>Subgrupo de produto</u>
+                        </li>
+                        <li
+                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          onclick="formGpProduto()"
+                        >
+                          <u>Produto</u>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  Estoque
+                  <ul>
+                    <li
+                      data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                      onclick="formEntradaProduto()"
+                    >
+                      <u>Entrada de Produtos</u>
+                    </li>
+                    <li
+                      data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                      onclick="formBaixaProduto()"
+                    >
+                      <u>Baixa de Produtos</u>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  Dashboard
+                  <ul>
+                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                      <u>Estado de atividades por usuário</u>
+                    </li>
+                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                      <u>Estado de atividades por setor</u>
+                    </li>
+                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                      <u>Estado de status de atividades</u>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  Relatórios
+                  <ul>
+                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                      <u>Atividades por Usuário</u>
+                    </li>
+                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                      <u>Atividades por Setor</u>
+                    </li>
+                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                      <u>Status de Atividades</u>
+                    </li>
+                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                      <u>Material Utilizado</u>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </section>
         </div>
         <!---->
 

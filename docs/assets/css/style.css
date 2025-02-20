@@ -1,6 +1,7 @@
 :root {
   --cor-principal-gt: #194278;
 }
+
 main {
   background: linear-gradient(
     135deg,
@@ -13,9 +14,10 @@ main {
 }
 .sidebar {
   width: 400px;
-  height: 100vh;
+  height: 100%;
+  overflow: scroll;
   position: fixed;
-  border-right: 1px solid #0000007c;
+  border-right: 2px solid rgba(0, 0, 0, 0.3);
 }
 .conteudo {
   margin-left: 450px;
@@ -73,4 +75,13 @@ main {
   100% {
     width: 100%;
   }
+}
+
+#forms {
+  padding: 30px;
+}
+
+.btnCadastro {
+  background-color: var(--cor-principal-gt)!important ;
+  color: #fff !important;
 }

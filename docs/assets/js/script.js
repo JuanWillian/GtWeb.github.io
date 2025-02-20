@@ -1,11 +1,11 @@
 function formUnidade() {
   let form = "";
   form += '<form class="row g-3 ">';
-  form += ' <div class="col-md-12">';
+  form += ' <div class="col-md-6">';
   form += '  <label for="nomeEmpresa">Empresa da unidade</label>';
   form += ' <input id="nomeEmpresa" class="form-control" type="text" />';
   form += " </div>";
-  form += ' <div class="col-12">';
+  form += ' <div class="col-md-6">';
   form += '   <label for="cidade">Cidade</label>';
   form += '   <select class="form-select">';
   form += '   <option value="1">Salvador</option>';
@@ -14,15 +14,17 @@ function formUnidade() {
   form += '   <option value="4">Jacobina</option>';
   form += "   </select>";
   form += " </div>";
-  form += ' <div class="col-md-12">';
+  form += ' <div class="col-md-6">';
   form += '   <label for="ruaUnidade">Rua</label>';
   form += '   <input id="rua" class="form-control" type="text" />';
   form += " </div>";
-  form += ' <div class="col-md-12">';
+  form += ' <div class="col-md-6">';
   form += '   <label for="numeroEnderecoUnidade">Número do endereço:</label>';
   form += '   <input id="nomeEmpresa" class="form-control" type="number" />';
-  form += '   <button type="submit" class="btn btn-primary mt-2">Cadastrar</button>';
   form += " </div>";
+  form += ' <div>';
+  form += '   <button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
+  form += '</div>';
   form += "</form>";
   document.getElementById("forms").innerHTML = form;
 }
@@ -36,8 +38,10 @@ function formSetor() {
   form += '<div class="col-12">';
   form += ' <label for="descSetor">Descrição</label>';
   form += '<input id="descSetor" class="form-control p-5" type="text"/>';
-  form += '<button type="submit" class="btn btn-primary mt-2">Cadastrar</button>';
   form += "</div>";
+  form += ' <div>';
+  form += '   <button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
+  form += '</div>';
   form += "</form>";
   document.getElementById("forms").innerHTML = form;
 }
@@ -72,7 +76,7 @@ function formUsuario() {
     ' <input type="password" class="form-control" id="senha" placeholder="Insira a senha"/>';
   form += "</div>";
 
-  form += ' <div class="col-12">';
+  form += ' <div class="col-md-6" style="margin-top:24px">';
   form += '   <label for="cargo">Cargo</label>';
   form += '   <select class="form-select">';
   form += '   <option value="1">Líder</option>';
@@ -82,7 +86,7 @@ function formUsuario() {
   form += " </div>";
   
   form += '<div class="col-12">';
-  form += '<button type="submit" class="btn btn-primary">Cadastrar</button>';
+  form += '<button type="submit" class="btn btnCadastro">Cadastrar</button>';
   form += "</div>";
   form += "</form>";
   document.getElementById("forms").innerHTML = form;
@@ -90,60 +94,64 @@ function formUsuario() {
 function formExecucao() {
   let form = "";
   form += '<form class="row g-3">';
-  form += ' <div class="col-6">';
-  form += ' <label for="tituloExecucao">Titulo</label>';
-  form += ' <input id="tituloExecucao" class="form-control" type="text"/>';
+  form += ' <div class="col-md-12">';
+  form += '   <label for="tituloExecucao">Titulo</label>';
+  form += '   <input id="tituloExecucao" class="form-control" type="text"/>';
   form += " </div>";
-  form += '<div class="col-12">';
-  form += ' <label for="descExecucao">Descrição</label>';
-  form += '<input id="descExecucao" class="form-control p-5" type="text">';
-  form += '<button type="submit" class="btn btn-primary mt-2">Cadastrar</button>';
-  form += " </div>";
+  form += ' <div class="col-12">';
+  form += '   <label for="descExecucao">Descrição</label>';
+  form += '   <input id="descExecucao" class="form-control p-5" type="text">';
+  form += "   </div>";
+  form += ' <div>';
+  form += '   <button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
+  form += '</div>';
   form += " </form>";
   document.getElementById("forms").innerHTML = form;
 }
 function formAtvd() {
   let form = "";
   form += '  <form class="row g-3">';
-  form += ' <div class="col-6">';
+  form += ' <div class="col-md-12">';
   form += ' <label for="nomeAtvd">Nome</label>';
   form += ' <input id="nomeAtvd" class="form-control" type="text" />';
-  form += "</div>";
+  form += ' </div>';
   form += ' <div class="col-12">';
   form += '<label for="descAtvd">Descrição</label>';
   form += '<input id="descAtvd" class="form-control p-5" type="text" />';
-  form += "  </div>";
-  form += '<div class="col-6">';
+  form += '  </div>';
+  form += '<div class="col-md-12">';
   form += '<label for="localAtvd">Local</label>';
   form += ' <select class="form-select" id="localAtvd">';
   form += ' <option value="1">Banheiro</option>';
   form += '<option value="2">Corredor</option>';
   form += ' <option value="3">Ala 3</option>';
-  form += "</select>";
-  form += '<button type="submit" class="btn btn-primary mt-2">Cadastrar</button>';
-  form += "</div>";
-  form += "</form>";
+  form += '</select>';
+  form += '</div>';
+  form += ' <div>';
+  form += '   <button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
+  form += '</div>';
+  form += '</form>';
   document.getElementById("forms").innerHTML = form;
 }
 function formGpProduto() {
   let form = "";
   form += ' <form class="row g-3">';
-  form += '<div class="col-6">';
+  form += '<div class="col-md-6">';
   form += '<label for="subGrupo">Sub-Grupo</label>';
   form += ' <select class="form-select">';
   form += ' <option value="1">Alvejante</option>';
   form += ' <option value="2">Água sanitária</option>';
   form += " </select>";
   form += "</div>";
-  form += ' <div class="col-6">';
+  form += ' <div class="col-md-6">';
   form += '<label for="nomeGrupo">Nome</label>';
   form += ' <input id="nomeGrupo" class="form-control" type="text">';
   form += "</div>";
-  form += '<div class="row g-3">';
+  form += '<div class="col-md-12">';
   form += ' <label for="descGrupo">Descrição</label>';
-  form += ' <input id="descGrupo" class="form-control p-5" type="text">';
+  form += ' <input id="descGrupo" class="form-control p-2" type="text">';
   form += "</div>";
-  form += '<div class="col-6">';
+  form += '<div class="col-md-6">';
   form += '<label for="localAtvd">Unidade de medida</label>';
   form += ' <select class="form-select">';
   form += ' <option value="1">Litro(l)</option>';
@@ -152,11 +160,13 @@ function formGpProduto() {
   form += ' <option value="4">Grama(g)</option>';
   form += " </select>";
   form += "</div>";
-  form += ' <div class="col-md-12">';
+  form += ' <div class="col-md-6">';
   form += '   <label for="qtd">Quantidade em estoque:</label>';
   form += '   <input id="qtdProd" class="form-control" type="number" />';
-  form += '   <button type="submit" class="btn btn-primary mt-2">Cadastrar</button>';
   form += " </div>";
+  form += ' <div>';
+  form += '   <button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
+  form += '</div>';
   form += "</form>";
   form += "";
   
