@@ -1,0 +1,79 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: 10px;
+  border: #3085fe 0.5px solid;
+  border-radius: 10px;
+}
+
+.form-signin input[type="password"] {
+  border: #3085fe 0.5px solid;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.form-signin input[type="text"] {
+  border: #3085fe 0.5px solid;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.gtServicos {
+  color: #3085fe;
+}
+.h6 {
+  padding-bottom: 10px;
+}
+.link-primary {
+  padding-bottom: 10px;
+}
+.termos{
+  color: #2472df;
+}
+.form-check-input {
+  width: 15px;
+  height: 15px;
+  border: 2px solid #071729c4; 
+  border-radius: 3px; 
+
+}
+
+.btn {
+  background-color: #3085fe;
+  color: #fff;
+}
+.btn:hover {
+  background-color: #2472df;
+  color: #fff;
+}
