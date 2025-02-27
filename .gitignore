@@ -1,4 +1,4 @@
-git rm -r --cached conf node_modules cert
+
 conf/
 node_modules/
 cert/
