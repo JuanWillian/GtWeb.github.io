@@ -20,7 +20,7 @@ var config = JSON.parse(fs.readFileSync(__dirname + '/conf/config.json'));
 var keys = JSON.parse(fs.readFileSync(__dirname + '/conf/keys.json'));
 
 app.use(express.urlencoded({ extended: true }));
-
+app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'public')));
 
 var repositoryPath = __dirname + '/' + config.repositoryPath;
