@@ -1,6 +1,6 @@
 {
     "fileServerPort": "5000",
-    "repositoryPath": "repository",
+    "repositoryPath": "views",
     "httpsKeyFile": "cert/key.pem",
     "httpsCertFile": "cert/certificate.crt",
     "mongoServer": "mongodb://root:root@localhost?retryWrites=true&writeConcern=majority",

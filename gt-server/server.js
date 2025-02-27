@@ -4,10 +4,14 @@
  * This service provides support for to serv file and data for Gt Web application.
  */
 const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
+
+const loginController = require('./controllers/loginController.js');
 
 const fs = require('node:fs');
 const https = require('https');
 const url = require('url');
+const path = require('path');
 const mime = require('mime-types');
 var express = require('express');
 var app = express();
@@ -15,19 +19,21 @@ var app = express();
 var config = JSON.parse(fs.readFileSync(__dirname + '/conf/config.json'));
 var keys = JSON.parse(fs.readFileSync(__dirname + '/conf/keys.json'));
 
-var repositoryPath = __dirname + '/' + config.repositoryPath;
+app.use(express.urlencoded({ extended: true }));
 
+app.use(express.static(path.resolve(__dirname, 'public')));
+
+var repositoryPath = __dirname + '/' + config.repositoryPath;
 var httpsKeyFile = __dirname + '/' + config.httpsKeyFile;
 var httpsCertFile = __dirname + '/' + config.httpsCertFile;
-
-var keys = JSON.parse(fs.readFileSync(__dirname + '/conf/keys.json'));
-
-//config.mongoServer = "mongodb://root:root@localhost?retryWrites=true&writeConcern=majority";
-//config.mongoDatabase = "gt";
 
 const client = new MongoClient(config.mongoServer);
 const database = client.db(config.mongoDatabase);
 const usuarios = database.collection('usuarios');
+
+mongoose.connect(config.mongoServer, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {app.emit('pronto')})
+    .catch((e) => console.log(e));
 
 const options = {
     key: fs.readFileSync(httpsKeyFile),
@@ -68,7 +74,7 @@ function formatDateHour(date) {
     if (second.length < 2) {
         second = '0' + second;
     }
-    
+
     return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
 }
 
@@ -82,18 +88,18 @@ async function sendFile(request, response) {
     var pathname = request.path;
 
     var mimeType = mime.lookup(repositoryPath + pathname)
-        
+
     try {
         var fileContents = fs.readFileSync(repositoryPath + pathname);
         console.log('Sending file "' + repositoryPath + pathname + '"...');
 
-        response.writeHead(200, {'Content-Type': mimeType});
+        response.writeHead(200, { 'Content-Type': mimeType });
         response.write(fileContents);
         response.end();
     } catch (e) {
         console.log('Error: File not found!');
 
-        response.writeHead(404, {'Content-Type': 'text/plain'});
+        response.writeHead(404, { 'Content-Type': 'text/plain' });
         response.write('404 Not Found');
         response.end();
     }
@@ -114,7 +120,7 @@ async function setUsuario(request, response) {
         try {
             var body = JSON.parse(request.body);
             console.log(body);
-            
+
             const query = { 'usuario': body.usuario };
             const options = {};
 
@@ -144,7 +150,7 @@ async function setUsuario(request, response) {
         } catch (e) {
             console.log('Error: Could not connect to the database!');
 
-            response.writeHead(404, {'Content-Type': 'text/plain'});
+            response.writeHead(404, { 'Content-Type': 'text/plain' });
             response.write('500 Internal Server Error');
             response.end();
 
@@ -152,7 +158,7 @@ async function setUsuario(request, response) {
         }
 
         try {
-            response.writeHead(200, {'Content-Type': 'text/plain'});
+            response.writeHead(200, { 'Content-Type': 'text/plain' });
             response.write("Ok");
             response.end();
         } catch (e) {
@@ -160,8 +166,8 @@ async function setUsuario(request, response) {
         }
     } else {
         console.log('Error: Invalid key!');
-        
-        response.writeHead(401, {'Content-Type': 'text/plain'});
+
+        response.writeHead(401, { 'Content-Type': 'text/plain' });
         response.write('401 Unauthorized');
         response.end();
     }
@@ -178,7 +184,7 @@ async function getListaUsuarios(request, response) {
 
     var key = request.query.key;
 
-    if (typeof(key) != 'undefined') {
+    if (typeof (key) != 'undefined') {
         if (keys.includes(key)) {
             try {
                 const query = { 'key': key };
@@ -188,11 +194,11 @@ async function getListaUsuarios(request, response) {
                 };
 
                 const cursor = usuarios.find(query, options);
-                
+
                 if ((await usuarios.countDocuments(query)) === 0) {
                     console.log('Erro: Nenhum usuário cadastrado!');
 
-                    response.writeHead(400, {'Content-Type': 'text/plain'});
+                    response.writeHead(400, { 'Content-Type': 'text/plain' });
                     response.write('400 Bad Request');
                     response.end();
                 } else {
@@ -203,14 +209,14 @@ async function getListaUsuarios(request, response) {
                     }
 
                     console.log(JSON.stringify(usuariosList));
-                    response.writeHead(200, {'Content-Type': 'application/json'});
+                    response.writeHead(200, { 'Content-Type': 'application/json' });
                     response.write(JSON.stringify(usuariosList));
                     response.end();
                 }
             } catch (e) {
                 console.log('Error: Could not connect to the database!');
 
-                response.writeHead(404, {'Content-Type': 'text/plain'});
+                response.writeHead(404, { 'Content-Type': 'text/plain' });
                 response.write('500 Internal Server Error');
                 response.end();
 
@@ -218,15 +224,15 @@ async function getListaUsuarios(request, response) {
             }
         } else {
             console.log('Error: Invalid key!');
-        
-            response.writeHead(401, {'Content-Type': 'text/plain'});
+
+            response.writeHead(401, { 'Content-Type': 'text/plain' });
             response.write('401 Unauthorized');
             response.end();
         }
     } else {
         console.log('Error: Invalid key!');
-        
-        response.writeHead(401, {'Content-Type': 'text/plain'});
+
+        response.writeHead(401, { 'Content-Type': 'text/plain' });
         response.write('401 Unauthorized');
         response.end();
     }
@@ -252,14 +258,14 @@ async function deleteUsuarios(request, response) {
     if (listaUsuarios != null) {
         try {
             usuarios.drop();
-            
-            response.writeHead(200, {'Content-Type': 'text/plain'});
+
+            response.writeHead(200, { 'Content-Type': 'text/plain' });
             response.write("Ok");
             response.end();
         } catch (e) {
             console.log('Error: Could not connect to the database!');
 
-            response.writeHead(404, {'Content-Type': 'text/plain'});
+            response.writeHead(404, { 'Content-Type': 'text/plain' });
             response.write('500 Internal Server Error');
             response.end();
 
@@ -267,8 +273,51 @@ async function deleteUsuarios(request, response) {
         }
     } else {
         console.log('Error: Invalid key!');
-        
-        response.writeHead(401, {'Content-Type': 'text/plain'});
+
+        response.writeHead(401, { 'Content-Type': 'text/plain' });
+        response.write('401 Unauthorized');
+        response.end();
+    }
+}
+
+/**
+ * Deletes the "user" collection from the database.
+ *
+ * @param {Object} request - The HTTP request object.
+ * @param {Object} response - The HTTP response object.
+ */
+async function deleteUsuario(request, response) {
+    var pathname = request.path;
+
+    var key = request.query.key;
+
+    const query = { 'key': key };
+    const options = {};
+
+    const listaUsuarios = await usuarios.findOne(query, options);
+    console.log(listaUsuarios);
+
+    if (listaUsuarios != null) {
+        try {
+            usuarios.deleteOne(query);
+            console.log('User deleted!');
+
+            response.writeHead(200, { 'Content-Type': 'text/plain' });
+            response.write("Ok");
+            response.end();
+        } catch (e) {
+            console.log('Error: Could not connect to the database!');
+
+            response.writeHead(404, { 'Content-Type': 'text/plain' });
+            response.write('500 Internal Server Error');
+            response.end();
+
+            return;
+        }
+    } else {
+        console.log('Error: Invalid key!');
+
+        response.writeHead(401, { 'Content-Type': 'text/plain' });
         response.write('401 Unauthorized');
         response.end();
     }
@@ -294,14 +343,14 @@ async function deleteAll(request, response) {
     if (listaUsuarios != null) {
         try {
             database.dropDatabase();
-            
-            response.writeHead(200, {'Content-Type': 'text/plain'});
+
+            response.writeHead(200, { 'Content-Type': 'text/plain' });
             response.write("Ok");
             response.end();
         } catch (e) {
             console.log('Error: Could not connect to the database!');
 
-            response.writeHead(404, {'Content-Type': 'text/plain'});
+            response.writeHead(404, { 'Content-Type': 'text/plain' });
             response.write('500 Internal Server Error');
             response.end();
 
@@ -309,8 +358,8 @@ async function deleteAll(request, response) {
         }
     } else {
         console.log('Error: Invalid key!');
-        
-        response.writeHead(401, {'Content-Type': 'text/plain'});
+
+        response.writeHead(401, { 'Content-Type': 'text/plain' });
         response.write('401 Unauthorized');
         response.end();
     }
@@ -337,9 +386,15 @@ app.post('/deleteUsuarios', (request, response) => {
     deleteUsuarios(request, response);
 });
 
+app.post('/deleteUsuario', (request, response) => {
+    deleteUsuario(request, response);
+});
+
 app.post('/deleteAll', (request, response) => {
     deleteAll(request, response);
 });
+
+app.post('/login', loginController.Verificarlogin);
 
 /**
  * Creates the HTTP server.
@@ -349,6 +404,9 @@ const server = https.createServer(options, app);
 /**
  * Starts the HTTP server.
  */
-server.listen(port, host, () => {
-    console.log(`The server is running on http://${host}:${port}.`);
-});
+app.on('pronto', () => {
+    server.listen(port, host, () => {
+        console.log(`The server is running on https://${host}:${port}.`);
+    });
+})
+
