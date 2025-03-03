@@ -113,3 +113,108 @@ exports.getListaUsuarios = async (request, response) => {
     response.end();
   }
 }
+
+exports.deleteUsuario = async (request, response) => {
+  var key = request.query.key;
+
+  const query = { 'key': key };
+  const options = {};
+
+  const listaUsuarios = await UsuarioERP.findOne(query, options);
+  console.log(listaUsuarios);
+
+  if (listaUsuarios != null) {
+    try {
+      await UsuarioERP.deleteOne(query);
+      console.log('User deleted!');
+
+      response.writeHead(200, { 'Content-Type': 'text/plain' });
+      response.write("Ok");
+      response.end();
+    } catch (e) {
+      console.log('Error: Could not connect to the database!');
+
+      response.writeHead(404, { 'Content-Type': 'text/plain' });
+      response.write('500 Internal Server Error');
+      response.end();
+
+      return;
+    }
+  } else {
+    console.log('Error: Invalid key!');
+
+    response.writeHead(401, { 'Content-Type': 'text/plain' });
+    response.write('401 Unauthorized');
+    response.end();
+  }
+}
+
+exports.deleteUsuarios = async (request, response) => {
+  var pathname = request.path;
+
+  var key = request.query.key;
+
+  const query = { 'key': key };
+  const options = {};
+
+  const listaUsuarios = await UsuarioERP.findOne(query, options);
+  console.log(listaUsuarios);
+
+  if (listaUsuarios != null) {
+    try {
+      await UsuarioERP.collection.drop();
+
+      response.writeHead(200, { 'Content-Type': 'text/plain' });
+      response.write("Ok");
+      response.end();
+    } catch (e) {
+      console.log('Error: Could not connect to the database!');
+
+      response.writeHead(404, { 'Content-Type': 'text/plain' });
+      response.write('500 Internal Server Error');
+      response.end();
+
+      return;
+    }
+  } else {
+    console.log('Error: Invalid key!');
+
+    response.writeHead(401, { 'Content-Type': 'text/plain' });
+    response.write('401 Unauthorized');
+    response.end();
+  }
+}
+
+exports.deleteAll = async (request, response) => {
+  var key = request.query.key;
+
+  const query = { 'key': key };
+  const options = {};
+
+  const listaUsuarios = await UsuarioERP.findOne(query, options);
+  console.log(listaUsuarios);
+
+  if (listaUsuarios != null) {
+    try {
+      await mongoose.connection.dropDatabase();
+
+      response.writeHead(200, { 'Content-Type': 'text/plain' });
+      response.write("Ok");
+      response.end();
+    } catch (e) {
+      console.log('Error: Could not connect to the database!');
+
+      response.writeHead(404, { 'Content-Type': 'text/plain' });
+      response.write('500 Internal Server Error');
+      response.end();
+
+      return;
+    }
+  } else {
+    console.log('Error: Invalid key!');
+
+    response.writeHead(401, { 'Content-Type': 'text/plain' });
+    response.write('401 Unauthorized');
+    response.end();
+  }
+}

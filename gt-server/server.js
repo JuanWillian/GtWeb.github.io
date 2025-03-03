@@ -41,6 +41,7 @@ const options = {
     key: fs.readFileSync(httpsKeyFile),
     cert: fs.readFileSync(httpsCertFile)
 };
+
 var currentDate = new Date();
 
 /**
@@ -103,133 +104,6 @@ async function sendFile(request, response) {
     }
 }
 
-/**
- * Deletes the "users" collection from the database.
- *
- * @param {Object} request - The HTTP request object.
- * @param {Object} response - The HTTP response object.
- */
-async function deleteUsuarios(request, response) {
-    var pathname = request.path;
-
-    var key = request.query.key;
-
-    const query = { 'key': key };
-    const options = {};
-
-    const listaUsuarios = await usuarios.findOne(query, options);
-    console.log(listaUsuarios);
-
-    if (listaUsuarios != null) {
-        try {
-            usuarios.drop();
-
-            response.writeHead(200, { 'Content-Type': 'text/plain' });
-            response.write("Ok");
-            response.end();
-        } catch (e) {
-            console.log('Error: Could not connect to the database!');
-
-            response.writeHead(404, { 'Content-Type': 'text/plain' });
-            response.write('500 Internal Server Error');
-            response.end();
-
-            return;
-        }
-    } else {
-        console.log('Error: Invalid key!');
-
-        response.writeHead(401, { 'Content-Type': 'text/plain' });
-        response.write('401 Unauthorized');
-        response.end();
-    }
-}
-
-/**
- * Deletes the "user" collection from the database.
- *
- * @param {Object} request - The HTTP request object.
- * @param {Object} response - The HTTP response object.
- */
-async function deleteUsuario(request, response) {
-    var pathname = request.path;
-
-    var key = request.query.key;
-
-    const query = { 'key': key };
-    const options = {};
-
-    const listaUsuarios = await usuarios.findOne(query, options);
-    console.log(listaUsuarios);
-
-    if (listaUsuarios != null) {
-        try {
-            usuarios.deleteOne(query);
-            console.log('User deleted!');
-
-            response.writeHead(200, { 'Content-Type': 'text/plain' });
-            response.write("Ok");
-            response.end();
-        } catch (e) {
-            console.log('Error: Could not connect to the database!');
-
-            response.writeHead(404, { 'Content-Type': 'text/plain' });
-            response.write('500 Internal Server Error');
-            response.end();
-
-            return;
-        }
-    } else {
-        console.log('Error: Invalid key!');
-
-        response.writeHead(401, { 'Content-Type': 'text/plain' });
-        response.write('401 Unauthorized');
-        response.end();
-    }
-}
-
-/**
- * Deletes all data from the database.
- *
- * @param {Object} request - The HTTP request object.
- * @param {Object} response - The HTTP response object.
- */
-async function deleteAll(request, response) {
-    var pathname = request.path;
-
-    var key = request.query.key;
-
-    const query = { 'key': key };
-    const options = {};
-
-    const listaUsuarios = await usuarios.findOne(query, options);
-    console.log(listaUsuarios);
-
-    if (listaUsuarios != null) {
-        try {
-            database.dropDatabase();
-
-            response.writeHead(200, { 'Content-Type': 'text/plain' });
-            response.write("Ok");
-            response.end();
-        } catch (e) {
-            console.log('Error: Could not connect to the database!');
-
-            response.writeHead(404, { 'Content-Type': 'text/plain' });
-            response.write('500 Internal Server Error');
-            response.end();
-
-            return;
-        }
-    } else {
-        console.log('Error: Invalid key!');
-
-        response.writeHead(401, { 'Content-Type': 'text/plain' });
-        response.write('401 Unauthorized');
-        response.end();
-    }
-}
-
 app.use(express.text({ type: 'application/json' }));
 
 /**
@@ -243,17 +117,11 @@ app.post('/setUsuario', erpController.setUsuario);
 
 app.post('/getListaUsuarios', erpController.getListaUsuarios);
 
-app.post('/deleteUsuarios', (request, response) => {
-    deleteUsuarios(request, response);
-});
+app.post('/deleteUsuarios', erpController.deleteUsuarios);
 
-app.post('/deleteUsuario', (request, response) => {
-    deleteUsuario(request, response);
-});
+app.post('/deleteUsuario', erpController.deleteUsuario);
 
-app.post('/deleteAll', (request, response) => {
-    deleteAll(request, response);
-});
+app.post('/deleteAll', erpController.deleteAll);
 
 app.post('/login', loginController.Verificarlogin);
 
