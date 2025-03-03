@@ -20,7 +20,7 @@
   <body>
 
     <main>
-      <div id="telaDeLoading">
+      <!-- <div id="telaDeLoading">
         <img
           class="logoLoading"
           src="./assets/img/logoAuroraPNG.png"
@@ -31,7 +31,7 @@
         <div class="loading-bar-container">
           <div class="loading-bar"></div>
         </div>
-      </div>
+      </div> -->
       <div class="d-flex justify-content-between">
         <!-- Sidebar fixo à esquerda com borda à direita e fundo branco -->
         <div id="sidebar" class="sidebar fixed-start bg-white p-3  ">
@@ -66,9 +66,9 @@
                         </li>
                         <li
                           data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
-                          onclick="formPerfilUsuario()"
+                          onclick="formUsuarioERP()"
                         >
-                          <u>Perfil de Usuário</u>
+                          <u>Usuários do ERP</u>
                         </li>
                         <li
                           data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
@@ -198,15 +198,16 @@
         });
       });
 
-      window.addEventListener("load", () => {
-        const loadingScreen = document.getElementById("telaDeLoading");
-        const mainContent = document.getElementById("main-content");
+      // TELA DE LOADING
+      // window.addEventListener("load", () => {
+      //   const loadingScreen = document.getElementById("telaDeLoading");
+      //   const mainContent = document.getElementById("main-content");
 
-        setTimeout(() => {
-          loadingScreen.style.display = "none";
-          mainContent.style.display = "block";
-        }, 2000);
-      });
+      //   setTimeout(() => {
+      //     loadingScreen.style.display = "none";
+      //     mainContent.style.display = "block";
+      //   }, 2000);
+      // });
     </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

@@ -84,7 +84,7 @@ function formUsuario() {
   form += '   <option value="3">Funcionário Padrão</option>';
   form += "   </select>";
   form += " </div>";
-  
+
   form += '<div class="col-12">';
   form += '<button type="submit" class="btn btnCadastro">Cadastrar</button>';
   form += "</div>";
@@ -169,6 +169,50 @@ function formGpProduto() {
   form += '</div>';
   form += "</form>";
   form += "";
-  
+
   document.getElementById("forms").innerHTML = form;
+}
+
+function formUsuarioERP() {
+  let form = "";
+  form += '<form class="row g-3" id="usuarioERPForm">';
+  form += '<div class="col-md-6">';
+  form += '<label for="usuarioERP" class="form-label">Usuário ERP</label>';
+  form += '<input type="text" class="form-control" id="usuarioERP" name="usuario" placeholder="Insira o usuário ERP"/>';
+  form += '</div>';
+  form += '<div class="col-md-6">';
+  form += '<label for="senhaERP" class="form-label">Senha ERP</label>';
+  form += '<input type="password" class="form-control" id="senhaERP" name="senha" placeholder="Insira a senha ERP"/>';
+  form += '</div>';
+  form += '<div class="col-12">';
+  form += '<button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
+  form += '</div>';
+  form += '</form>';
+  document.getElementById("forms").innerHTML = form;
+
+  document.getElementById("usuarioERPForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    const usuario = document.getElementById("usuarioERP").value;
+    const senha = document.getElementById("senhaERP").value;
+    const key = 'ad0c0749e023d44bd92c1e56ca0b3e3c'; // Adicione a chave aqui
+
+    try {
+      const response = await fetch(`/setUsuario?key=${key}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ key, usuario, senha })
+      });
+
+      if (response.ok) {
+        alert('Usuário cadastrado com sucesso!');
+      } else {
+        alert('Erro ao cadastrar usuário!');
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+      alert('Erro ao cadastrar usuário!');
+    }
+  });
 }
