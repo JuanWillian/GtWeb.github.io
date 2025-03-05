@@ -202,7 +202,11 @@ function formUsuarioERP() {
         headers: {
           'Content-Type': 'application/json'
         },
+<<<<<<< HEAD
         body: JSON.stringify({ usuario, senha })
+=======
+        body: JSON.stringify({ key, usuario, senha })
+>>>>>>> 6c3369f9173959b9a590dee4442366683acc84fd
       });
 
       if (response.ok) {
