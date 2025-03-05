@@ -25,6 +25,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'public')));
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 var repositoryPath = __dirname + '/' + config.repositoryPath;
 var httpsKeyFile = __dirname + '/' + config.httpsKeyFile;
 var httpsCertFile = __dirname + '/' + config.httpsCertFile;
@@ -53,6 +56,16 @@ const sessionOptions = session({
 });
 app.use(sessionOptions);
 app.use(middlewareGlobal);
+
+const flash = require('connect-flash');
+
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.successMessages = req.flash('success');
+    res.locals.errorMessages = req.flash('error');
+    next();
+});
 
 const options = {
     key: fs.readFileSync(httpsKeyFile),
@@ -126,11 +139,11 @@ app.use(express.text({ type: 'application/json' }));
 /**
  * The HTTP server listeners.
  */
-app.get('/pagPrincipal.html', loginRequired, (request, response) => {
-    sendFile(request, response);
+app.get('/pagPrincipal', loginRequired, (request, response) => {
+    response.render('pagPrincipal');
 });
 
-app.get('/index.html', loginController.index);
+app.get('/index', loginController.index);
 app.post('/login/register', loginController.register);
 app.post('/login/login', loginController.login);
 app.get('/login/logout', loginController.logout);

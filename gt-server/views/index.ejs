@@ -15,14 +15,13 @@
     <main class="form-signin">
       <section>
         <form id="loginForm" action="/login/login" method="POST">
-          
           <div class="cabecalhoLogin">
-            <h1 class="h2 ">Bem Vindo ao</h1>
-            <h2 class="h2 mb-3 primary gtServicos ">GT Serviços</h2>
+            <h1 class="h2">Bem vindo a</h1>
+            <h2 class="h2 mb-3 primary gtServicos">GT Serviços</h2>
             <h6 class="h6 text-muted">Faça o login para continuar</h6>
           </div>
-          
-          <div class="form-floating rounded">
+
+          <div class="form-floating">
             <input
               type="text"
               class="form-control"
@@ -44,18 +43,31 @@
             />
             <label for="floatingPassword">Senha</label>
           </div>
-          <button class="w-100 btn btn-lg" type="submit">
-            Logar
-          </button>
+          
+          <% if (errorMessages.length > 0) { %>
+            <div class="alert alert-danger ">
+              <%= errorMessages.join('<br />') %>
+            </div>
+            <% } %> <% if (successMessages.length > 0) { %>
+            <div class="alert alert-success">
+              <%= successMessages.join('<br />') %>
+            </div>
+            <% } %>
+          <button class="w-100 btn btn-lg" type="submit">Logar</button>
+          
         </form>
-        <img src="/assets/img/LogoAuroraPNG.png" alt="AuroraSistemas" class="logoImg">
+        <img
+          src="/assets/img/LogoAuroraPNG.png"
+          alt="AuroraSistemas"
+          class="logoImg"
+        />
       </section>
     </main>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
-    
   </body>
 </html>

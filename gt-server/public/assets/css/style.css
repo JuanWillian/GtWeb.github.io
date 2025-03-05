@@ -31,6 +31,10 @@ main {
   height: 20px;
 }
 
+.fotoGt {
+  margin-top: -10px;
+}
+
 /* 1 - tela de carregamento */
 /* #telaDeLoading {
   position: fixed;

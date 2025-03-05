@@ -88,3 +88,10 @@ body {
 .cabecalhoLogin {
   text-align: center;
 }
+
+#loginForm {
+  width: 300px;
+}
+
+
+

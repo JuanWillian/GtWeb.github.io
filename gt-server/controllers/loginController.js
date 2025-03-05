@@ -3,30 +3,33 @@ const { UsuarioERP } = require('../models/usuarioERP');
 
 exports.index = (req, res) => {
     if (req.session.user) {
-        return res.sendFile(path.resolve(__dirname, '../views/pagPrincipal.html'));
+        return res.render('pagPrincipal');
     }
-    return res.sendFile(path.resolve(__dirname, '../views/index.html'));
+    return res.render('index');
 };
 
 exports.register = async function (req, res) {
     try {
         const usuarioERP = new UsuarioERP(req.body);
-        const key = req.body.key; 
+        const key = req.body.key;
         await usuarioERP.register(key);
 
         if (usuarioERP.errors.length > 0) {
             console.log(usuarioERP.errors);
+            req.flash('error', usuarioERP.errors);
             req.session.save(function () {
                 return res.redirect('back');
             });
             return;
         }
 
+        req.flash('success', 'Usuário registrado com sucesso.');
         console.log('Usuário registrado com sucesso.');
         req.session.save(function () {
-            return res.redirect('/pagPrincipal.html');
+            return res.redirect('/pagPrincipal');
         });
     } catch (e) {
+        req.flash('error', 'Erro ao conectar ao banco de dados.');
         console.log('Error: Could not connect to the database!', e);
 
         res.writeHead(500, { 'Content-Type': 'text/plain' });
@@ -41,14 +44,12 @@ exports.login = async function (req, res) {
     try {
         console.log(`Tentando encontrar usuário: ${usuario} com a senha: ${password}`);
 
-        // Adicionando log para verificar os dados enviados
-        console.log(`Dados recebidos - Usuário: ${usuario}, Senha: ${password}`);
-
         const usuarioERP = new UsuarioERP(req.body);
         await usuarioERP.login();
 
         if (usuarioERP.errors.length > 0) {
             console.log(usuarioERP.errors);
+            req.flash('error', usuarioERP.errors);
             req.session.save(function () {
                 return res.redirect('back');
             });
@@ -60,16 +61,18 @@ exports.login = async function (req, res) {
         req.session.save(function (err) {
             if (err) {
                 console.log('Erro ao salvar a sessão:', err);
+                req.flash('error', 'Erro ao salvar a sessão.');
                 res.writeHead(500, { 'Content-Type': 'text/plain' });
                 res.write('500 Internal Server Error');
                 res.end();
                 return;
             }
-            return res.redirect('/pagPrincipal.html');
+            req.flash('success', 'Usuário logado com sucesso.');
+            return res.redirect('/pagPrincipal');
         });
     } catch (e) {
         console.log('Error: Could not connect to the database!', e);
-
+        req.flash('error', 'Erro ao conectar ao banco de dados.');
         res.writeHead(500, { 'Content-Type': 'text/plain' });
         res.write('500 Internal Server Error');
         res.end();
@@ -78,5 +81,5 @@ exports.login = async function (req, res) {
 
 exports.logout = function (req, res) {
     req.session.destroy();
-    res.redirect('/index.html');
+    res.redirect('/index');
 };

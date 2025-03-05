@@ -6,7 +6,7 @@ exports.middlewareGlobal = (req, res, next) => {
 exports.loginRequired = (req, res, next) => {
   if (!req.session.user) {
     console.log('Usuário não logado.');
-    return res.redirect('/index.html');
+    return res.redirect('/index'); 
   }
   next();
 };
