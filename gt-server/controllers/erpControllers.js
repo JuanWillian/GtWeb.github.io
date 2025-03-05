@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 6c3369f9173959b9a590dee4442366683acc84fd
 const fs = require('node:fs');
 const path = require('path');
 const mongoose = require('mongoose');
