@@ -1,24 +1,27 @@
-const { MongoClient } = require('mongodb');
-const config = require('../conf/config.json');
-
-const client = new MongoClient(config.mongoServer);
-const database = client.db(config.mongoDatabase);
-const usuarios = database.collection('usuarios');
+const UsuarioERP = require('../models/usuarioERP');
 
 exports.Verificarlogin = async (req, res) => {
     const { usuario, senha } = req.body;
 
     try {
-        const user = await usuarios.findOne({ usuario, senha });
+        console.log(`Tentando encontrar usuário: ${usuario} com a senha: ${senha}`);
+
+        // Adicionando log para verificar os dados enviados
+        console.log(`Dados recebidos - Usuário: ${usuario}, Senha: ${senha}`);
+
+        // Adicionando log para verificar a consulta
+        const user = await UsuarioERP.findOne({ usuario, senha });
+        console.log(`Consulta ao banco de dados - Resultado: ${user}`);
 
         if (user) {
-            res.redirect('/pagprincipal.html');
+            console.log('Usuário autenticado!');
+            res.redirect('/pagPrincipal.html');
         } else {
-            res.redirect('/index.html');
             console.log('Usuário ou senha inválidos!');
+            res.redirect('/index.html');
         }
     } catch (e) {
-        console.log('Error: Could not connect to the database!');
+        console.log('Error: Could not connect to the database!', e);
         res.status(500).send('Internal Server Error');
     }
 };
