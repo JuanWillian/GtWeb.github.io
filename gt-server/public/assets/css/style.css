@@ -80,9 +80,12 @@ main {
 #forms {
   padding: 30px;
 }
-
+*/
 .btnCadastro {
   background-color: var(--cor-principal-gt)!important ;
   color: #fff !important;
-} */
-
+} 
+.btnCadastro:hover {
+  background-color: #182b47 !important;
+  color: #fff;
+}

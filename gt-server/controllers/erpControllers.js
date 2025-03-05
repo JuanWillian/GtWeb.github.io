@@ -6,62 +6,6 @@ const { UsuarioERPModel } = require('../models/usuarioERP');
 const keys = JSON.parse(fs.readFileSync(path.join(__dirname, '../conf/keys.json')));
 
 exports.getListaUsuarios = async (request, response) => {
-<<<<<<< HEAD
-    var key = request.query.key;
-
-    if (typeof (key) != 'undefined') {
-        if (keys.includes(key)) {
-            try {
-                const query = { 'key': key };
-                const options = {
-                    sort: { data: -1 },
-                    projection: { _id: 0 }
-                };
-
-                const cursor = UsuarioERP.find(query).sort(options.sort).select(options.projection);
-
-                if ((await UsuarioERP.countDocuments(query)) === 0) {
-                    console.log('Erro: Nenhum usuário cadastrado!');
-
-                    response.writeHead(400, { 'Content-Type': 'text/plain' });
-                    response.write('400 Bad Request');
-                    response.end();
-                } else {
-                    var UsuarioERPList = [];
-
-                    for await (const doc of cursor) {
-                        UsuarioERPList.push(doc);
-                    }
-
-                    console.log(JSON.stringify(UsuarioERPList));
-                    response.writeHead(200, { 'Content-Type': 'application/json' });
-                    response.write(JSON.stringify(UsuarioERPList));
-                    response.end();
-                }
-            } catch (e) {
-                console.log('Error: Could not connect to the database!');
-
-                response.writeHead(404, { 'Content-Type': 'text/plain' });
-                response.write('500 Internal Server Error');
-                response.end();
-
-                return;
-            }
-        } else {
-            console.log('Error: Unregistred key!');
-
-            response.writeHead(401, { 'Content-Type': 'text/plain' });
-            response.write('401 Unauthorized');
-            response.end();
-        }
-    } else {
-        console.log('Error: Undefined key!');
-
-        response.writeHead(401, { 'Content-Type': 'text/plain' });
-        response.write('401 Unauthorized');
-        response.end();
-    }
-=======
   var key = request.query.key;
 
   if (typeof (key) != 'undefined') {
@@ -222,4 +166,4 @@ exports.deleteAll = async (request, response) => {
     response.write('401 Unauthorized');
     response.end();
   }
-}
+};
