@@ -1,56 +1,52 @@
+:root {
+  --cor-principal-gt: #194278;
+  --cor-aurora: #4444a4;
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
-html,
-body {
-  height: 100%;
-}
-
-body {
+main {
   display: flex;
+  justify-content: center;
   align-items: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  height: 100vh;
+}
+body {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(68, 68, 164, 0.6) 90%
+  );
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .form-signin {
   width: 100%;
-  max-width: 330px;
-  padding: 15px;
+  max-width:700px;
   margin: auto;
-}
-
-.form-signin .checkbox {
-  font-weight: 400;
 }
 
 .form-signin .form-floating:focus-within {
   z-index: 2;
 }
 
-.form-signin input[type="email"] {
-  margin-bottom: 10px;
-  border: #3085fe 0.5px solid;
-  border-radius: 10px;
-}
-
 .form-signin input[type="password"] {
-  border: #3085fe 0.5px solid;
+  border: var(--cor-aurora) 1px solid;
   border-radius: 10px;
   margin-bottom: 10px;
 }
 .form-signin input[type="text"] {
-  border: #3085fe 0.5px solid;
+  border: var(--cor-aurora) 1px solid;
   border-radius: 10px;
   margin-bottom: 10px;
 }
 
 .gtServicos {
-  color: #3085fe;
+  color: var(--cor-aurora);
 }
 .h6 {
   padding-bottom: 10px;
@@ -58,22 +54,44 @@ body {
 .link-primary {
   padding-bottom: 10px;
 }
-.termos{
-  color: #2472df;
+.termos {
+  color: var(--cor-principal-gt);
 }
 .form-check-input {
   width: 15px;
   height: 15px;
-  border: 2px solid #071729c4; 
-  border-radius: 3px; 
-
+  border: 2px solid #071729c4;
+  border-radius: 3px;
 }
 
 .btn {
-  background-color: #3085fe;
-  color: #fff;
+  background-color: var(--cor-aurora) !important;
+  color: #fff !important;
 }
 .btn:hover {
-  background-color: #2472df;
+  background-color: #43146e !important;
   color: #fff;
 }
+
+.logoImg {
+  width: 100%;
+  max-width: 100px;
+  margin: auto;
+  display: block;
+  position: absolute;
+  margin-bottom: 10px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.cabecalhoLogin {
+  text-align: center;
+}
+
+#loginForm {
+  width: 300px;
+}
+
+
+

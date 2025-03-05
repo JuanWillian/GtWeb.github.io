@@ -16,9 +16,16 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
   </head>
   <body>
-
     <main>
       <!-- <div id="telaDeLoading">
         <img
@@ -34,15 +41,22 @@
       </div> -->
       <div class="d-flex justify-content-between">
         <!-- Sidebar fixo à esquerda com borda à direita e fundo branco -->
-        <div id="sidebar" class="sidebar fixed-start bg-white p-3  ">
+        <div id="sidebar" class="sidebar fixed-start bg-white p-3">
           <section>
-            <div class="d-flex justify-content-start mb-3">
+            <div class="d-flex justify-content-between align-items-center">
               <img
                 src="assets/img/GtLogo.jpg"
                 alt=""
                 class="fotoGt"
                 width="200"
               />
+              <div class="logout">
+                <form action="/login/logout" method="GET">
+                  <a href="/login/logout" class="btn btn-danger"
+                    ><i class="bi bi-box-arrow-left"></i
+                  ></a>
+                </form>
+              </div>
             </div>
             <div id="jstree">
               <ul>
@@ -53,25 +67,25 @@
                       Empresa
                       <ul>
                         <li
-                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
                           onclick="formUnidade()"
                         >
                           <u>Unidades</u>
                         </li>
                         <li
-                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
                           onclick="formSetor()"
                         >
                           <u>Setores</u>
                         </li>
                         <li
-                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
                           onclick="formUsuarioERP()"
                         >
                           <u>Usuários do ERP</u>
                         </li>
                         <li
-                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
                           onclick="formUsuario()"
                         >
                           <u>Usuário</u>
@@ -82,14 +96,14 @@
                       Atividades Laborais
                       <ul>
                         <li
-                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
                           onclick="formExecucao()"
                         >
                           <u>Execuções</u>
                         </li>
                         <li
                           onclick="formAtvd()"
-                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
                         >
                           <u>Atividades</u>
                         </li>
@@ -99,19 +113,19 @@
                       Almoxarifado
                       <ul>
                         <li
-                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
                           onclick="formSetor()"
                         >
                           <u>Grupo de produto</u>
                         </li>
                         <li
-                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
                           onclick="formSetor()"
                         >
                           <u>Subgrupo de produto</u>
                         </li>
                         <li
-                          data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
                           onclick="formGpProduto()"
                         >
                           <u>Produto</u>
@@ -124,13 +138,13 @@
                   Estoque
                   <ul>
                     <li
-                      data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
                       onclick="formEntradaProduto()"
                     >
                       <u>Entrada de Produtos</u>
                     </li>
                     <li
-                      data-jstree='{"icon":"assets/img/iconArquivos.svg"}'
+                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
                       onclick="formBaixaProduto()"
                     >
                       <u>Baixa de Produtos</u>
@@ -140,13 +154,13 @@
                 <li>
                   Dashboard
                   <ul>
-                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
                       <u>Estado de atividades por usuário</u>
                     </li>
-                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
                       <u>Estado de atividades por setor</u>
                     </li>
-                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
                       <u>Estado de status de atividades</u>
                     </li>
                   </ul>
@@ -154,16 +168,16 @@
                 <li>
                   Relatórios
                   <ul>
-                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
                       <u>Atividades por Usuário</u>
                     </li>
-                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
                       <u>Atividades por Setor</u>
                     </li>
-                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
                       <u>Status de Atividades</u>
                     </li>
-                    <li data-jstree='{"icon":"assets/img/iconArquivos.svg"}'>
+                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
                       <u>Material Utilizado</u>
                     </li>
                   </ul>
@@ -175,9 +189,7 @@
         <!---->
 
         <div class="conteudo">
-          <section id="forms">
-            
-          </section>
+          <section id="forms"></section>
         </div>
       </div>
     </main>
@@ -187,10 +199,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
     <script>
       $(function () {
-        $("#jstree").jstree();
+        $("#jstree").jstree({
+          core: {
+            themes: {
+              responsive: false,
+            },
+          },
+          types: {
+            default: {
+              icon: "bi bi-folder-fill text-warning", // Ícone de pasta
+            },
+          },
+          plugins: ["types"],
+        });
+
         $("#jstree").on("changed.jstree", function (e, data) {
           console.log(data.selected);
         });
+
         $("button").on("click", function () {
           $("#jstree").jstree(true).select_node("child_node_1");
           $("#jstree").jstree("select_node", "child_node_1");
