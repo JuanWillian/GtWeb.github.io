@@ -18,7 +18,6 @@ var express = require('express');
 var app = express();
 
 var config = JSON.parse(fs.readFileSync(__dirname + '/conf/config.json'));
-var keys = JSON.parse(fs.readFileSync(__dirname + '/conf/keys.json'));
 
 const host = 'localhost';
 const port = config.fileServerPort || 5000;
@@ -38,6 +37,24 @@ const usuarios = database.collection('usuarios');
 mongoose.connect(config.mongoServer, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {app.emit('pronto')})
     .catch((e) => console.log(e));
+
+//sessões de login
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const { middlewareGlobal, loginRequired } = require('./middlewares/middleware');
+
+const sessionOptions = session({
+    secret: config.sessionSecret,
+    store: MongoStore.create({ mongoUrl: config.mongoServer }),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        httpOnly: true
+    }
+});
+app.use(sessionOptions);
+app.use(middlewareGlobal);
 
 const options = {
     key: fs.readFileSync(httpsKeyFile),
@@ -374,21 +391,23 @@ app.use(express.text({ type: 'application/json' }));
 /**
  * The HTTP server listeners.
  */
-app.get('*', (request, response) => {
+app.get('/pagPrincipal.html', loginRequired, (request, response) => {
     sendFile(request, response);
 });
 
-app.post('/setUsuario', erpController.setUsuario);
+app.get('/index.html', loginController.index);
+app.post('/login/register', loginController.register);
+app.post('/login/login', loginController.login);
+app.get('/login/logout', loginController.logout);
 
 app.post('/getListaUsuarios', erpController.getListaUsuarios);
-
 app.post('/deleteUsuarios', erpController.deleteUsuarios);
-
 app.post('/deleteUsuario', erpController.deleteUsuario);
-
 app.post('/deleteAll', erpController.deleteAll);
 
-app.post('/login', loginController.Verificarlogin);
+app.get('*', (request, response) => {
+    sendFile(request, response);
+});
 
 /**
  * Creates the HTTP server.
