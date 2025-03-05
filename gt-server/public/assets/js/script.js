@@ -28,6 +28,7 @@ function formUnidade() {
   form += "</form>";
   document.getElementById("forms").innerHTML = form;
 }
+
 function formSetor() {
   let form = "";
   form += '<form class="row g-3 formulario">';
@@ -45,6 +46,7 @@ function formSetor() {
   form += "</form>";
   document.getElementById("forms").innerHTML = form;
 }
+
 function formUsuario() {
   let form = "";
   form += ' <form class="row g-3 formulario">';
@@ -91,6 +93,7 @@ function formUsuario() {
   form += "</form>";
   document.getElementById("forms").innerHTML = form;
 }
+
 function formExecucao() {
   let form = "";
   form += '<form class="row g-3 formulario" >';
@@ -108,6 +111,7 @@ function formExecucao() {
   form += " </form>";
   document.getElementById("forms").innerHTML = form;
 }
+
 function formAtvd() {
   let form = "";
   form += '  <form class="row g-3 formulario" >';
@@ -133,6 +137,7 @@ function formAtvd() {
   form += '</form>';
   document.getElementById("forms").innerHTML = form;
 }
+
 function formGpProduto() {
   let form = "";
   form += ' <form class="row g-3 formulario" >';
@@ -193,17 +198,20 @@ function formUsuarioERP() {
   document.getElementById("usuarioERPForm").addEventListener("submit", async function (event) {
     event.preventDefault();
     const usuario = document.getElementById("usuarioERP").value;
-    const senha = document.getElementById("senhaERP").value;
-    const key = 'ad0c0749e023d44bd92c1e56ca0b3e3c'; // Adicione a chave aqui
-
+    const password = document.getElementById("senhaERP").value;
+    const key = 'ad0c0749e023d44bd92c1e56ca0b3e3c';
+    console.log('usuario:', usuario);
+    console.log('password :', password);
     try {
-      const response = await fetch(`/setUsuario?key=${key}`, {
+      const response = await fetch(`/login/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ usuario, senha })
+        body: JSON.stringify({ key, usuario, password })
       });
+
+      const responseData = await response.json();
 
       if (response.ok) {
         alert('Usuário cadastrado com sucesso!');
@@ -212,7 +220,6 @@ function formUsuarioERP() {
       }
     } catch (error) {
       console.error('Erro:', error);
-      alert('Erro ao cadastrar usuário!');
     }
   });
 }

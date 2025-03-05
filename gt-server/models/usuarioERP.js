@@ -66,7 +66,6 @@ class UsuarioERP {
         if (!keys.includes(key)) {
             this.errors.push('Key inválida.');
         }
-        // A senha precisa ter entre 3 e 50 caracteres
         if (this.body.password.length < 3 || this.body.password.length > 50) {
             this.errors.push('A senha precisa ter entre 3 e 50 caracteres.');
         }
