@@ -24,11 +24,16 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding: 50px 50px 50px 0px;
   height: 100vh;
 }
 #jstree .jstree-icon {
   width: 20px;
   height: 20px;
+}
+
+.fotoGt {
+  margin-top: -10px;
 }
 
 /* 1 - tela de carregamento */
@@ -80,9 +85,12 @@ main {
 #forms {
   padding: 30px;
 }
-
+*/
 .btnCadastro {
   background-color: var(--cor-principal-gt)!important ;
   color: #fff !important;
-} */
-
+} 
+.btnCadastro:hover {
+  background-color: #182b47 !important;
+  color: #fff;
+}

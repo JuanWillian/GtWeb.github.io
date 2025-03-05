@@ -9,7 +9,6 @@ const mongoose = require('mongoose');
 const erpController = require('./controllers/erpControllers.js');
 const loginController = require('./controllers/loginController.js');
 
-
 const fs = require('node:fs');
 const https = require('https');
 const path = require('path');
@@ -18,7 +17,6 @@ var express = require('express');
 var app = express();
 
 var config = JSON.parse(fs.readFileSync(__dirname + '/conf/config.json'));
-var keys = JSON.parse(fs.readFileSync(__dirname + '/conf/keys.json'));
 
 const host = 'localhost';
 const port = config.fileServerPort || 5000;
@@ -27,25 +25,52 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'public')));
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 var repositoryPath = __dirname + '/' + config.repositoryPath;
 var httpsKeyFile = __dirname + '/' + config.httpsKeyFile;
 var httpsCertFile = __dirname + '/' + config.httpsCertFile;
 
-const client = new MongoClient(config.mongoServer);
-const database = client.db(config.mongoDatabase);
-const usuarios = database.collection('usuarios');
+mongoose.connect(config.mongoServer, {
+    dbName: config.mongoDatabase
+}).then(() => {
+    console.log(`Connected to MongoDB database: ${config.mongoDatabase}`);
+    app.emit('pronto');
+}).catch((e) => console.log(e));
 
-mongoose.connect(config.mongoServer, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {app.emit('pronto')})
-    .catch((e) => console.log(e));
+//sessões de login
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const { middlewareGlobal, loginRequired } = require('./middlewares/middleware');
+
+const sessionOptions = session({
+    secret: config.sessionSecret,
+    store: MongoStore.create({ mongoUrl: config.mongoServer }),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        httpOnly: true
+    }
+});
+app.use(sessionOptions);
+app.use(middlewareGlobal);
+
+const flash = require('connect-flash');
+
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.successMessages = req.flash('success');
+    res.locals.errorMessages = req.flash('error');
+    next();
+});
 
 const options = {
     key: fs.readFileSync(httpsKeyFile),
     cert: fs.readFileSync(httpsCertFile)
 };
-
-const host = '0.0.0.0';
-const port = config.fileServerPort;
 
 var currentDate = new Date();
 
@@ -109,286 +134,28 @@ async function sendFile(request, response) {
     }
 }
 
-/**
- * Registers a new user or update an existing one in the database.
- *
- * @param {Object} request - The HTTP request object.
- * @param {Object} response - The HTTP response object.
- */
-async function setUsuario(request, response) {
-    var pathname = request.path;
-
-    var key = request.query.key;
-
-    if (keys.includes(key)) {
-        try {
-            var body = JSON.parse(request.body);
-            console.log(body);
-
-            const query = { 'usuario': body.usuario };
-            const options = {};
-
-            const listaUsuarios = await usuarios.findOne(query, options);
-            console.log(listaUsuarios);
-
-            if (listaUsuarios == null) {
-                const result = await usuarios.insertOne(body);
-                console.log(`Update data inserted with the _id: ${result.insertedId}.`);
-            } else {
-                const filter = { 'usuario': body.usuario };
-                const options = { upsert: true };
-
-                const updateDoc = {
-                    $set: {
-                        'key': body.key,
-                        'usuario': body.usuario,
-                        'senha': body.senha,
-                        'nome': body.nome,
-                        'sobrenome': body.sobrenome
-                    },
-                };
-
-                const result = await usuarios.updateOne(filter, updateDoc, options);
-                console.log(`${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s).`);
-            }
-        } catch (e) {
-            console.log('Error: Could not connect to the database!');
-
-            response.writeHead(404, { 'Content-Type': 'text/plain' });
-            response.write('500 Internal Server Error');
-            response.end();
-
-            return;
-        }
-
-        try {
-            response.writeHead(200, { 'Content-Type': 'text/plain' });
-            response.write("Ok");
-            response.end();
-        } catch (e) {
-            console.log('Error: Could not send a response to the client!');
-        }
-    } else {
-        console.log('Error: Invalid key!');
-
-        response.writeHead(401, { 'Content-Type': 'text/plain' });
-        response.write('401 Unauthorized');
-        response.end();
-    }
-}
-
-/**
- * Retrieves a list of users for the given key.
- *
- * @param {Object} request - The HTTP request object.
- * @param {Object} response - The HTTP response object.
- */
-async function getListaUsuarios(request, response) {
-    var pathname = request.path;
-
-    var key = request.query.key;
-
-    if (typeof (key) != 'undefined') {
-        if (keys.includes(key)) {
-            try {
-                const query = { 'key': key };
-                const options = {
-                    sort: { data: -1 },
-                    projection: { _id: 0 }
-                };
-
-                const cursor = usuarios.find(query, options);
-
-                if ((await usuarios.countDocuments(query)) === 0) {
-                    console.log('Erro: Nenhum usuário cadastrado!');
-
-                    response.writeHead(400, { 'Content-Type': 'text/plain' });
-                    response.write('400 Bad Request');
-                    response.end();
-                } else {
-                    var usuariosList = [];
-
-                    for await (const doc of cursor) {
-                        usuariosList.push(doc);
-                    }
-
-                    console.log(JSON.stringify(usuariosList));
-                    response.writeHead(200, { 'Content-Type': 'application/json' });
-                    response.write(JSON.stringify(usuariosList));
-                    response.end();
-                }
-            } catch (e) {
-                console.log('Error: Could not connect to the database!');
-
-                response.writeHead(404, { 'Content-Type': 'text/plain' });
-                response.write('500 Internal Server Error');
-                response.end();
-
-                return;
-            }
-        } else {
-            console.log('Error: Invalid key!');
-
-            response.writeHead(401, { 'Content-Type': 'text/plain' });
-            response.write('401 Unauthorized');
-            response.end();
-        }
-    } else {
-        console.log('Error: Invalid key!');
-
-        response.writeHead(401, { 'Content-Type': 'text/plain' });
-        response.write('401 Unauthorized');
-        response.end();
-    }
-}
-
-/**
- * Deletes the "users" collection from the database.
- *
- * @param {Object} request - The HTTP request object.
- * @param {Object} response - The HTTP response object.
- */
-async function deleteUsuarios(request, response) {
-    var pathname = request.path;
-
-    var key = request.query.key;
-
-    const query = { 'key': key };
-    const options = {};
-
-    const listaUsuarios = await usuarios.findOne(query, options);
-    console.log(listaUsuarios);
-
-    if (listaUsuarios != null) {
-        try {
-            usuarios.drop();
-
-            response.writeHead(200, { 'Content-Type': 'text/plain' });
-            response.write("Ok");
-            response.end();
-        } catch (e) {
-            console.log('Error: Could not connect to the database!');
-
-            response.writeHead(404, { 'Content-Type': 'text/plain' });
-            response.write('500 Internal Server Error');
-            response.end();
-
-            return;
-        }
-    } else {
-        console.log('Error: Invalid key!');
-
-        response.writeHead(401, { 'Content-Type': 'text/plain' });
-        response.write('401 Unauthorized');
-        response.end();
-    }
-}
-
-/**
- * Deletes the "user" collection from the database.
- *
- * @param {Object} request - The HTTP request object.
- * @param {Object} response - The HTTP response object.
- */
-async function deleteUsuario(request, response) {
-    var pathname = request.path;
-
-    var key = request.query.key;
-
-    const query = { 'key': key };
-    const options = {};
-
-    const listaUsuarios = await usuarios.findOne(query, options);
-    console.log(listaUsuarios);
-
-    if (listaUsuarios != null) {
-        try {
-            usuarios.deleteOne(query);
-            console.log('User deleted!');
-
-            response.writeHead(200, { 'Content-Type': 'text/plain' });
-            response.write("Ok");
-            response.end();
-        } catch (e) {
-            console.log('Error: Could not connect to the database!');
-
-            response.writeHead(404, { 'Content-Type': 'text/plain' });
-            response.write('500 Internal Server Error');
-            response.end();
-
-            return;
-        }
-    } else {
-        console.log('Error: Invalid key!');
-
-        response.writeHead(401, { 'Content-Type': 'text/plain' });
-        response.write('401 Unauthorized');
-        response.end();
-    }
-}
-
-/**
- * Deletes all data from the database.
- *
- * @param {Object} request - The HTTP request object.
- * @param {Object} response - The HTTP response object.
- */
-async function deleteAll(request, response) {
-    var pathname = request.path;
-
-    var key = request.query.key;
-
-    const query = { 'key': key };
-    const options = {};
-
-    const listaUsuarios = await usuarios.findOne(query, options);
-    console.log(listaUsuarios);
-
-    if (listaUsuarios != null) {
-        try {
-            database.dropDatabase();
-
-            response.writeHead(200, { 'Content-Type': 'text/plain' });
-            response.write("Ok");
-            response.end();
-        } catch (e) {
-            console.log('Error: Could not connect to the database!');
-
-            response.writeHead(404, { 'Content-Type': 'text/plain' });
-            response.write('500 Internal Server Error');
-            response.end();
-
-            return;
-        }
-    } else {
-        console.log('Error: Invalid key!');
-
-        response.writeHead(401, { 'Content-Type': 'text/plain' });
-        response.write('401 Unauthorized');
-        response.end();
-    }
-}
-
 app.use(express.text({ type: 'application/json' }));
 
 /**
  * The HTTP server listeners.
  */
+app.get('/pagPrincipal', loginRequired, (request, response) => {
+    response.render('pagPrincipal');
+});
+
+app.get('/index', loginController.index);
+app.post('/login/register', loginController.register);
+app.post('/login/login', loginController.login);
+app.get('/login/logout', loginController.logout);
+
+app.post('/getListaUsuarios', erpController.getListaUsuarios);
+app.post('/deleteUsuarios', erpController.deleteUsuarios);
+app.post('/deleteUsuario', erpController.deleteUsuario);
+app.post('/deleteAll', erpController.deleteAll);
+
 app.get('*', (request, response) => {
     sendFile(request, response);
 });
-
-app.post('/setUsuario', erpController.setUsuario);
-
-app.post('/getListaUsuarios', erpController.getListaUsuarios);
-
-app.post('/deleteUsuarios', erpController.deleteUsuarios);
-
-app.post('/deleteUsuario', erpController.deleteUsuario);
-
-app.post('/deleteAll', erpController.deleteAll);
-
-app.post('/login', loginController.Verificarlogin);
 
 /**
  * Creates the HTTP server.
