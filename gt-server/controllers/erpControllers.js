@@ -65,12 +65,21 @@ exports.getListaUsuarios = async (request, response) => {
 
 exports.deleteUsuario = async (request, response) => {
   var key = request.query.key;
+  var usuario = request.query.usuario;  
 
-  const query = { 'key': key };
+  if (!key || !usuario) {
+    console.log('Error: Undefined key or usuario!');
+
+    response.writeHead(401, { 'Content-Type': 'text/plain' });
+    response.write('401 Unauthorized');
+    response.end();
+    return;
+  }
+
+  const query = { 'key': key, 'usuario': usuario };
   const options = {};
 
   const listaUsuarios = await UsuarioERPModel.findOne(query, options);
-  console.log(listaUsuarios);
 
   if (listaUsuarios != null) {
     try {
@@ -90,7 +99,7 @@ exports.deleteUsuario = async (request, response) => {
       return;
     }
   } else {
-    console.log('Error: Invalid key!');
+    console.log('Error: Invalid key or usuario!');
 
     response.writeHead(401, { 'Content-Type': 'text/plain' });
     response.write('401 Unauthorized');
