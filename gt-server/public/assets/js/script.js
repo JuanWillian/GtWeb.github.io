@@ -1,6 +1,6 @@
 function formUnidade() {
   let form = "";
-  form += '<form class="row g-3 ">';
+  form += '<form class="row g-3 formulario">';
   form += ' <div class="col-md-6">';
   form += '  <label for="nomeEmpresa">Empresa da unidade</label>';
   form += ' <input id="nomeEmpresa" class="form-control" type="text" />';
@@ -30,7 +30,7 @@ function formUnidade() {
 }
 function formSetor() {
   let form = "";
-  form += '<form class="row g-3 ">';
+  form += '<form class="row g-3 formulario">';
   form += ' <div class="col-md-12">';
   form += '  <label for="nomeSetor">Nome</label>';
   form += ' <input id="nomeSetor" class="form-control" type="text" />';
@@ -93,7 +93,7 @@ function formUsuario() {
 }
 function formExecucao() {
   let form = "";
-  form += '<form class="row g-3">';
+  form += '<form class="row g-3 formulario" >';
   form += ' <div class="col-md-12">';
   form += '   <label for="tituloExecucao">Titulo</label>';
   form += '   <input id="tituloExecucao" class="form-control" type="text"/>';
@@ -110,7 +110,7 @@ function formExecucao() {
 }
 function formAtvd() {
   let form = "";
-  form += '  <form class="row g-3">';
+  form += '  <form class="row g-3 formulario" >';
   form += ' <div class="col-md-12">';
   form += ' <label for="nomeAtvd">Nome</label>';
   form += ' <input id="nomeAtvd" class="form-control" type="text" />';
@@ -135,7 +135,7 @@ function formAtvd() {
 }
 function formGpProduto() {
   let form = "";
-  form += ' <form class="row g-3">';
+  form += ' <form class="row g-3 formulario" >';
   form += '<div class="col-md-6">';
   form += '<label for="subGrupo">Sub-Grupo</label>';
   form += ' <select class="form-select">';
@@ -175,7 +175,7 @@ function formGpProduto() {
 
 function formUsuarioERP() {
   let form = "";
-  form += '<form class="row g-3" id="usuarioERPForm">';
+  form += '<form class="row g-3 formulario" id="usuarioERPForm">';
   form += '<div class="col-md-6">';
   form += '<label for="usuarioERP" class="form-label">Usuário ERP</label>';
   form += '<input type="text" class="form-control" id="usuarioERP" name="usuario" placeholder="Insira o usuário ERP"/>';
