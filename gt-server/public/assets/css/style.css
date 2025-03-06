@@ -26,6 +26,7 @@ main {
   justify-content: center;
   padding: 50px 50px 50px 0px;
   height: 100vh;
+  width: 100%;
 }
 #jstree .jstree-icon {
   width: 20px;
@@ -95,12 +96,37 @@ main {
   color: #fff;
 }
 
-.table {
-  border-radius: 10px !important;
-  overflow: hidden;
+#forms .table {
+  border-radius: 0px 0px 5px 5px  !important;
+  overflow: hidden !important;
 }
 
-#forms .table {
-  border-radius: 5px !important;
-  overflow: hidden !important;
+.cabecalhoForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background-color: rgba(1000, 1000, 1000, 0.8);
+  height: 50px;
+  padding: 10px;
+  border-radius: 5px 5px 0 0;
+}
+
+.botoesForm {
+  display: flex;
+  gap: 10px;
+ 
+}
+.cabecalhoForm button {
+  background-color: var(--cor-principal-gt) !important ;
+  color: #fff !important;
+
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+.cabecalhoForm button:hover {
+  background-color: #265cad !important;
+  color: #fff;
+}
+.mainFormContainer {
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
 }

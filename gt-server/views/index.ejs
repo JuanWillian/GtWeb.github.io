@@ -44,15 +44,7 @@
             <label for="floatingPassword">Senha</label>
           </div>
           
-          <% if (errorMessages.length > 0) { %>
-            <div class="alert alert-danger ">
-              <%= errorMessages.join('<br />') %>
-            </div>
-            <% } %> <% if (successMessages.length > 0) { %>
-            <div class="alert alert-success">
-              <%= successMessages.join('<br />') %>
-            </div>
-            <% } %>
+          <%- include('includes/messages'); %>
           <button class="w-100 btn btn-lg" type="submit">Logar</button>
           
         </form>

@@ -80,7 +80,7 @@
                         </li>
                         <li
                           data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                          onclick="formUsuarioERP()"
+                          onclick="carregarTabela('Usuarios')"
                         >
                           <u>Usuários do ERP</u>
                         </li>
@@ -187,9 +187,11 @@
           </section>
         </div>
         <!---->
-
+       
         <div class="conteudo">
+          <%- include('includes/messages'); %>
           <section id="forms">
+            
             <div class="msgOForms">
               
             </div>
