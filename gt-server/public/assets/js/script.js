@@ -1,3 +1,4 @@
+var key = 'ad0c0749e023d44bd92c1e56ca0b3e3c';
 function formUnidade() {
   let form = "";
   form += '<form class="row g-3 formulario">';
@@ -193,27 +194,26 @@ function formUsuarioERP() {
   form += '<button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
   form += '</div>';
   form += '</form>';
+
+
+  
   document.getElementById("forms").innerHTML = form;
+  carregarTabela();
+  carregarUsuarios("Usuarios");
 
   document.getElementById("usuarioERPForm").addEventListener("submit", async function (event) {
     event.preventDefault();
     const usuario = document.getElementById("usuarioERP").value;
     const password = document.getElementById("senhaERP").value;
-    const key = 'ad0c0749e023d44bd92c1e56ca0b3e3c';
-    console.log('usuario:', usuario);
-    console.log('password :', password);
     try {
-      const response = await fetch(`/login/register`, {
+      const res = await fetch(`/login/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ key, usuario, password })
       });
-
-      const responseData = await response.json();
-
-      if (response.ok) {
+      if (res.ok) {
         alert('Usuário cadastrado com sucesso!');
       } else {
         alert('Erro ao cadastrar usuário!');
@@ -222,4 +222,50 @@ function formUsuarioERP() {
       console.error('Erro:', error);
     }
   });
+}
+
+async function carregarUsuarios(entidade) {
+  try {
+    const res = await fetch(`/getLista${entidade}?key=${key}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (res.ok) {
+      const usuarios = await res.json();
+      const tbody = document.querySelector("#tabelaUsuarios tbody");
+      tbody.innerHTML = '';
+
+      usuarios.forEach(usuario => {
+        const tr = document.createElement('tr');
+        const tdNome = document.createElement('td');
+        tdNome.innerHTML = usuario.usuario;
+
+        tr.appendChild(tdNome);
+        tbody.appendChild(tr);
+      });
+    } else {
+      console.error('Erro ao carregar usuários!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+function carregarTabela() {
+  let form = '';
+
+  form += '<table id="tabelaUsuarios" class="table mt-3">';
+  form += '<thead>';
+  form += '<tr>';
+  form += '<th>Nome</th>';
+  form += '</tr>';
+  form += '</thead>';
+  form += '<tbody>';
+  form += '</tbody>';
+  form += '</table>';
+
+  // Append the table to the existing form
+  document.getElementById("forms").innerHTML += form;
 }

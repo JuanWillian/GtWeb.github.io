@@ -87,10 +87,20 @@ main {
 }
 */
 .btnCadastro {
-  background-color: var(--cor-principal-gt)!important ;
+  background-color: var(--cor-principal-gt) !important ;
   color: #fff !important;
-} 
+}
 .btnCadastro:hover {
   background-color: #182b47 !important;
   color: #fff;
+}
+
+.table {
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+
+#forms .table {
+  border-radius: 5px !important;
+  overflow: hidden !important;
 }
