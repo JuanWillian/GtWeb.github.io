@@ -1,0 +1,49 @@
+
+<script src="assets/js/script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+  crossorigin="anonymous"
+></script>
+<script>
+  $(function () {
+    $("#jstree").jstree({
+      core: {
+        themes: {
+          responsive: false,
+        },
+      },
+      types: {
+        default: {
+          icon: "bi bi-folder-fill text-warning", // Ícone de pasta
+        },
+      },
+      plugins: ["types"],
+    });
+
+    $("#jstree").on("changed.jstree", function (e, data) {
+      console.log(data.selected);
+    });
+
+    $("button").on("click", function () {
+      $("#jstree").jstree(true).select_node("child_node_1");
+      $("#jstree").jstree("select_node", "child_node_1");
+      $.jstree.reference("#jstree").select_node("child_node_1");
+    });
+  });
+
+  // TELA DE LOADING
+  // window.addEventListener("load", () => {
+  //   const loadingScreen = document.getElementById("telaDeLoading");
+  //   const mainContent = document.getElementById("main-content");
+
+  //   setTimeout(() => {
+  //     loadingScreen.style.display = "none";
+  //     mainContent.style.display = "block";
+  //   }, 2000);
+  // });
+</script>
+</body>
+</html>

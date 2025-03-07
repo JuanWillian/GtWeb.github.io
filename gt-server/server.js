@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 
 const erpController = require('./controllers/erpControllers.js');
 const loginController = require('./controllers/loginController.js');
+const setorController = require('./controllers/SetorController.js')
 
 const fs = require('node:fs');
 const https = require('https');
@@ -33,7 +34,9 @@ var httpsKeyFile = __dirname + '/' + config.httpsKeyFile;
 var httpsCertFile = __dirname + '/' + config.httpsCertFile;
 
 mongoose.connect(config.mongoServer, {
-    dbName: config.mongoDatabase
+    dbName: config.mongoDatabase,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 }).then(() => {
     console.log(`Connected to MongoDB database: ${config.mongoDatabase}`);
     app.emit('pronto');
@@ -139,19 +142,22 @@ app.use(express.text({ type: 'application/json' }));
 /**
  * The HTTP server listeners.
  */
-app.get('/pagPrincipal', loginRequired, (request, response) => {
-    response.render('pagPrincipal');
-});
+app.get('/pagPrincipal', loginRequired, erpController.index);
 
 app.get('/index', loginController.index);
 app.post('/login/register', loginController.register);
 app.post('/login/login', loginController.login);
 app.get('/login/logout', loginController.logout);
+app.post('/getListaUsuarios', loginController.getListaUsuarios);
+app.post('/deleteUsuarios', loginController.deleteUsuarios);
+app.post('/deleteUsuario', loginController.deleteUsuario);
+app.post('/deleteAll', loginController.deleteAll);
 
-app.post('/getListaUsuarios', erpController.getListaUsuarios);
-app.post('/deleteUsuarios', erpController.deleteUsuarios);
-app.post('/deleteUsuario', erpController.deleteUsuario);
-app.post('/deleteAll', erpController.deleteAll);
+// SETORES rotas
+app.post('/pagPrincipal/setor/register', setorController.register);
+app.get('/setor/index/:id', loginRequired, setorController.editIndex);
+app.post('/setor/edit/:id', loginRequired, setorController.edit);
+app.get('/setor/delete/:id', loginRequired, setorController.delete);
 
 app.get('*', (request, response) => {
     sendFile(request, response);

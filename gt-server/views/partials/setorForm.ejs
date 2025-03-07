@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8 my-3">
+      <h1 class="text-center"><%= setor._id ? 'Editar' : 'Cadastrar' %> Setor</h1>
+      <p class="text-center lead"><%= setor._id ? 'Edite as informações do setor abaixo.' : 'Cadastre um novo setor abaixo.' %></p>
+      <form action="<%= setor._id ? '/setor/edit/' + setor._id : '/pagPrincipal/setor/register' %>" method="POST">
+        <div class="form-group">
+          <label>Nome</label>
+          <input value="<%= setor.nome %>" type="text" class="form-control" name="nome" required>
+        </div>
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea class="form-control" name="descricao"><%= setor.descricao %></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </form>
+    </div>
+    <div class="col-lg-2"></div>
+  </div>
+</div>
