@@ -106,7 +106,7 @@ main {
   justify-content: center;
   align-items: center;
   gap: 5px;
-  background-color: rgba(1000, 1000, 1000, 0.8);
+  background: linear-gradient(360deg, rgba(230,230,230,0.9) 0%, rgba(255,255,255,1) 100%);
   height: 50px;
   padding: 10px;
   border-radius: 5px 5px 0 0;
@@ -118,13 +118,13 @@ main {
  
 }
 .cabecalhoForm button {
-  background-color: var(--cor-principal-gt) !important ;
-  color: #fff !important;
+  background: linear-gradient(349deg, rgba(182,182,182,0.7) 0%, rgba(255,255,255,1) 100%) !important;
+  color: #000000 !important;
 
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 .cabecalhoForm button:hover {
-  background-color: #265cad !important;
+  background-color: #858585 !important;
   color: #fff;
 }
 .mainFormContainer {
