@@ -80,7 +80,7 @@
                         </li>
                         <li
                           data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                          onclick="formUsuarioERP()"
+                          onclick="carregarTabela('Usuarios')"
                         >
                           <u>Usuários do ERP</u>
                         </li>
@@ -189,10 +189,9 @@
         <!---->
 
         <div class="conteudo">
+          <%- include('includes/messages'); %>
           <section id="forms">
-            <div class="msgOForms">
-              
-            </div>
+            <div class="msgOForms"></div>
           </section>
         </div>
       </div>
@@ -201,6 +200,11 @@
     <script src="assets/js/script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
     <script>
       $(function () {
         $("#jstree").jstree({
@@ -239,10 +243,5 @@
       //   }, 2000);
       // });
     </script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
   </body>
 </html>

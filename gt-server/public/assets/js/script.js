@@ -190,16 +190,13 @@ function formUsuarioERP() {
   form += '<label for="senhaERP" class="form-label">Senha ERP</label>';
   form += '<input type="password" class="form-control" id="senhaERP" name="senha" placeholder="Insira a senha ERP"/>';
   form += '</div>';
-  form += '<div class="col-12">';
+  form += '<div class="col-12 botoesForm">';
   form += '<button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
+  form += '<button class="btn btnCadastro mt-2" onclick="carregarTabela(`Usuarios`)">Voltar</button>';
   form += '</div>';
   form += '</form>';
 
-
-  
   document.getElementById("forms").innerHTML = form;
-  carregarTabela();
-  carregarUsuarios("Usuarios");
 
   document.getElementById("usuarioERPForm").addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -213,18 +210,14 @@ function formUsuarioERP() {
         },
         body: JSON.stringify({ key, usuario, password })
       });
-      if (res.ok) {
-        alert('Usuário cadastrado com sucesso!');
-      } else {
-        alert('Erro ao cadastrar usuário!');
-      }
+      
     } catch (error) {
       console.error('Erro:', error);
     }
   });
 }
 
-async function carregarUsuarios(entidade) {
+async function carregarEntidades(entidade) {
   try {
     const res = await fetch(`/getLista${entidade}?key=${key}`, {
       method: 'POST',
@@ -253,19 +246,24 @@ async function carregarUsuarios(entidade) {
   }
 }
 
-function carregarTabela() {
+function carregarTabela(entidade) {
   let form = '';
+  form += '<div class="mainFormContainer ">';
+  form += '<div class="cabecalhoForm ">';
+  form += '<button class="btn btnCadastro " onclick="formUsuarioERP()"><i class="bi bi-plus-lg"></i></button>';
+  form += '<button class="btn btnCadastro " ><i class="bi bi-trash-fill"></i></button>';
+  form += '</div>';
 
-  form += '<table id="tabelaUsuarios" class="table mt-3">';
-  form += '<thead>';
+  form += '<table id="tabelaUsuarios" class="table table-striped">';
+  form += '<thead >';
   form += '<tr>';
   form += '<th>Nome</th>';
   form += '</tr>';
   form += '</thead>';
-  form += '<tbody>';
+  form += '<tbody class="table-group-divider">';
   form += '</tbody>';
   form += '</table>';
-
-  // Append the table to the existing form
-  document.getElementById("forms").innerHTML += form;
+  form += '</div>';
+  document.getElementById("forms").innerHTML = form;
+  carregarEntidades(entidade);
 }

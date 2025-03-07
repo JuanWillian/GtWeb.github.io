@@ -1,4 +1,3 @@
-const path = require('path');
 const { UsuarioERP } = require('../models/usuarioERP');
 
 exports.index = (req, res) => {
@@ -67,7 +66,6 @@ exports.login = async function (req, res) {
                 res.end();
                 return;
             }
-            req.flash('success', 'Usuário logado com sucesso.');
             return res.redirect('/pagPrincipal');
         });
     } catch (e) {
