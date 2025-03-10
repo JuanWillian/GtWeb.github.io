@@ -42,7 +42,7 @@
                     </li>
                     <li
                       data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                      onclick="formSetor()"
+                      onclick="carregarFormulario('setorForm')"
                     >
                       <u>Setores</u>
                     </li>
@@ -156,46 +156,80 @@
     </div>
     <!---->
 
+    <!-- Conteúdo das entidades da sideBar -->
     <div class="conteudo">
       <section id="forms">
-        <div class="msgOForms">
-          <%- include('includes/messages'); %> 
-          <%- include('partials/setorForm') %>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-2"></div>
-              <div class="col-lg-8 my-3">
-                <h1 class="text-center">Setores</h1>
-                <p class="text-center lead">Gerencie seus setores abaixo.</p>
-                <% if (setores.length > 0) { %>
-                <div class="responsive-table">
-                  <table class="table my-3">
-                    <% setores.forEach(setor => { %>
-                    <tr>
-                      <td><%= setor.nome %></td>
-                      <td><%= setor.descricao %></td>
-                      <td><a href="/setor/edit/<%= setor._id %>">Editar</a></td>
-                      <td>
-                        <a
-                          class="text-danger"
-                          href="/setor/delete/<%= setor._id %>"
-                          >Excluir</a
-                        >
-                      </td>
-                    </tr>
-                    <% }); %>
-                  </table>
-                </div>
-                <% } else { %>
-                <p class="text-center lead">Não existem setores cadastrados.</p>
-                <% } %>
-              </div>
-              <div class="col-lg-2"></div>
-            </div>
-          </div>
-        </div>
+        <%- include('includes/messages'); %>
       </section>
     </div>
   </div>
+
+  <!-- Modal de cadastro de setor -->
+  <div class="modal fade" id="setor" tabindex="-1" role="dialog">
+    <div
+      class="modal-dialog modal-lg"
+      role="document"
+      style="overflow-y: initial !important"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="titleForm">
+            <h1 class="text-center">
+              <%= setor._id ? 'Editar' : 'Cadastrar' %> Setor
+            </h1>
+            <p class="text-center lead">
+              <%= setor._id ? 'Edite as informações do setor abaixo.' :
+              'Cadastre um novo setor abaixo.' %>
+            </p>
+          </div>
+        </div>
+        <div
+          class="modal-body"
+          style="max-height: calc(100vh - 200px); overflow-y: auto"
+        >
+          <form
+            id="setorForm"
+            action="<%= setor._id ? '/setor/edit/' + setor._id : '/pagPrincipal/setor/register' %>"
+            method="POST"
+          >
+            <input type="hidden" id="grupoId" value="" />
+            <div class="col">
+              <div class="form-group">
+                <label>Nome</label>
+                <input
+                  value="<%= setor.nome %>"
+                  type="text"
+                  class="form-control"
+                  name="nome"
+                  id="setorId"
+                  required
+                />
+                <label>Descrição</label>
+                <textarea
+                  class="form-control"
+                  name="descricao"
+                  id="setorDescricao"
+                >
+            <%= setor.descricao %></textarea
+                >
+              </div>
+            </div>
+            <button type="submit" class="btn btn-success">
+              <i class="fa fa-save"></i> <%= setor._id ? 'Salvar' : 'Cadastrar'
+              %>
+            </button>
+            <button
+              type="button"
+              class="btn btn-warning"
+              onclick="return botaoCancelarClick('setor')"
+            >
+              <i class="fa fa-close"></i> Cancelar
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
+
 <%- include('includes/footer') %>

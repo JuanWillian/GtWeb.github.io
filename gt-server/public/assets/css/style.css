@@ -106,7 +106,6 @@ main {
   justify-content: center;
   align-items: center;
   gap: 5px;
-  background: linear-gradient(360deg, rgba(230,230,230,0.9) 0%, rgba(255,255,255,1) 100%);
   height: 50px;
   padding: 10px;
   border-radius: 5px 5px 0 0;
@@ -128,5 +127,15 @@ main {
   color: #fff;
 }
 .mainFormContainer {
+  background: linear-gradient(360deg, rgba(200,200,200,0.9) 0%, rgba(255,255,255,1) 100%);
+  border-radius: 5px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* modais */
+.titleForm {
+  flex-direction: column;
+}
+.modal-header {
+  justify-content: center;
 }

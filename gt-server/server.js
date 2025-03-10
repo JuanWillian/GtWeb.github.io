@@ -155,9 +155,15 @@ app.post('/deleteAll', loginController.deleteAll);
 
 // SETORES rotas
 app.post('/pagPrincipal/setor/register', setorController.register);
-app.get('/setor/index/:id', loginRequired, setorController.editIndex);
+// app.get('/setor/index/:id', loginRequired, setorController.carregarSetor);
 app.post('/setor/edit/:id', loginRequired, setorController.edit);
 app.get('/setor/delete/:id', loginRequired, setorController.delete);
+app.get('/api/setores', loginRequired, erpController.getSetores);
+app.get('/partials/:formulario', loginRequired, (req, res) => {
+    const { formulario } = req.params;
+    res.render(`partials/${formulario}`);
+  });
+
 
 app.get('*', (request, response) => {
     sendFile(request, response);

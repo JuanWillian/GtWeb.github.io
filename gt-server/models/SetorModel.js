@@ -16,6 +16,13 @@ function Setor(body) {
 Setor.prototype.register = async function() {
   this.valida();
   if (this.errors.length > 0) return;
+
+  const setorExistente = await SetorModel.findOne({ nome: this.body.nome });
+  if (setorExistente) {
+    this.errors.push('Setor já existe.');
+    return;
+  }
+
   this.setor = await SetorModel.create(this.body);
 };
 
@@ -53,7 +60,7 @@ Setor.buscaPorId = async function(id) {
 
 Setor.buscaSetores = async function() {
   const setores = await SetorModel.find()
-    .sort({ nome: -1 });
+    .sort({ nome: 1 });
   return setores;
 };
 

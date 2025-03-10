@@ -1,4 +1,3 @@
-
 <script src="assets/js/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
@@ -8,6 +7,130 @@
   crossorigin="anonymous"
 ></script>
 <script>
+  async function carregarFormulario(formulario) {
+    try {
+      const res = await fetch(`/partials/${formulario}`);
+      if (res.ok) {
+        const html = await res.text();
+        document.getElementById('forms').innerHTML = html;
+        if (formulario === 'setorForm') {
+          await carregarSetores();
+        }
+      } else {
+        console.error('Erro ao carregar o formulário!');
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+    }
+  }
+
+  async function carregarSetores() {
+    try {
+      const res = await fetch('/api/setores');
+      if (res.ok) {
+        const setores = await res.json();
+        const tabela = document.querySelector('#setorFormContainer .table tbody');
+        tabela.innerHTML = setores.map(setor => `
+          <tr>
+            <td>${setor.nome}</td>
+            <td>${setor.descricao}</td>
+            <td>
+              <a href="#" class="btn-edit" data-id="${setor._id}" data-nome="${setor.nome}" data-descricao="${setor.descricao}" onclick="return botaoListaSetorEditarClick(this)">Editar</a>
+            </td>
+            <td>
+              <a class="text-danger" href="#" onclick="return excluirSetor('${setor._id}')">Excluir</a>
+            </td>
+          </tr>
+        `).join('');
+      } else {
+        console.error('Erro ao carregar os setores!');
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+    }
+  }
+
+  function botaoListaSetorEditarClick(element) {
+    const setorId = $(element).data('id');
+    const setorNome = $(element).data('nome');
+    const setorDescricao = $(element).data('descricao');
+
+    $('#setorId').val(setorNome);
+    $('#setorDescricao').val(setorDescricao);
+
+    // Defina a ação do formulário para edição
+    $('#setorForm').attr('action', '/setor/edit/' + setorId);
+
+    $('#setor').modal('show');
+
+    return false;
+  }
+
+  function botaoListaSetorNovoClick() {
+    $('#setorId').val('');
+    $('#setorDescricao').val('');
+
+    // Defina a ação do formulário para registro
+    $('#setorForm').attr('action', '/pagPrincipal/setor/register');
+
+    $('#setor').modal('show');
+
+    return false;
+  }
+
+  function botaoCancelarClick(nomeModal) {
+    $('#'+nomeModal).modal('hide');
+
+    return false;
+  }
+
+  async function submitSetorForm(event) {
+    event.preventDefault();
+    const form = event.target;
+    const action = form.getAttribute('action');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch(action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        $('#setor').modal('hide');
+        await carregarSetores();
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.errors.join('<br>'));
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+    }
+  }
+
+  async function excluirSetor(id) {
+    try {
+      const res = await fetch(`/setor/delete/${id}`, {
+        method: 'GET'
+      });
+
+      if (res.ok) {
+        await carregarSetores();
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.error);
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+    }
+
+    return false;
+  }
+
   $(function () {
     $("#jstree").jstree({
       core: {
@@ -25,12 +148,6 @@
 
     $("#jstree").on("changed.jstree", function (e, data) {
       console.log(data.selected);
-    });
-
-    $("button").on("click", function () {
-      $("#jstree").jstree(true).select_node("child_node_1");
-      $("#jstree").jstree("select_node", "child_node_1");
-      $.jstree.reference("#jstree").select_node("child_node_1");
     });
   });
 
