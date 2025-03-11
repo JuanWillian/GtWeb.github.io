@@ -7,8 +7,10 @@ exports.index = async (req, res) => {
 
 exports.getSetores = async (req, res) => {
   try {
-    const setores = await Setor.buscaSetores();
-    res.json(setores);
+    const { page = 1, limit = 10 } = req.query;
+    const setores = await Setor.buscaSetores(page, limit);
+    const totalSetores = await Setor.countDocuments(); // Use the correct method
+    res.json({ setores, totalSetores });
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: 'Erro ao buscar setores' });

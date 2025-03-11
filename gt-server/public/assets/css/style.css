@@ -84,7 +84,6 @@ main {
 }
 */
 
-
 .btnCadastro {
   background-color: var(--cor-principal-gt) !important ;
   color: #fff !important;
@@ -95,7 +94,7 @@ main {
 }
 
 #forms .table {
-  border-radius: 0px 0px 5px 5px  !important;
+  border-radius: 0px 0px 5px 5px !important;
   overflow: hidden !important;
 }
 
@@ -113,10 +112,13 @@ main {
 .botoesForm {
   display: flex;
   gap: 10px;
- 
 }
 .cabecalhoForm button {
-  background: linear-gradient(349deg, rgba(182,182,182,0.7) 0%, rgba(255,255,255,1) 100%) !important;
+  background: linear-gradient(
+    349deg,
+    rgba(182, 182, 182, 0.7) 0%,
+    rgba(255, 255, 255, 1) 100%
+  ) !important;
   color: #000000 !important;
 
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
@@ -125,9 +127,33 @@ main {
   background-color: #858585 !important;
   color: #fff;
 }
+
+.formSelectGradient {
+  display: block !important;
+  appearance: none !important;
+  background: linear-gradient(
+      349deg,
+      rgba(182, 182, 182, 0.7) 0%,
+      rgba(255, 255, 255, 1) 100%
+    ),
+    var(--bs-form-select-bg-img) !important; /* Combine gradient and image */
+  background-repeat: no-repeat !important;
+  background-position: right 0rem center !important; /* Adjust position */
+  background-size: auto, 1.5em !important; /* Adjust the size of the image */
+  padding-right: 2.5em !important; /* Ensure space for the image */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3) !important;
+  position: relative !important;
+  display: inline-block !important;
+  width: 100%; /* Ensure the background covers the entire select */
+}
+
 .mainFormContainer {
   padding: 5px;
-  background: linear-gradient(360deg, rgba(200,200,200,0.9) 0%, rgba(255,255,255,1) 100%);
+  background: linear-gradient(
+    360deg,
+    rgba(200, 200, 200, 0.9) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
   border-radius: 5px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
 }
@@ -146,7 +172,7 @@ main {
 
 .tdButton a {
   text-decoration: none !important;
-  font-weight:600;
+  font-weight: 600;
 }
 
 .limited-width {

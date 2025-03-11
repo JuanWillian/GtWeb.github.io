@@ -275,15 +275,21 @@ function botaoCancelarClick(nomeModal) {
   return false;
 }
 
+let currentPage = 1;
+let recordsPerPage = 10;
 // Carregar Formulários
 async function carregarFormulario(formulario) {
   try {
+    console.log(`Fetching form: ${formulario}`);
     const res = await fetch(`/partials/${formulario}`);
     if (res.ok) {
       const html = await res.text();
       document.getElementById('forms').innerHTML = html;
+      console.log(`Form loaded: ${formulario}`);
       if (formulario === 'setorLista') {
-        await carregarSetores();
+        console.log('Loading setores...');
+        await carregarSetores(currentPage, recordsPerPage);
+        console.log('Setores loaded');
       }
     } else {
       console.error('Erro ao carregar o formulário!');
@@ -294,11 +300,11 @@ async function carregarFormulario(formulario) {
 }
 
 // SETORES 
-async function carregarSetores() {
+async function carregarSetores(page, limit) {
   try {
-    const res = await fetch('/api/setores');
+    const res = await fetch(`/api/setores?page=${page}&limit=${limit}`);
     if (res.ok) {
-      const setores = await res.json();
+      const { setores, totalSetores } = await res.json();
       const tabela = document.querySelector('#setorFormContainer .table tbody');
       tabela.innerHTML = setores.map(setor => `
         <tr>
@@ -312,11 +318,40 @@ async function carregarSetores() {
           </td>
         </tr>
       `).join('');
+
+      const totalPages = Math.ceil(totalSetores / limit);
+      const pagination = document.querySelector('.pagination');
+      pagination.innerHTML = `
+        <li class="page-item ${page === 1 ? 'disabled' : ''}">
+          <a class="page-link" href="#" aria-label="Previous" onclick="carregarSetores(${page - 1}, ${limit})">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        ${Array.from({ length: totalPages }, (_, i) => `
+          <li class="page-item ${page === i + 1 ? 'active' : ''}">
+            <a class="page-link" href="#" onclick="carregarSetores(${i + 1}, ${limit})">${i + 1}</a>
+          </li>
+        `).join('')}
+        <li class="page-item ${page === totalPages ? 'disabled' : ''}">
+          <a class="page-link" href="#" aria-label="Next" onclick="carregarSetores(${page + 1}, ${limit})">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      `;
     } else {
       console.error('Erro ao carregar os setores!');
     }
   } catch (error) {
     console.error('Erro:', error);
+  }
+}
+
+function recordsPerPageChange() {
+  const recordsPerPageSelect = document.querySelector('#recordsPerPage');
+  if (recordsPerPageSelect) {
+    recordsPerPage = parseInt(recordsPerPageSelect.value, 10);
+    currentPage = 1; // Resetar para a primeira página sempre que a quantidade de registros por página mudar
+    carregarSetores(currentPage, recordsPerPage);
   }
 }
 
@@ -374,11 +409,11 @@ async function submitSetorForm(event) {
 
     if (res.ok) {
       $('#setor').modal('hide');
-      await carregarSetores();
+      await carregarSetores(currentPage, recordsPerPage);
       window.alert('Setor salvo com sucesso!');
     } else {
       const result = await res.json();
-      console.error('Erro:', result.errors.join('<br>'));
+      window.alert('Erro: ' + result.errors.join('\n'));
     }
   } catch (error) {
     console.error('Erro:', error);
@@ -394,7 +429,7 @@ async function excluirSetor(id) {
       });
 
       if (res.ok) {
-        await carregarSetores();
+        await carregarSetores(currentPage, recordsPerPage);
       } else {
         const result = await res.json();
         console.error('Erro:', result.error);
