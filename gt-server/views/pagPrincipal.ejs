@@ -187,11 +187,7 @@
           class="modal-body"
           style="max-height: calc(100vh - 200px); overflow-y: auto"
         >
-          <form
-            id="setorForm"
-            action="<%= setor._id ? '/setor/edit/' + setor._id : '/pagPrincipal/setor/register' %>"
-            method="POST"
-          >
+          <form id="setorForm" onsubmit="return submitSetorForm(event)">
             <input type="hidden" id="grupoId" value="" />
             <div class="col">
               <div class="form-group">
@@ -210,7 +206,7 @@
                   name="descricao"
                   id="setorDescricao"
                 >
-            <%= setor.descricao %></textarea
+<%= setor.descricao %></textarea
                 >
               </div>
             </div>
