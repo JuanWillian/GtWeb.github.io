@@ -46,4 +46,3 @@ exports.delete = async function (req, res) {
   req.session.save(() => res.status(200).json({ message: 'Setor apagado com sucesso.' }));
   return;
 };
-

@@ -19,7 +19,7 @@ Setor.prototype.register = async function() {
 
   const setorExistente = await SetorModel.findOne({ nome: this.body.nome });
   if (setorExistente) {
-    this.errors.push('Setor já existe.');
+    bootbox.alert('Setor já cadastrado.');
     return;
   }
 

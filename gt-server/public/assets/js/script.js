@@ -210,7 +210,7 @@ function formUsuarioERP() {
         },
         body: JSON.stringify({ key, usuario, password })
       });
-      
+
     } catch (error) {
       console.error('Erro:', error);
     }
@@ -267,3 +267,153 @@ function carregarTabela(entidade) {
   document.getElementById("forms").innerHTML = form;
   carregarEntidades(entidade);
 }
+
+// Fechar modal
+function botaoCancelarClick(nomeModal) {
+  $('#' + nomeModal).modal('hide');
+
+  return false;
+}
+
+// Carregar Formulários
+async function carregarFormulario(formulario) {
+  try {
+    const res = await fetch(`/partials/${formulario}`);
+    if (res.ok) {
+      const html = await res.text();
+      document.getElementById('forms').innerHTML = html;
+      if (formulario === 'setorLista') {
+        await carregarSetores();
+      }
+    } else {
+      console.error('Erro ao carregar o formulário!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+// SETORES 
+async function carregarSetores() {
+  try {
+    const res = await fetch('/api/setores');
+    if (res.ok) {
+      const setores = await res.json();
+      const tabela = document.querySelector('#setorFormContainer .table tbody');
+      tabela.innerHTML = setores.map(setor => `
+        <tr>
+          <td class="limited-width">${setor.nome}</td>
+          <td class="limited-width">${setor.descricao}</td>
+          <td class="tdButton">
+            <a href="#" class="btn-edit" data-id="${setor._id}" data-nome="${setor.nome}" data-descricao="${setor.descricao}" onclick="return botaoListaSetorEditarClick(this)" title="Editar setor">Editar</a>
+          </td>
+          <td class="tdButton">
+            <a class="text-danger" href="#" onclick="return excluirSetor('${setor._id}')" title="Excluir este setor">Excluir</a>
+          </td>
+        </tr>
+      `).join('');
+    } else {
+      console.error('Erro ao carregar os setores!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+function botaoListaSetorEditarClick(element) {
+  const setorId = $(element).data('id');
+  const setorNome = $(element).data('nome');
+  const setorDescricao = $(element).data('descricao');
+
+  $('#setorId').val(setorNome);
+  $('#setorDescricao').val(setorDescricao);
+
+  // Atualizar o título e a descrição do formulário
+  $('#tituloModal').text('Editar Setor');
+  $('#subTituloModal').text('Edite as informações do setor abaixo.');
+
+  // Defina a ação do formulário para edição
+  $('#setorForm').attr('action', '/setor/edit/' + setorId);
+
+  $('#setor').modal('show');
+
+  return false;
+}
+
+function botaoListaSetorNovoClick() {
+  $('#setorId').val('');
+  $('#setorDescricao').val('');
+
+  // Atualizar o título e a descrição do formulário
+  $('#tituloModal').text('Cadastrar Setor');
+  $('#subTituloModal').text('Cadastre um novo setor abaixo.');
+
+  // Defina a ação do formulário para registro
+  $('#setorForm').attr('action', '/pagPrincipal/setor/register');
+
+  $('#setor').modal('show');
+
+  return false;
+}
+
+async function submitSetorForm(event) {
+  event.preventDefault();
+  const form = event.target;
+  const action = form.getAttribute('action');
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
+
+  try {
+    const res = await fetch(action, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (res.ok) {
+      $('#setor').modal('hide');
+      await carregarSetores();
+      window.alert('Setor salvo com sucesso!');
+    } else {
+      const result = await res.json();
+      console.error('Erro:', result.errors.join('<br>'));
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+async function excluirSetor(id) {
+  try {
+    const result = window.confirm("Deseja realmente excluir este setor?");
+    if (result) {
+      const res = await fetch(`/setor/delete/${id}`, {
+        method: 'GET'
+      });
+
+      if (res.ok) {
+        await carregarSetores();
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.error);
+      }
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+
+  return false;
+}
+
+// TELA DE LOADING
+// window.addEventListener("load", () => {
+//   const loadingScreen = document.getElementById("telaDeLoading");
+//   const mainContent = document.getElementById("main-content");
+
+//   setTimeout(() => {
+//     loadingScreen.style.display = "none";
+//     mainContent.style.display = "block";
+//   }, 2000);
+// });
