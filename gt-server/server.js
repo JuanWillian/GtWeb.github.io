@@ -164,7 +164,7 @@ app.get('/partials/:formulario', loginRequired, (req, res) => {
     res.render(`partials/${formulario}`);
   });
 
-
+  
 app.get('*', (request, response) => {
     sendFile(request, response);
 });

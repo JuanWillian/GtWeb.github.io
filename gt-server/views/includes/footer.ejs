@@ -32,12 +32,12 @@
         const tabela = document.querySelector('#setorFormContainer .table tbody');
         tabela.innerHTML = setores.map(setor => `
           <tr>
-            <td>${setor.nome}</td>
-            <td>${setor.descricao}</td>
-            <td>
+            <td class="limited-width">${setor.nome}</td>
+            <td class="limited-width">${setor.descricao}</td>
+            <td class="tdButton">
               <a href="#" class="btn-edit" data-id="${setor._id}" data-nome="${setor.nome}" data-descricao="${setor.descricao}" onclick="return botaoListaSetorEditarClick(this)">Editar</a>
             </td>
-            <td>
+            <td class="tdButton">
               <a class="text-danger" href="#" onclick="return excluirSetor('${setor._id}')">Excluir</a>
             </td>
           </tr>
@@ -58,6 +58,10 @@
     $('#setorId').val(setorNome);
     $('#setorDescricao').val(setorDescricao);
 
+    // Atualizar o título e a descrição do formulário
+    $('#titleForm').text('Editar Setor');
+    $('#descriptionForm').text('Edite as informações do setor abaixo.');
+
     // Defina a ação do formulário para edição
     $('#setorForm').attr('action', '/setor/edit/' + setorId);
 
@@ -69,6 +73,10 @@
   function botaoListaSetorNovoClick() {
     $('#setorId').val('');
     $('#setorDescricao').val('');
+
+    // Atualizar o título e a descrição do formulário
+    $('#titleForm').text('Cadastrar Setor');
+    $('#descriptionForm').text('Cadastre um novo setor abaixo.');
 
     // Defina a ação do formulário para registro
     $('#setorForm').attr('action', '/pagPrincipal/setor/register');

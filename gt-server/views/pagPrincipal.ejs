@@ -158,9 +158,7 @@
 
     <!-- Conteúdo das entidades da sideBar -->
     <div class="conteudo">
-      <section id="forms">
-        <%- include('includes/messages'); %>
-      </section>
+      <section id="forms"></section>
     </div>
   </div>
 
@@ -174,13 +172,8 @@
       <div class="modal-content">
         <div class="modal-header">
           <div class="titleForm">
-            <h1 class="text-center">
-              <%= setor._id ? 'Editar' : 'Cadastrar' %> Setor
-            </h1>
-            <p class="text-center lead">
-              <%= setor._id ? 'Edite as informações do setor abaixo.' :
-              'Cadastre um novo setor abaixo.' %>
-            </p>
+            <h1 class="text-center">Cadastrar Setor</h1>
+            <p class="text-center lead">Cadastre um novo setor abaixo</p>
           </div>
         </div>
         <div
@@ -189,7 +182,7 @@
         >
           <form id="setorForm" onsubmit="return submitSetorForm(event)">
             <input type="hidden" id="grupoId" value="" />
-            <div class="col">
+            <div class="col mb-3">
               <div class="form-group">
                 <label>Nome</label>
                 <input
@@ -199,20 +192,21 @@
                   name="nome"
                   id="setorId"
                   required
+                  maxlength="80"
                 />
                 <label>Descrição</label>
                 <textarea
                   class="form-control"
                   name="descricao"
                   id="setorDescricao"
+                  maxlength="150"
                 >
 <%= setor.descricao %></textarea
                 >
               </div>
             </div>
             <button type="submit" class="btn btn-success">
-              <i class="fa fa-save"></i> <%= setor._id ? 'Salvar' : 'Cadastrar'
-              %>
+              <i class="fa fa-save"></i> Cadastrar
             </button>
             <button
               type="button"

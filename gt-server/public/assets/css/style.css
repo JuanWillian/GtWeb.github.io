@@ -82,11 +82,9 @@ main {
     width: 100%;
   }
 }
-
-#forms {
-  padding: 30px;
-}
 */
+
+
 .btnCadastro {
   background-color: var(--cor-principal-gt) !important ;
   color: #fff !important;
@@ -109,6 +107,7 @@ main {
   height: 50px;
   padding: 10px;
   border-radius: 5px 5px 0 0;
+  margin-bottom: 5px;
 }
 
 .botoesForm {
@@ -127,6 +126,7 @@ main {
   color: #fff;
 }
 .mainFormContainer {
+  padding: 5px;
   background: linear-gradient(360deg, rgba(200,200,200,0.9) 0%, rgba(255,255,255,1) 100%);
   border-radius: 5px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
@@ -138,4 +138,19 @@ main {
 }
 .modal-header {
   justify-content: center;
+}
+
+.tdButton {
+  max-width: 10px !important;
+}
+
+.tdButton a {
+  text-decoration: none !important;
+  font-weight:600;
+}
+
+.limited-width {
+  max-width: 100px; /* Adjust the value as needed */
+  word-wrap: break-word;
+  white-space: normal;
 }
