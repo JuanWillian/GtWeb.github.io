@@ -268,11 +268,26 @@ function carregarTabela(entidade) {
   carregarEntidades(entidade);
 }
 
-// Fechar modal
+
+
+
+// FUNÇÕES GENERICAS: 
+
+// Função para fechar um modal
 function botaoCancelarClick(nomeModal) {
   $('#' + nomeModal).modal('hide');
 
   return false;
+}
+// Função para carregar registros
+async function carregarRegistros(entidade, page, limit) {
+  switch (entidade) {
+    case 'setor':
+      await carregarSetores(page, limit);
+      break;
+    default:
+      console.error('Entidade desconhecida:', entidade);
+  }
 }
 
 let currentPage = 1;
@@ -293,6 +308,44 @@ async function carregarFormulario(formulario) {
       }
     } else {
       console.error('Erro ao carregar o formulário!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+function registrosPorPagChange(nomeModal) {
+  const registrosPorPagSelect = document.querySelector('#registrosPorPag');
+  if (registrosPorPagSelect) {
+    registrosPorPag = parseInt(registrosPorPagSelect.value, 10);
+    pagAtual = 1; 
+    carregarRegistros(nomeModal, pagAtual, registrosPorPag)
+  }
+}
+
+async function submitForm(event, nomeModal) {
+  event.preventDefault();
+  const form = event.target;
+  const action = form.getAttribute('action');
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
+
+  try {
+    const res = await fetch(action, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (res.ok) {
+      $('#' + nomeModal).modal('hide');
+      await carregarRegistros(nomeModal, currentPage, recordsPerPage);
+      window.alert(nomeModal.charAt(0).toUpperCase() + nomeModal.slice(1) + ' salvo com sucesso!');
+    } else {
+      const result = await res.json();
+      window.alert('Erro: ' + result.errors.join('\n'));
     }
   } catch (error) {
     console.error('Erro:', error);
@@ -343,54 +396,6 @@ async function carregarSetores(page, limit) {
     }
   } catch (error) {
     console.error('Erro:', error);
-  }
-}
-
-function registrosPorPagChange(nomeModal) {
-  const registrosPorPagSelect = document.querySelector('#registrosPorPag');
-  if (registrosPorPagSelect) {
-    registrosPorPag = parseInt(registrosPorPagSelect.value, 10);
-    pagAtual = 1; // Resetar para a primeira página sempre que a quantidade de registros por página mudar
-    carregarRegistros(nomeModal, pagAtual, registrosPorPag)
-  }
-}
-
-async function submitForm(event, nomeModal) {
-  event.preventDefault();
-  const form = event.target;
-  const action = form.getAttribute('action');
-  const formData = new FormData(form);
-  const data = Object.fromEntries(formData.entries());
-
-  try {
-    const res = await fetch(action, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-
-    if (res.ok) {
-      $('#' + nomeModal).modal('hide');
-      await carregarRegistros(nomeModal, currentPage, recordsPerPage);
-      window.alert(nomeModal.charAt(0).toUpperCase() + nomeModal.slice(1) + ' salvo com sucesso!');
-    } else {
-      const result = await res.json();
-      window.alert('Erro: ' + result.errors.join('\n'));
-    }
-  } catch (error) {
-    console.error('Erro:', error);
-  }
-}
-
-async function carregarRegistros(entidade, page, limit) {
-  switch (entidade) {
-    case 'setor':
-      await carregarSetores(page, limit);
-      break;
-    default:
-      console.error('Entidade desconhecida:', entidade);
   }
 }
 
