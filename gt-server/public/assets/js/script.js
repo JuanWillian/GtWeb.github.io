@@ -269,7 +269,8 @@ function carregarTabela(entidade) {
 }
 
 
-
+let currentPage = 1;
+let recordsPerPage = 10;
 
 // FUNÇÕES GENERICAS: 
 
@@ -290,8 +291,7 @@ async function carregarRegistros(entidade, page, limit) {
   }
 }
 
-let currentPage = 1;
-let recordsPerPage = 10;
+
 // Carregar Formulários
 async function carregarFormulario(formulario) {
   try {
@@ -317,9 +317,9 @@ async function carregarFormulario(formulario) {
 function registrosPorPagChange(nomeModal) {
   const registrosPorPagSelect = document.querySelector('#registrosPorPag');
   if (registrosPorPagSelect) {
-    registrosPorPag = parseInt(registrosPorPagSelect.value, 10);
-    pagAtual = 1; 
-    carregarRegistros(nomeModal, pagAtual, registrosPorPag)
+    recordsPerPage = parseInt(registrosPorPagSelect.value, 10);
+    currentPage = 1; 
+    carregarRegistros(nomeModal, currentPage, recordsPerPage)
   }
 }
 
@@ -442,9 +442,10 @@ async function excluirSetor(id) {
       const res = await fetch(`/setor/delete/${id}`, {
         method: 'GET'
       });
-
+      
       if (res.ok) {
-        await carregarSetores(currentPage, recordsPerPage);
+        console.log('Tentando carregar registros!', currentPage, recordsPerPage);
+        await carregarRegistros('setor', currentPage, recordsPerPage);
       } else {
         const result = await res.json();
         console.error('Erro:', result.error);
