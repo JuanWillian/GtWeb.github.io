@@ -51,7 +51,7 @@ exports.getSetores = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
     const setores = await Setor.buscaSetores(page, limit);
-    const totalSetores = await Setor.countDocuments(); // Use the correct method
+    const totalSetores = await Setor.countDocuments(); 
     res.json({ setores, totalSetores });
   } catch (e) {
     console.log(e);

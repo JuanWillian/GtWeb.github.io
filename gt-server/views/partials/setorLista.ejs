@@ -5,7 +5,7 @@
     <div class="cabecalhoForm">
       <button
         class="btn btnCadastro"
-        onclick="return botaoListaSetorNovoClick()"
+        onclick="return registrarNovoSetorClick()"
         title="Adicionar novo setor"
       >
         <i class="bi bi-plus-lg"></i>
@@ -13,7 +13,7 @@
         <select
           id="registrosPorPag"
           class="formSelectGradient"
-          onchange="registrosPorPagChange('setor')"
+          onchange="atualizarRegistrosPorPag('setor')"
         >
           <option value="5">5</option>
           <option value="10" selected>10</option>

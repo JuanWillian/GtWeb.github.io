@@ -217,6 +217,7 @@ function formUsuarioERP() {
   });
 }
 
+// Rotinas de Usuários ERP
 async function carregarEntidades(entidade) {
   try {
     const res = await fetch(`/getLista${entidade}?key=${key}`, {
@@ -272,8 +273,8 @@ function carregarTabela(entidade) {
 let currentPage = 1;
 let recordsPerPage = 10;
 
-// FUNÇÕES GENERICAS: 
 
+// FUNÇÕES GENERICAS: 
 // Função para fechar um modal
 function botaoCancelarClick(nomeModal) {
   $('#' + nomeModal).modal('hide');
@@ -286,25 +287,26 @@ async function carregarRegistros(entidade, page, limit) {
     case 'setor':
       await carregarSetores(page, limit);
       break;
-    default:
+     /*
+      * TODO falta adicionar as outras entidades como opção     
+      */    
+      default:
       console.error('Entidade desconhecida:', entidade);
   }
 }
 
-
 // Carregar Formulários
 async function carregarFormulario(formulario) {
   try {
-    console.log(`Fetching form: ${formulario}`);
     const res = await fetch(`/partials/${formulario}`);
     if (res.ok) {
       const html = await res.text();
       document.getElementById('forms').innerHTML = html;
-      console.log(`Form loaded: ${formulario}`);
+      console.log(`Form carregado: ${formulario}`);
       if (formulario === 'setorLista') {
-        console.log('Loading setores...');
+        console.log('Carregando setores...');
         await carregarRegistros("setor", currentPage, recordsPerPage);
-        console.log('Setores loaded');
+        console.log('Setores carregados');
       }
     } else {
       console.error('Erro ao carregar o formulário!');
@@ -314,13 +316,33 @@ async function carregarFormulario(formulario) {
   }
 }
 
-function registrosPorPagChange(nomeModal) {
+function atualizarRegistrosPorPag(nomeModal) {
   const registrosPorPagSelect = document.querySelector('#registrosPorPag');
   if (registrosPorPagSelect) {
     recordsPerPage = parseInt(registrosPorPagSelect.value, 10);
     currentPage = 1; 
     carregarRegistros(nomeModal, currentPage, recordsPerPage)
   }
+}
+
+function gerarPaginacao(entidade, page, totalPaginas, limit) {
+  return `
+    <li class="page-item rounded-left ${page === 1 ? 'disabled' : ''}">
+      <a class="page-link" href="#" aria-label="Previous" onclick="carregarRegistros('${entidade}', ${page - 1}, ${limit})">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    ${Array.from({ length: totalPaginas }, (_, i) => `
+      <li class="page-item ${page === i + 1 ? 'active' : ''}">
+        <a class="page-link" href="#" onclick="carregarRegistros('${entidade}', ${i + 1}, ${limit})">${i + 1}</a>
+      </li>
+    `).join('')}
+    <li class="page-item rounded-right ${page === totalPaginas ? 'disabled' : ''}">
+      <a class="page-link" href="#" aria-label="Next" onclick="carregarRegistros('${entidade}', ${page + 1}, ${limit})">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  `;
 }
 
 async function submitForm(event, nomeModal) {
@@ -364,33 +386,17 @@ async function carregarSetores(page, limit) {
           <td class="limited-width">${setor.nome}</td>
           <td class="limited-width">${setor.descricao}</td>
           <td class="tdButton">
-            <a href="#" class="btn-edit" data-id="${setor._id}" data-nome="${setor.nome}" data-descricao="${setor.descricao}" onclick="return botaoListaSetorEditarClick(this)" title="Editar setor">Editar</a>
+            <a href="#" class="btn-edit" data-id="${setor._id}" data-nome="${setor.nome}" data-descricao="${setor.descricao}" onclick="return editarSetorClick(this)" title="Editar setor">Editar</a>
           </td>
           <td class="tdButton">
-            <a class="text-danger" href="#" onclick="return excluirSetor('${setor._id}')" title="Excluir este setor">Excluir</a>
+            <a class="text-danger" href="#" onclick="return excluirSetorClick('${setor._id}')" title="Excluir este setor">Excluir</a>
           </td>
         </tr>
       `).join('');
 
-      const totalPages = Math.ceil(totalSetores / limit);
+      const totalPaginas = Math.ceil(totalSetores / limit);
       const pagination = document.querySelector('.pagination');
-      pagination.innerHTML = `
-        <li class="page-item rounded-left ${page === 1 ? 'disabled' : ''}">
-          <a class="page-link" href="#" aria-label="Previous" onclick="carregarRegistros('setor', ${page - 1}, ${limit})">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        ${Array.from({ length: totalPages }, (_, i) => `
-          <li class="page-item ${page === i + 1 ? 'active' : ''}">
-            <a class="page-link" href="#" onclick="carregarRegistros('setor', ${i + 1}, ${limit})">${i + 1}</a>
-          </li>
-        `).join('')}
-        <li class="page-item rounded-right ${page === totalPages ? 'disabled' : ''}">
-          <a class="page-link" href="#" aria-label="Next" onclick="carregarRegistros('setor', ${page + 1}, ${limit})">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      `;
+      pagination.innerHTML = gerarPaginacao('setor', page, totalPaginas, limit);
     } else {
       console.error('Erro ao carregar os setores!');
     }
@@ -399,7 +405,7 @@ async function carregarSetores(page, limit) {
   }
 }
 
-function botaoListaSetorEditarClick(element) {
+function editarSetorClick(element) {
   const setorId = $(element).data('id');
   const setorNome = $(element).data('nome');
   const setorDescricao = $(element).data('descricao');
@@ -407,11 +413,9 @@ function botaoListaSetorEditarClick(element) {
   $('#setorId').val(setorNome);
   $('#setorDescricao').val(setorDescricao);
 
-  // Atualizar o título e a descrição do formulário
   $('#tituloModal').text('Editar Setor');
   $('#subTituloModal').text('Edite as informações do setor abaixo.');
 
-  // Defina a ação do formulário para edição
   $('#setorForm').attr('action', '/setor/edit/' + setorId);
 
   $('#setor').modal('show');
@@ -419,15 +423,13 @@ function botaoListaSetorEditarClick(element) {
   return false;
 }
 
-function botaoListaSetorNovoClick() {
+function registrarNovoSetorClick() {
   $('#setorId').val('');
   $('#setorDescricao').val('');
 
-  // Atualizar o título e a descrição do formulário
   $('#tituloModal').text('Cadastrar Setor');
   $('#subTituloModal').text('Cadastre um novo setor abaixo.');
 
-  // Defina a ação do formulário para registro
   $('#setorForm').attr('action', '/pagPrincipal/setor/register');
 
   $('#setor').modal('show');
@@ -435,7 +437,7 @@ function botaoListaSetorNovoClick() {
   return false;
 }
 
-async function excluirSetor(id) {
+async function excluirSetorClick(id) {
   try {
     const result = window.confirm("Deseja realmente excluir este setor?");
     if (result) {
@@ -444,7 +446,7 @@ async function excluirSetor(id) {
       });
       
       if (res.ok) {
-        console.log('Tentando carregar registros!', currentPage, recordsPerPage);
+        console.log('Tentando carregar registros...', currentPage, recordsPerPage);
         await carregarRegistros('setor', currentPage, recordsPerPage);
       } else {
         const result = await res.json();
