@@ -218,6 +218,11 @@ function formUsuarioERP() {
 }
 
 // Rotinas de Usuários ERP
+/**
+ * Carrega entidades da base de dados e atualiza a tabela de usuários.
+ * @param {string} entidade - Nome da entidade a ser carregada.
+ * @return {Promise<void>}
+ */
 async function carregarEntidades(entidade) {
   try {
     const res = await fetch(`/getLista${entidade}?key=${key}`, {
@@ -247,6 +252,11 @@ async function carregarEntidades(entidade) {
   }
 }
 
+/**
+ * Carrega a tabela de uma entidade específica.
+ * @param {string} entidade - Nome da entidade a ser carregada.
+ * @return {void}
+ */
 function carregarTabela(entidade) {
   let form = '';
   form += '<div class="mainFormContainer ">';
@@ -270,18 +280,28 @@ function carregarTabela(entidade) {
 }
 
 
+
 let currentPage = 1;
 let recordsPerPage = 10;
 
 
-// FUNÇÕES GENERICAS: 
-// Função para fechar um modal
+/**
+ * Fecha um modal.
+ * @param {string} nomeModal - Nome do modal a ser fechado.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
 function botaoCancelarClick(nomeModal) {
   $('#' + nomeModal).modal('hide');
-
   return false;
 }
-// Função para carregar registros
+
+/**
+ * Carrega registros de uma entidade específica.
+ * @param {string} entidade - Nome da entidade a ser carregada.
+ * @param {number} page - Número da página atual.
+ * @param {number} limit - Número de registros por página.
+ * @return {Promise<void>}
+ */
 async function carregarRegistros(entidade, page, limit) {
   switch (entidade) {
     case 'setor':
@@ -295,7 +315,11 @@ async function carregarRegistros(entidade, page, limit) {
   }
 }
 
-// Carregar Formulários
+/**
+ * Carrega um formulário específico.
+ * @param {string} formulario - Nome do formulário a ser carregado.
+ * @return {Promise<void>}
+ */
 async function carregarFormulario(formulario) {
   try {
     const res = await fetch(`/partials/${formulario}`);
@@ -316,6 +340,11 @@ async function carregarFormulario(formulario) {
   }
 }
 
+/**
+ * Atualiza o número de registros por página.
+ * @param {string} nomeModal - Nome do modal a ser atualizado.
+ * @return {void}
+ */
 function atualizarRegistrosPorPag(nomeModal) {
   const registrosPorPagSelect = document.querySelector('#registrosPorPag');
   if (registrosPorPagSelect) {
@@ -325,6 +354,14 @@ function atualizarRegistrosPorPag(nomeModal) {
   }
 }
 
+/**
+ * Gera a paginação para uma entidade específica.
+ * @param {string} entidade - Nome da entidade.
+ * @param {number} page - Número da página atual.
+ * @param {number} totalPaginas - Número total de páginas.
+ * @param {number} limit - Número de registros por página.
+ * @return {string} - HTML da paginação.
+ */
 function gerarPaginacao(entidade, page, totalPaginas, limit) {
   return `
     <li class="page-item rounded-left ${page === 1 ? 'disabled' : ''}">
@@ -345,18 +382,24 @@ function gerarPaginacao(entidade, page, totalPaginas, limit) {
   `;
 }
 
+/**
+ * Submete um formulário via AJAX.
+ * @param {Event} event - Evento de submissão do formulário.
+ * @param {string} nomeModal - Nome do modal a ser fechado após a submissão.
+ * @return {Promise<void>}
+ */
 async function submitForm(event, nomeModal) {
   event.preventDefault();
   const form = event.target;
   const action = form.getAttribute('action');
   const formData = new FormData(form);
   const data = Object.fromEntries(formData.entries());
-  
+
   if (data.nome && typeof data.nome === 'string') {
     data.nome = data.nome.charAt(0).toUpperCase() + data.nome.slice(1);
   }
-  
-  data.key = key; 
+
+  data.key = key;
   try {
     const res = await fetch(action, {
       method: 'POST',
@@ -379,7 +422,12 @@ async function submitForm(event, nomeModal) {
   }
 }
 
-// SETORES 
+/**
+ * Carrega os setores da base de dados e atualiza a tabela de setores.
+ * @param {number} page - Número da página atual.
+ * @param {number} limit - Número de registros por página.
+ * @return {Promise<void>}
+ */
 async function carregarSetores(page, limit) {
   try {
     const res = await fetch(`/setor/setores?key=${key}&page=${page}&limit=${limit}`);
@@ -410,6 +458,11 @@ async function carregarSetores(page, limit) {
   }
 }
 
+/**
+ * Edita um setor existente.
+ * @param {HTMLElement} element - Elemento HTML que disparou o evento.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
 function editarSetorClick(element) {
   const setorId = $(element).data('id');
   const setorNome = $(element).data('nome');
@@ -428,6 +481,10 @@ function editarSetorClick(element) {
   return false;
 }
 
+/**
+ * Registra um novo setor.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
 function registrarNovoSetorClick() {
   $('#setorId').val('');
   $('#setorDescricao').val('');
@@ -442,6 +499,11 @@ function registrarNovoSetorClick() {
   return false;
 }
 
+/**
+ * Exclui um setor existente.
+ * @param {string} id - ID do setor a ser excluído.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
 async function excluirSetorClick(id) {
   try {
     const result = window.confirm("Deseja realmente excluir este setor?");
