@@ -1,4 +1,8 @@
 const Setor = require('../models/SetorModel');
+const fs = require('node:fs');
+const path = require('path');
+
+const keys = JSON.parse(fs.readFileSync(path.join(__dirname, '../conf/keys.json')));
 
 exports.register = async (req, res) => {
   try {
@@ -49,9 +53,12 @@ exports.delete = async function (req, res) {
 
 exports.getSetores = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
-    const setores = await Setor.buscaSetores(page, limit);
-    const totalSetores = await Setor.countDocuments(); 
+    const { key, page = 1, limit = 10 } = req.query;
+    if (!keys.includes(key)) {
+      return res.status(401).json({ error: 'Key inválida.' });
+    }
+    const setores = await Setor.buscaSetores(key, page, limit);
+    const totalSetores = await Setor.countDocuments(key);
     res.json({ setores, totalSetores });
   } catch (e) {
     console.log(e);

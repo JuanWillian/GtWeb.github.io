@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
+const fs = require('node:fs');
+const path = require('path');
+
+const keys = JSON.parse(fs.readFileSync(path.join(__dirname, '../conf/keys.json')));
 
 const SetorSchema = new mongoose.Schema({
+  key: { type: String, required: true },
   nome: { type: String, required: true },
   descricao: { type: String, required: false, default: '' },
 });
@@ -17,7 +22,7 @@ Setor.prototype.register = async function () {
   this.valida();
   if (this.errors.length > 0) return;
 
-  const setorExistente = await SetorModel.findOne({ nome: this.body.nome });
+  const setorExistente = await SetorModel.findOne({ nome: this.body.nome, key: this.body.key });
   if (setorExistente) {
     this.errors.push('Setor já cadastrado.');
     return;
@@ -30,6 +35,9 @@ Setor.prototype.valida = function () {
   this.cleanUp();
 
   if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
+  if (!keys.includes(this.body.key)) {
+    this.errors.push('Key inválida.');
+  }
 };
 
 Setor.prototype.cleanUp = function () {
@@ -40,6 +48,7 @@ Setor.prototype.cleanUp = function () {
   }
 
   this.body = {
+    key: this.body.key,
     nome: this.body.nome,
     descricao: this.body.descricao,
   };
@@ -58,9 +67,9 @@ Setor.buscaPorId = async function (id) {
   return setor;
 };
 
-Setor.buscaSetores = async function (page, limit) {
+Setor.buscaSetores = async function (key, page, limit) {
   const skip = (page - 1) * limit;
-  const setores = await SetorModel.find()
+  const setores = await SetorModel.find({ key })
     .sort({ nome: 1 })
     .skip(skip)
     .limit(parseInt(limit));
@@ -73,8 +82,8 @@ Setor.delete = async function (id) {
   return setor;
 };
 
-Setor.countDocuments = async function () {
-  return await SetorModel.countDocuments();
+Setor.countDocuments = async function (key) {
+  return await SetorModel.countDocuments({ key });
 };
 
 module.exports = Setor;

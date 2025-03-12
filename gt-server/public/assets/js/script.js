@@ -287,10 +287,10 @@ async function carregarRegistros(entidade, page, limit) {
     case 'setor':
       await carregarSetores(page, limit);
       break;
-     /*
-      * TODO falta adicionar as outras entidades como opção     
-      */    
-      default:
+    /*
+     * TODO falta adicionar as outras entidades como opção     
+     */
+    default:
       console.error('Entidade desconhecida:', entidade);
   }
 }
@@ -320,7 +320,7 @@ function atualizarRegistrosPorPag(nomeModal) {
   const registrosPorPagSelect = document.querySelector('#registrosPorPag');
   if (registrosPorPagSelect) {
     recordsPerPage = parseInt(registrosPorPagSelect.value, 10);
-    currentPage = 1; 
+    currentPage = 1;
     carregarRegistros(nomeModal, currentPage, recordsPerPage)
   }
 }
@@ -351,7 +351,7 @@ async function submitForm(event, nomeModal) {
   const action = form.getAttribute('action');
   const formData = new FormData(form);
   const data = Object.fromEntries(formData.entries());
-
+  data.key = key; 
   try {
     const res = await fetch(action, {
       method: 'POST',
@@ -377,7 +377,7 @@ async function submitForm(event, nomeModal) {
 // SETORES 
 async function carregarSetores(page, limit) {
   try {
-    const res = await fetch(`/setor/setores?page=${page}&limit=${limit}`);
+    const res = await fetch(`/setor/setores?key=${key}&page=${page}&limit=${limit}`);
     if (res.ok) {
       const { setores, totalSetores } = await res.json();
       const tabela = document.querySelector('#setorFormContainer .table tbody');
@@ -444,7 +444,7 @@ async function excluirSetorClick(id) {
       const res = await fetch(`/setor/delete/${id}`, {
         method: 'GET'
       });
-      
+
       if (res.ok) {
         console.log('Tentando carregar registros...', currentPage, recordsPerPage);
         await carregarRegistros('setor', currentPage, recordsPerPage);
