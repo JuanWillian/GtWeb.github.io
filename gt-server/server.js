@@ -53,7 +53,7 @@ const sessionOptions = session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 360,
         httpOnly: true
     }
 });
@@ -143,6 +143,8 @@ app.use(express.text({ type: 'application/json' }));
  * The HTTP server listeners.
  */
 app.get('/pagPrincipal', loginRequired, erpController.index);
+app.get('/partials/:formulario', loginRequired, erpController.carregarFormulario);
+
 
 app.get('/index', loginController.index);
 app.post('/login/register', loginController.register);
@@ -154,17 +156,11 @@ app.post('/deleteUsuario', loginController.deleteUsuario);
 app.post('/deleteAll', loginController.deleteAll);
 
 // SETORES rotas
-app.post('/pagPrincipal/setor/register', setorController.register);
-// app.get('/setor/index/:id', loginRequired, setorController.carregarSetor);
+app.post('/pagPrincipal/setor/register',loginRequired, setorController.register);
 app.post('/setor/edit/:id', loginRequired, setorController.edit);
 app.get('/setor/delete/:id', loginRequired, setorController.delete);
-app.get('/api/setores', loginRequired, erpController.getSetores);
-app.get('/partials/:formulario', loginRequired, (req, res) => {
-    const { formulario } = req.params;
-    res.render(`partials/${formulario}`);
-  });
+app.get('/setor/setores', loginRequired, setorController.getSetores);
 
-  
 app.get('*', (request, response) => {
     sendFile(request, response);
 });

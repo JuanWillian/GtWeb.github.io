@@ -302,7 +302,7 @@ async function carregarFormulario(formulario) {
 // SETORES 
 async function carregarSetores(page, limit) {
   try {
-    const res = await fetch(`/api/setores?page=${page}&limit=${limit}`);
+    const res = await fetch(`/setor/setores?page=${page}&limit=${limit}`);
     if (res.ok) {
       const { setores, totalSetores } = await res.json();
       const tabela = document.querySelector('#setorFormContainer .table tbody');
@@ -322,7 +322,7 @@ async function carregarSetores(page, limit) {
       const totalPages = Math.ceil(totalSetores / limit);
       const pagination = document.querySelector('.pagination');
       pagination.innerHTML = `
-        <li class="page-item ${page === 1 ? 'disabled' : ''}">
+        <li class="page-item rounded-left ${page === 1 ? 'disabled' : ''}">
           <a class="page-link" href="#" aria-label="Previous" onclick="carregarSetores(${page - 1}, ${limit})">
             <span aria-hidden="true">&laquo;</span>
           </a>
@@ -332,7 +332,7 @@ async function carregarSetores(page, limit) {
             <a class="page-link" href="#" onclick="carregarSetores(${i + 1}, ${limit})">${i + 1}</a>
           </li>
         `).join('')}
-        <li class="page-item ${page === totalPages ? 'disabled' : ''}">
+        <li class="page-item rounded-right ${page === totalPages ? 'disabled' : ''}">
           <a class="page-link" href="#" aria-label="Next" onclick="carregarSetores(${page + 1}, ${limit})">
             <span aria-hidden="true">&raquo;</span>
           </a>
