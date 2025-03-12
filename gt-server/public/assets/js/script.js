@@ -351,6 +351,11 @@ async function submitForm(event, nomeModal) {
   const action = form.getAttribute('action');
   const formData = new FormData(form);
   const data = Object.fromEntries(formData.entries());
+  
+  if (data.nome && typeof data.nome === 'string') {
+    data.nome = data.nome.charAt(0).toUpperCase() + data.nome.slice(1);
+  }
+  
   data.key = key; 
   try {
     const res = await fetch(action, {
