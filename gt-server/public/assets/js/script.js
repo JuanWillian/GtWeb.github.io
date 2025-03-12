@@ -288,7 +288,7 @@ async function carregarFormulario(formulario) {
       console.log(`Form loaded: ${formulario}`);
       if (formulario === 'setorLista') {
         console.log('Loading setores...');
-        await carregarSetores(currentPage, recordsPerPage);
+        await carregarRegistros("setor", currentPage, recordsPerPage);
         console.log('Setores loaded');
       }
     } else {
@@ -323,17 +323,17 @@ async function carregarSetores(page, limit) {
       const pagination = document.querySelector('.pagination');
       pagination.innerHTML = `
         <li class="page-item rounded-left ${page === 1 ? 'disabled' : ''}">
-          <a class="page-link" href="#" aria-label="Previous" onclick="carregarSetores(${page - 1}, ${limit})">
+          <a class="page-link" href="#" aria-label="Previous" onclick="carregarRegistros('setor', ${page - 1}, ${limit})">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
         ${Array.from({ length: totalPages }, (_, i) => `
           <li class="page-item ${page === i + 1 ? 'active' : ''}">
-            <a class="page-link" href="#" onclick="carregarSetores(${i + 1}, ${limit})">${i + 1}</a>
+            <a class="page-link" href="#" onclick="carregarRegistros('setor', ${i + 1}, ${limit})">${i + 1}</a>
           </li>
         `).join('')}
         <li class="page-item rounded-right ${page === totalPages ? 'disabled' : ''}">
-          <a class="page-link" href="#" aria-label="Next" onclick="carregarSetores(${page + 1}, ${limit})">
+          <a class="page-link" href="#" aria-label="Next" onclick="carregarRegistros('setor', ${page + 1}, ${limit})">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
@@ -346,12 +346,51 @@ async function carregarSetores(page, limit) {
   }
 }
 
-function recordsPerPageChange() {
-  const recordsPerPageSelect = document.querySelector('#recordsPerPage');
-  if (recordsPerPageSelect) {
-    recordsPerPage = parseInt(recordsPerPageSelect.value, 10);
-    currentPage = 1; // Resetar para a primeira página sempre que a quantidade de registros por página mudar
-    carregarSetores(currentPage, recordsPerPage);
+function registrosPorPagChange(nomeModal) {
+  const registrosPorPagSelect = document.querySelector('#registrosPorPag');
+  if (registrosPorPagSelect) {
+    registrosPorPag = parseInt(registrosPorPagSelect.value, 10);
+    pagAtual = 1; // Resetar para a primeira página sempre que a quantidade de registros por página mudar
+    carregarRegistros(nomeModal, pagAtual, registrosPorPag)
+  }
+}
+
+async function submitForm(event, nomeModal) {
+  event.preventDefault();
+  const form = event.target;
+  const action = form.getAttribute('action');
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
+
+  try {
+    const res = await fetch(action, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (res.ok) {
+      $('#' + nomeModal).modal('hide');
+      await carregarRegistros(nomeModal, currentPage, recordsPerPage);
+      window.alert(nomeModal.charAt(0).toUpperCase() + nomeModal.slice(1) + ' salvo com sucesso!');
+    } else {
+      const result = await res.json();
+      window.alert('Erro: ' + result.errors.join('\n'));
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+async function carregarRegistros(entidade, page, limit) {
+  switch (entidade) {
+    case 'setor':
+      await carregarSetores(page, limit);
+      break;
+    default:
+      console.error('Entidade desconhecida:', entidade);
   }
 }
 
@@ -389,35 +428,6 @@ function botaoListaSetorNovoClick() {
   $('#setor').modal('show');
 
   return false;
-}
-
-async function submitSetorForm(event) {
-  event.preventDefault();
-  const form = event.target;
-  const action = form.getAttribute('action');
-  const formData = new FormData(form);
-  const data = Object.fromEntries(formData.entries());
-
-  try {
-    const res = await fetch(action, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-
-    if (res.ok) {
-      $('#setor').modal('hide');
-      await carregarSetores(currentPage, recordsPerPage);
-      window.alert('Setor salvo com sucesso!');
-    } else {
-      const result = await res.json();
-      window.alert('Erro: ' + result.errors.join('\n'));
-    }
-  } catch (error) {
-    console.error('Erro:', error);
-  }
 }
 
 async function excluirSetor(id) {

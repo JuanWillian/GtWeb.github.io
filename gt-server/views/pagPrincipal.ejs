@@ -13,7 +13,6 @@
         </div>
       </div> -->
   <div class="d-flex justify-content-between">
-    
     <!-- Sidebar fixo à esquerda com borda à direita e fundo branco -->
     <div id="sidebar" class="sidebar fixed-start bg-white p-3">
       <section>
@@ -157,72 +156,72 @@
     </div>
     <!---->
 
-    <!-- Conteúdo das entidades da sideBar -->
+    <!-- Formulário de setores -->
+    <div class="modal fade" id="setor" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModal">Cadastrar Setor</h1>
+              <p class="text-center lead" id="subTituloModal">
+                Cadastre um novo setor abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form id="setorForm" onsubmit="return submitForm(event, 'setor')">
+              <input type="hidden" id="grupoId" value="" />
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Nome</label>
+                  <input
+                    value="<%= setor.nome %>"
+                    type="text"
+                    class="form-control"
+                    name="nome"
+                    id="setorId"
+                    required
+                    maxlength="80"
+                  />
+                  <label>Descrição</label>
+                  <textarea
+                    class="form-control"
+                    name="descricao"
+                    id="setorDescricao"
+                    maxlength="150"
+                  >
+                  <%= setor.descricao %></textarea
+                  >
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('setor')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conteúdo das listas de entidades -->
     <div class="conteudo">
       <section id="forms"></section>
     </div>
   </div>
-
-  <!-- Formulário de setores -->
-  <div class="modal fade" id="setor" tabindex="-1" role="dialog">
-    <div
-      class="modal-dialog modal-lg"
-      role="document"
-      style="overflow-y: initial !important"
-    >
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="titleForm">
-            <h1 class="text-center" id="tituloModal">Cadastrar Setor</h1>
-            <p class="text-center lead" id="subTituloModal">Cadastre um novo setor abaixo</p>
-          </div>
-        </div>
-        <div
-          class="modal-body"
-          style="max-height: calc(100vh - 200px); overflow-y: auto"
-        >
-          <form id="setorForm" onsubmit="return submitSetorForm(event)">
-            <input type="hidden" id="grupoId" value="" />
-            <div class="col mb-3">
-              <div class="form-group">
-                <label>Nome</label>
-                <input
-                  value="<%= setor.nome %>"
-                  type="text"
-                  class="form-control"
-                  name="nome"
-                  id="setorId"
-                  required
-                  maxlength="80"
-                />
-                <label>Descrição</label>
-                <textarea
-                  class="form-control"
-                  name="descricao"
-                  id="setorDescricao"
-                  maxlength="150"
-                >
-                <%= setor.descricao %></textarea
-                >
-              </div>
-            </div>
-            <button type="submit" class="btn btn-success">
-              <i class="fa fa-save"></i> Salvar
-            </button>
-            <button
-              type="button"
-              class="btn btn-warning"
-              onclick="return botaoCancelarClick('setor')"
-            >
-              <i class="fa fa-close"></i> Cancelar
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
 </main>
 
 <%- include('includes/footer') %>
