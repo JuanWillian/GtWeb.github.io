@@ -13,13 +13,23 @@ const usuarioERPSchema = new mongoose.Schema({
 
 const UsuarioERPModel = mongoose.model('UsuarioERP', usuarioERPSchema);
 
+/**
+ * Classe para manipulação de usuários ERP.
+ */
 class UsuarioERP {
+    /**
+     * Construtor da classe UsuarioERP.
+     * @param {Object} body - Dados do usuário.
+     */
     constructor(body) {
         this.body = body;
         this.errors = [];
         this.user = null;
     }
 
+    /**
+     * Realiza o login do usuário.
+     */
     async login() {
         this.user = await UsuarioERPModel.findOne({ usuario: this.body.usuario });
 
@@ -41,6 +51,10 @@ class UsuarioERP {
         }
     }
 
+    /**
+     * Registra um novo usuário.
+     * @param {string} key - Chave de validação.
+     */
     async register(key) {
         this.valida(key);
         if (this.errors.length > 0) return;
@@ -61,6 +75,10 @@ class UsuarioERP {
         if (this.user) this.errors.push('Usuário já existe.');
     }
 
+    /**
+     * Valida os dados do usuário.
+     * @param {string} key - Chave de validação.
+     */
     valida(key) {
         this.cleanUp();
         if (!keys.includes(key)) {
@@ -71,6 +89,9 @@ class UsuarioERP {
         }
     }
 
+    /**
+     * Limpa os dados do usuário.
+     */
     cleanUp() {
         for (const atributo in this.body) {
             if (typeof this.body[atributo] !== 'string') {

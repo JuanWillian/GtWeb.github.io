@@ -418,6 +418,7 @@ async function submitForm(event, nomeModal) {
     }
   } catch (error) {
     console.error('Erro:', error);
+    window.alert('Erro: ' + error.message);
   }
 }
 

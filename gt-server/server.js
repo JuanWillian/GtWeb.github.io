@@ -1,23 +1,24 @@
 /**
- * Aurora Gt File Server.
+ * Servidor de Arquivos Aurora Gt.
  *
- * This service provides support for to serv file and data for Gt Web application.
+ * Este serviço fornece suporte para servir arquivos e dados para a aplicação Gt Web.
  */
+
 const { MongoClient } = require('mongodb');
 const mongoose = require('mongoose');
 
 const erpController = require('./controllers/erpControllers.js');
 const loginController = require('./controllers/loginController.js');
-const setorController = require('./controllers/SetorController.js')
+const setorController = require('./controllers/SetorController.js');
 
 const fs = require('node:fs');
 const https = require('https');
 const path = require('path');
 const mime = require('mime-types');
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 
-var config = JSON.parse(fs.readFileSync(__dirname + '/conf/config.json'));
+const config = JSON.parse(fs.readFileSync(__dirname + '/conf/config.json'));
 
 const host = 'localhost';
 const port = config.fileServerPort || 5000;
@@ -29,20 +30,20 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-var repositoryPath = __dirname + '/' + config.repositoryPath;
-var httpsKeyFile = __dirname + '/' + config.httpsKeyFile;
-var httpsCertFile = __dirname + '/' + config.httpsCertFile;
+const repositoryPath = __dirname + '/' + config.repositoryPath;
+const httpsKeyFile = __dirname + '/' + config.httpsKeyFile;
+const httpsCertFile = __dirname + '/' + config.httpsCertFile;
 
 mongoose.connect(config.mongoServer, {
     dbName: config.mongoDatabase,
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {
-    console.log(`Connected to MongoDB database: ${config.mongoDatabase}`);
+    console.log(`Conectado ao banco de dados MongoDB: ${config.mongoDatabase}`);
     app.emit('pronto');
 }).catch((e) => console.log(e));
 
-//sessões de login
+// Sessões de login
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const { middlewareGlobal, loginRequired } = require('./middlewares/middleware');
@@ -75,21 +76,21 @@ const options = {
     cert: fs.readFileSync(httpsCertFile)
 };
 
-var currentDate = new Date();
+const currentDate = new Date();
 
 /**
- * Formats a JavaScript Date object into a string with the format "YYYY-MM-DD HH:mm:ss".
+ * Formata um objeto Date do JavaScript em uma string no formato "YYYY-MM-DD HH:mm:ss".
  *
- * @param {Date} date - The date to format.
- * @returns {string} - The formatted date and time string.
+ * @param {Date} date - A data a ser formatada.
+ * @returns {string} - A string da data e hora formatada.
  */
 function formatDateHour(date) {
-    var day = '' + date.getDate();
-    var month = '' + (date.getMonth() + 1);
-    var year = '' + date.getFullYear();
-    var hour = '' + date.getHours();
-    var minute = '' + date.getMinutes();
-    var second = '' + date.getSeconds();
+    let day = '' + date.getDate();
+    let month = '' + (date.getMonth() + 1);
+    let year = '' + date.getFullYear();
+    let hour = '' + date.getHours();
+    let minute = '' + date.getMinutes();
+    let second = '' + date.getSeconds();
 
     if (day.length < 2) {
         day = '0' + day;
@@ -111,25 +112,24 @@ function formatDateHour(date) {
 }
 
 /**
- * Handles the request to send a file to the client.
+ * Lida com a requisição para enviar um arquivo para o cliente.
  *
- * @param {Object} request - The HTTP request object.
- * @param {Object} response - The HTTP response object.
+ * @param {Object} request - O objeto de requisição HTTP.
+ * @param {Object} response - O objeto de resposta HTTP.
  */
 async function sendFile(request, response) {
-    var pathname = request.path;
-
-    var mimeType = mime.lookup(repositoryPath + pathname)
+    const pathname = request.path;
+    const mimeType = mime.lookup(repositoryPath + pathname);
 
     try {
-        var fileContents = fs.readFileSync(repositoryPath + pathname);
-        console.log('Sending file "' + repositoryPath + pathname + '"...');
+        const fileContents = fs.readFileSync(repositoryPath + pathname);
+        console.log('Enviando arquivo "' + repositoryPath + pathname + '"...');
 
         response.writeHead(200, { 'Content-Type': mimeType });
         response.write(fileContents);
         response.end();
     } catch (e) {
-        console.log('Error: File not found!');
+        console.log('Erro: Arquivo não encontrado!');
 
         response.writeHead(404, { 'Content-Type': 'text/plain' });
         response.write('404 Not Found');
@@ -140,12 +140,12 @@ async function sendFile(request, response) {
 app.use(express.text({ type: 'application/json' }));
 
 /**
- * The HTTP server listeners.
+ * Listeners do servidor HTTP.
  */
 app.get('/pagPrincipal', loginRequired, erpController.index);
 app.get('/partials/:formulario', loginRequired, erpController.carregarFormulario);
 
-
+// Rotas da entidade UsuarioERP
 app.get('/index', loginController.index);
 app.post('/login/register', loginController.register);
 app.post('/login/login', loginController.login);
@@ -155,8 +155,8 @@ app.post('/deleteUsuarios', loginController.deleteUsuarios);
 app.post('/deleteUsuario', loginController.deleteUsuario);
 app.post('/deleteAll', loginController.deleteAll);
 
-// SETORES rotas
-app.post('/pagPrincipal/setor/register',loginRequired, setorController.register);
+// Rotas da entidade Setor
+app.post('/pagPrincipal/setor/register', loginRequired, setorController.register);
 app.post('/setor/edit/:id', loginRequired, setorController.edit);
 app.get('/setor/delete/:id', loginRequired, setorController.delete);
 app.get('/setor/setores', loginRequired, setorController.getSetores);
@@ -166,15 +166,15 @@ app.get('*', (request, response) => {
 });
 
 /**
- * Creates the HTTP server.
+ * Cria o servidor HTTP.
  */
 const server = https.createServer(options, app);
 
 /**
- * Starts the HTTP server.
+ * Inicia o servidor HTTP.
  */
 app.on('pronto', () => {
     server.listen(port, host, () => {
-        console.log(`The server is running on https://${host}:${port}.`);
+        console.log(`O servidor está rodando em https://${host}:${port}.`);
     });
-})
+});
