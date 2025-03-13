@@ -304,7 +304,10 @@ async function carregarRegistros(entidade, page, limit) {
     case 'setor':
       await carregarSetores(page, limit);
       break;
-    /*
+    case 'empresa':
+      await carregarEmpresas(page, limit);
+      break;
+      /*
      * TODO falta adicionar as outras entidades como opção     
      */
     default:
@@ -323,11 +326,20 @@ async function carregarFormulario(formulario) {
       const html = await res.text();
       document.getElementById('forms').innerHTML = html;
       console.log(`Form carregado: ${formulario}`);
-      if (formulario === 'setorLista') {
-        console.log('Carregando setores...');
-        await carregarRegistros("setor", paginaAtual, registrosPorPag);
-        console.log('Setores carregados');
+      switch(formulario) {
+        case 'setorLista':
+          console.log('Carregando setores...');
+          await atualizarRegistrosPorPag('setor')
+          await carregarRegistros("setor", paginaAtual, registrosPorPag);
+          console.log('Setores carregados');
+          break;
+          case 'empresaLista':
+            console.log('Carregando empresas...');
+            await atualizarRegistrosPorPag('empresa')
+            await carregarRegistros("empresa", paginaAtual, registrosPorPag);
+          console.log('Empresas carregadas');  
       }
+      
       /*
      * TODO falta adicionar as outras entidades como opção     
      */
@@ -422,6 +434,8 @@ async function submitForm(event, nomeModal) {
   }
 }
 
+// Rotinas de SETORES
+
 /**
  * Carrega os setores da base de dados e atualiza a tabela de setores.
  * @param {number} page - Número da página atual.
@@ -514,6 +528,108 @@ async function excluirSetorClick(id) {
       if (res.ok) {
         console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
         await carregarRegistros('setor', paginaAtual, registrosPorPag);
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.error);
+      }
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+
+  return false;
+}
+
+// Rotinas de EMPRESAS
+
+/**
+ * Carrega as empresas da base de dados e atualiza a tabela de empresas.
+ * @param {number} page - Número da página atual.
+ * @param {number} limit - Número de registros por página.
+ */
+async function carregarEmpresas(page, limit) {
+  try {
+    const res = await fetch(`/empresa/empresas?key=${key}&page=${page}&limit=${limit}`);
+    if (res.ok) {
+      const { empresas, totalEmpresas } = await res.json();
+      const tabela = document.querySelector('#empresaFormContainer .table tbody');
+      tabela.innerHTML = empresas.map(empresa => `
+        <tr>
+          <td class="limited-width">${empresa.nome}</td>
+          <td class="tdButton">
+            <a href="#" class="btn-edit" data-id="${empresa._id}" data-nome="${empresa.nome}" onclick="return editarEmpresaClick(this)" title="Editar empresa">Editar</a>
+          </td>
+          <td class="tdButton">
+            <a class="text-danger" href="#" onclick="return excluirEmpresaClick('${empresa._id}')" title="Excluir este empresa">Excluir</a>
+          </td>
+        </tr>
+      `).join('');
+
+      const totalPaginas = Math.ceil(totalEmpresas / limit);
+      const pagination = document.querySelector('.pagination');
+      pagination.innerHTML = gerarPaginacao('empresa', page, totalPaginas, limit);
+    } else {
+      console.error('Erro ao carregar as empresas!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+/**
+ * Edita uma empresa existente.
+ * @param {HTMLElement} element - Elemento HTML que disparou o evento.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function editarEmpresaClick(element) {
+  const empresaId = $(element).data('id');
+  const empresaNome = $(element).data('nome');
+
+  $('#empresaId').val(empresaNome);
+
+  $('#tituloModal').text('Editar Empresa');
+  $('#subTituloModal').text('Edite as informações da empresa abaixo.');
+
+  $('#empresaForm').attr('action', '/empresa/edit/' + empresaId);
+
+  $('#empresa').modal('show');
+
+  return false;
+}
+
+/**
+ * Registra uma nova empresa.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function registrarNovaEmpresaClick() {
+  $('#empresaId').val('');
+
+  $('#tituloModal').text('Cadastrar Empresa');
+  $('#subTituloModal').text('Cadastre uma nova empresa abaixo.');
+
+  $('#empresaForm').attr('action', '/pagPrincipal/empresa/register');
+
+  $('#empresa').modal('show');
+
+  return false;
+}
+
+/**
+ * Exclui uma empresa.
+ * @param {string} id - ID da empresa a ser excluída.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+async function excluirEmpresaClick(id) {
+  try {
+    const result = window.confirm("Deseja realmente excluir esta empresa?");
+    if (result) {
+      const res = await fetch(`/empresa/delete/${id}`, {
+        method: 'GET'
+      });
+
+      if (res.ok) {
+        console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
+        await carregarRegistros('empresa', paginaAtual, registrosPorPag);
       } else {
         const result = await res.json();
         console.error('Erro:', result.error);

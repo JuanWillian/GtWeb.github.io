@@ -1,8 +1,10 @@
 const Setor = require('../models/SetorModel');
+const Empresa = require('../models/empresaModel');
 
 exports.index = async (req, res) => {
   const setores = await Setor.buscaSetores();
-  res.render('pagPrincipal', { setores, setor: {} });
+  const empresas = await Empresa.buscaEmpresas();
+  res.render('pagPrincipal', { setores, setor: {}, empresas, empresa: {} });
 };
 
 exports.carregarFormulario = (req, res) => {

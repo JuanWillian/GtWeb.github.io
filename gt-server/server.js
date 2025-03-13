@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 const erpController = require('./controllers/erpControllers.js');
 const loginController = require('./controllers/loginController.js');
 const setorController = require('./controllers/SetorController.js');
+const empresaController = require('./controllers/empresaController.js');
 
 const fs = require('node:fs');
 const https = require('https');
@@ -160,6 +161,12 @@ app.post('/pagPrincipal/setor/register', loginRequired, setorController.register
 app.post('/setor/edit/:id', loginRequired, setorController.edit);
 app.get('/setor/delete/:id', loginRequired, setorController.delete);
 app.get('/setor/setores', loginRequired, setorController.getSetores);
+
+// Rotas da entidade Empresa
+app.post('/pagPrincipal/empresa/register', loginRequired, empresaController.register);
+app.post('/empresa/edit/:id', loginRequired, empresaController.edit);
+app.get('/empresa/delete/:id', loginRequired, empresaController.delete);
+app.get('/empresa/empresas', loginRequired, empresaController.getEmpresas);
 
 app.get('*', (request, response) => {
     sendFile(request, response);

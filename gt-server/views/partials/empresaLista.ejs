@@ -1,19 +1,19 @@
-<section id="setorFormContainer">
+<section id="empresaFormContainer">
   <div class="mainFormContainer">
-    <h1 class="text-center">Setores</h1>
-    <p class="text-center lead">Gerencie seus setores abaixo</p>
+    <h1 class="text-center">Empresas</h1>
+    <p class="text-center lead">Gerencie as empresas abaixo</p>
     <div class="cabecalhoForm">
       <button
         class="btn btnCadastro"
-        onclick="return registrarNovoSetorClick()"
-        title="Adicionar novo setor"
+        onclick="return registrarNovaEmpresaClick()"
+        title="Adicionar nova empresa"
       >
         <i class="bi bi-plus-lg"></i>
       </button>
         <select
           id="registrosPorPag"
           class="formSelectGradient"
-          onchange="atualizarRegistrosPorPag('setor')"
+          onchange="atualizarRegistrosPorPag('empresa')"
         >
           <option value="5">5</option>
           <option value="10" selected>10</option>
@@ -32,13 +32,12 @@
         <thead>
           <tr>
             <th>Nome</th>
-            <th>Descrição</th>
             <th></th>
             <th></th>
           </tr>
         </thead>
         <tbody class="table-group-divider">
-          <!-- Os dados dos setores serão preenchidos aqui -->
+          <!-- Os dados das empresas serão preenchidos aqui -->
         </tbody>
       </table>
     </div>
