@@ -279,11 +279,8 @@ function carregarTabela(entidade) {
   carregarEntidades(entidade);
 }
 
-
-
-let currentPage = 1;
-let recordsPerPage = 10;
-
+let paginaAtual = 1;
+let registrosPorPag = 10;
 
 /**
  * Fecha um modal.
@@ -318,7 +315,6 @@ async function carregarRegistros(entidade, page, limit) {
 /**
  * Carrega um formulário específico.
  * @param {string} formulario - Nome do formulário a ser carregado.
- * @return {Promise<void>}
  */
 async function carregarFormulario(formulario) {
   try {
@@ -329,9 +325,12 @@ async function carregarFormulario(formulario) {
       console.log(`Form carregado: ${formulario}`);
       if (formulario === 'setorLista') {
         console.log('Carregando setores...');
-        await carregarRegistros("setor", currentPage, recordsPerPage);
+        await carregarRegistros("setor", paginaAtual, registrosPorPag);
         console.log('Setores carregados');
       }
+      /*
+     * TODO falta adicionar as outras entidades como opção     
+     */
     } else {
       console.error('Erro ao carregar o formulário!');
     }
@@ -348,9 +347,9 @@ async function carregarFormulario(formulario) {
 function atualizarRegistrosPorPag(nomeModal) {
   const registrosPorPagSelect = document.querySelector('#registrosPorPag');
   if (registrosPorPagSelect) {
-    recordsPerPage = parseInt(registrosPorPagSelect.value, 10);
-    currentPage = 1;
-    carregarRegistros(nomeModal, currentPage, recordsPerPage)
+    registrosPorPag = parseInt(registrosPorPagSelect.value, 10);
+    paginaAtual = 1;
+    carregarRegistros(nomeModal, paginaAtual, registrosPorPag)
   }
 }
 
@@ -411,7 +410,7 @@ async function submitForm(event, nomeModal) {
 
     if (res.ok) {
       $('#' + nomeModal).modal('hide');
-      await carregarRegistros(nomeModal, currentPage, recordsPerPage);
+      await carregarRegistros(nomeModal, paginaAtual, registrosPorPag);
       window.alert(nomeModal.charAt(0).toUpperCase() + nomeModal.slice(1) + ' salvo com sucesso!');
     } else {
       const result = await res.json();
@@ -426,7 +425,6 @@ async function submitForm(event, nomeModal) {
  * Carrega os setores da base de dados e atualiza a tabela de setores.
  * @param {number} page - Número da página atual.
  * @param {number} limit - Número de registros por página.
- * @return {Promise<void>}
  */
 async function carregarSetores(page, limit) {
   try {
@@ -513,8 +511,8 @@ async function excluirSetorClick(id) {
       });
 
       if (res.ok) {
-        console.log('Tentando carregar registros...', currentPage, recordsPerPage);
-        await carregarRegistros('setor', currentPage, recordsPerPage);
+        console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
+        await carregarRegistros('setor', paginaAtual, registrosPorPag);
       } else {
         const result = await res.json();
         console.error('Erro:', result.error);
