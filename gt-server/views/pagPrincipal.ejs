@@ -88,7 +88,7 @@
                   <ul>
                     <li
                       data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                      onclick="formSetor()"
+                      onclick="carregarLista('grupoLista')"
                     >
                       <u>Grupo de produto</u>
                     </li>
@@ -183,7 +183,6 @@
             style="max-height: calc(100vh - 200px); overflow-y: auto"
           >
             <form id="setorForm" onsubmit="return submitForm(event, 'setor')">
-              <input type="hidden" id="grupoId" value="" />
               <div class="col mb-3">
                 <div class="form-group">
                   <label>Nome</label>
@@ -244,7 +243,6 @@
             style="max-height: calc(100vh - 200px); overflow-y: auto"
           >
             <form id="empresaForm" onsubmit="return submitForm(event, 'empresa')">
-              <input type="hidden" id="grupoId" value="" />
               <div class="col mb-3">
                 <div class="form-group">
                   <label>Nome</label>
@@ -296,7 +294,6 @@
             style="max-height: calc(100vh - 200px); overflow-y: auto"
           >
             <form id="atividadeForm" onsubmit="return submitForm(event, 'atividade')">
-              <input type="hidden" id="grupoId" value="" />
               <div class="col mb-3">
                 <div class="form-group">
                   <label>Nome</label>
@@ -348,7 +345,6 @@
             style="max-height: calc(100vh - 200px); overflow-y: auto"
           >
             <form id="execucaoForm" onsubmit="return submitForm(event, 'execucao')">
-              <input type="hidden" id="grupoId" value="" />
               <div class="col mb-3">
                 <div class="form-group">
                   <label>Descrição</label>
@@ -370,6 +366,57 @@
                 type="button"
                 class="btn btn-warning"
                 onclick="return botaoCancelarClick('execucao')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário das grupos -->
+    <div class="modal fade" id="grupo" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModal">Cadastrar Grupo</h1>
+              <p class="text-center lead" id="subTituloModal">
+                Cadastre uma novo grupo abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form id="grupoForm" onsubmit="return submitForm(event, 'grupo')">
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Nome</label>
+                  <input
+                    value="<%= grupo.nome %>"
+                    type="text"
+                    class="form-control"
+                    name="nome"
+                    id="grupoId"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('grupo')"
               >
                 <i class="fa fa-close"></i> Cancelar
               </button>

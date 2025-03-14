@@ -1,0 +1,49 @@
+<section id="grupoFormContainer">
+  <div class="mainFormContainer">
+    <h1 class="text-center">Grupo</h1>
+    <p class="text-center lead">Gerencie os Grupos abaixo</p>
+    <div class="cabecalhoForm">
+      <button
+        class="btn btnCadastro"
+        onclick="return registrarNovoGrupoClick()"
+        title="Adicionar novo Grupo"
+      >
+        <i class="bi bi-plus-lg"></i>
+      </button>
+        <select
+          id="registrosPorPag"
+          class="formSelectGradient"
+          onchange="atualizarRegistrosPorPag('grupo')"
+        >
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+    </div>
+    <div
+      class="table-responsive"
+      style="max-height: 400px !important; overflow-y: scroll !important"
+    >
+      <table
+        class="table table-striped table-bordered"
+        style="margin-bottom: 0px !important"
+      >
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <!-- Os dados dos grupos serão preenchidos aqui -->
+        </tbody>
+      </table>
+    </div>
+    <nav aria-label="footer Navbar" class="footerNav">
+      <ul class="pagination ">
+      </ul>
+    </nav>
+  </div>
+</section>

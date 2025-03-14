@@ -13,6 +13,7 @@ const setorController = require('./controllers/SetorController.js');
 const empresaController = require('./controllers/empresaController.js');
 const atividadeController = require('./controllers/atividadeController.js');
 const execucaoController = require('./controllers/execucaoController.js');
+const grupoController = require('./controllers/grupoController.js');
 
 const fs = require('node:fs');
 const https = require('https');
@@ -181,6 +182,12 @@ app.post('/pagPrincipal/execucao/register', loginRequired, execucaoController.re
 app.post('/execucao/edit/:id', loginRequired, execucaoController.edit);
 app.get('/execucao/delete/:id', loginRequired, execucaoController.delete);
 app.get('/execucao/execucoes', loginRequired, execucaoController.getExecucoes);
+
+// Rotas da entidade Execuções
+app.post('/pagPrincipal/grupo/register', loginRequired, grupoController.register);
+app.post('/grupo/edit/:id', loginRequired, grupoController.edit);
+app.get('/grupo/delete/:id', loginRequired, grupoController.delete);
+app.get('/grupo/grupos', loginRequired, grupoController.getGrupos);
 
 
 app.get('*', (request, response) => {

@@ -297,7 +297,6 @@ function botaoCancelarClick(nomeModal) {
  * @param {string} entidade - Nome da entidade a ser carregada.
  * @param {number} page - Número da página atual.
  * @param {number} limit - Número de registros por página.
- * @return {Promise<void>}
  */
 async function carregarRegistros(entidade, page, limit) {
   switch (entidade) {
@@ -312,6 +311,9 @@ async function carregarRegistros(entidade, page, limit) {
       break;  
     case 'execucao':
       await carregarExecucoes(page, limit);
+      break;
+    case 'grupo':
+      await carregarGrupos(page, limit);
       break;
       /*
      * TODO falta adicionar as outras entidades como opção     
@@ -334,24 +336,25 @@ async function carregarLista(lista) {
       console.log(`Form carregado: ${lista}`);
       switch(lista) {
         case 'setorLista':
-          console.log('Carregando setores...');
           await atualizarRegistrosPorPag('setor')
           await carregarRegistros("setor", paginaAtual, registrosPorPag);
-          console.log('Setores carregados');
           break;
-          case 'empresaLista':
-            console.log('Carregando empresas...');
-            await atualizarRegistrosPorPag('empresa')
-            await carregarRegistros("empresa", paginaAtual, registrosPorPag);
-          case 'atividadeLista':
-            console.log('Carregando atividades...');
-            await atualizarRegistrosPorPag('atividade')
-            await carregarRegistros("atividade", paginaAtual, registrosPorPag);
-          case 'execucaoLista':
-            console.log('Carregando execuções...');
-            await atualizarRegistrosPorPag('execucao')
-            await carregarRegistros("execucao", paginaAtual, registrosPorPag);
-          console.log('Execuções carregadas');  
+        case 'empresaLista':
+          await atualizarRegistrosPorPag('empresa')
+          await carregarRegistros("empresa", paginaAtual, registrosPorPag);
+          break;
+        case 'atividadeLista':
+          await atualizarRegistrosPorPag('atividade')
+          await carregarRegistros("atividade", paginaAtual, registrosPorPag);
+          break;
+        case 'execucaoLista':
+          await atualizarRegistrosPorPag('execucao')
+          await carregarRegistros("execucao", paginaAtual, registrosPorPag);
+          break;
+        case 'grupoLista':
+          await atualizarRegistrosPorPag('grupo')
+          await carregarRegistros("grupo", paginaAtual, registrosPorPag);
+          break;
       }
       
       /*
@@ -850,6 +853,108 @@ async function excluirExecucaoClick(id) {
       if (res.ok) {
         console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
         await carregarRegistros('execucao', paginaAtual, registrosPorPag);
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.error);
+      }
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+
+  return false;
+}
+
+// Rotinas de ATIVIDADES
+
+/**
+ * Carrega as grupos da base de dados e atualiza a tabela de grupos.
+ * @param {number} page - Número da página atual.
+ * @param {number} limit - Número de registros por página.
+ */
+async function carregarGrupos(page, limit) {
+  try {
+    const res = await fetch(`/grupo/grupos?key=${key}&page=${page}&limit=${limit}`);
+    if (res.ok) {
+      const { grupos, totalGrupos } = await res.json();
+      const tabela = document.querySelector('#grupoFormContainer .table tbody');
+      tabela.innerHTML = grupos.map(grupo => `
+        <tr>
+          <td class="limited-width">${grupo.nome}</td>
+          <td class="tdButton">
+            <a href="#" class="btn-edit" data-id="${grupo._id}" data-nome="${grupo.nome}" onclick="return editarGrupoClick(this)" title="Editar grupo">Editar</a>
+          </td>
+          <td class="tdButton">
+            <a class="text-danger" href="#" onclick="return excluirGrupoClick('${grupo._id}')" title="Excluir este grupo">Excluir</a>
+          </td>
+        </tr>
+      `).join('');
+
+      const totalPaginas = Math.ceil(totalGrupos / limit);
+      const pagination = document.querySelector('.pagination');
+      pagination.innerHTML = gerarPaginacao('grupo', page, totalPaginas, limit);
+    } else {
+      console.error('Erro ao carregar as grupos!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+/**
+ * Edita um grupo existente.
+ * @param {HTMLElement} element - Elemento HTML que disparou o evento.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function editarGrupoClick(element) {
+  const grupoId = $(element).data('id');
+  const grupoNome = $(element).data('nome');
+
+  $('#grupoId').val(grupoNome);
+
+  $('#tituloModal').text('Editar Grupo');
+  $('#subTituloModal').text('Edite as informações da grupo abaixo.');
+
+  $('#grupoForm').attr('action', '/grupo/edit/' + grupoId);
+
+  $('#grupo').modal('show');
+
+  return false;
+}
+
+/**
+ * Registra um nova grupo.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function registrarNovoGrupoClick() {
+  $('#grupoId').val('');
+
+  $('#tituloModal').text('Cadastrar Grupo');
+  $('#subTituloModal').text('Cadastre um nova grupo abaixo.');
+
+  $('#grupoForm').attr('action', '/pagPrincipal/grupo/register');
+
+  $('#grupo').modal('show');
+
+  return false;
+}
+
+/**
+ * Exclui um grupo.
+ * @param {string} id - ID da grupo a ser excluída.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+async function excluirGrupoClick(id) {
+  try {
+    const result = window.confirm("Deseja realmente excluir esta grupo?");
+    if (result) {
+      const res = await fetch(`/grupo/delete/${id}`, {
+        method: 'GET'
+      });
+
+      if (res.ok) {
+        console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
+        await carregarRegistros('grupo', paginaAtual, registrosPorPag);
       } else {
         const result = await res.json();
         console.error('Erro:', result.error);
