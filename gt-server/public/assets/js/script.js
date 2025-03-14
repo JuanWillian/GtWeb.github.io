@@ -310,6 +310,9 @@ async function carregarRegistros(entidade, page, limit) {
     case 'atividade':
       await carregarAtividades(page, limit);
       break;  
+    case 'execucao':
+      await carregarExecucoes(page, limit);
+      break;
       /*
      * TODO falta adicionar as outras entidades como opção     
      */
@@ -343,8 +346,12 @@ async function carregarLista(lista) {
           case 'atividadeLista':
             console.log('Carregando atividades...');
             await atualizarRegistrosPorPag('atividade')
-            await carregarRegistros("atividade", paginaAtual, registrosPorPag);  
-          console.log('Atividades carregadas');  
+            await carregarRegistros("atividade", paginaAtual, registrosPorPag);
+          case 'execucaoLista':
+            console.log('Carregando execuções...');
+            await atualizarRegistrosPorPag('execucao')
+            await carregarRegistros("execucao", paginaAtual, registrosPorPag);
+          console.log('Execuções carregadas');  
       }
       
       /*
@@ -415,6 +422,8 @@ async function submitForm(event, nomeModal) {
 
   if (data.nome && typeof data.nome === 'string') {
     data.nome = data.nome.charAt(0).toUpperCase() + data.nome.slice(1);
+  } else if (data.descricao && typeof data.descricao === 'string') {
+    data.descricao = data.descricao.charAt(0).toUpperCase() + data.descricao.slice(1);
   }
 
   data.key = key;
@@ -739,6 +748,108 @@ async function excluirAtividadeClick(id) {
       if (res.ok) {
         console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
         await carregarRegistros('atividade', paginaAtual, registrosPorPag);
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.error);
+      }
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+
+  return false;
+}
+
+// Rotinas de EXECUÇÕES
+
+/**
+ * Carrega as EXECUÇÕES da base de dados e atualiza a tabela de EXECUÇÕES.
+ * @param {number} page - Número da página atual.
+ * @param {number} limit - Número de registros por página.
+ */
+async function carregarExecucoes(page, limit) {
+  try {
+    const res = await fetch(`/execucao/execucoes?key=${key}&page=${page}&limit=${limit}`);
+    if (res.ok) {
+      const { execucoes, totalExecucoes } = await res.json();
+      const tabela = document.querySelector('#execucaoFormContainer .table tbody');
+      tabela.innerHTML = execucoes.map(execucao => `
+        <tr>
+          <td class="limited-width">${execucao.descricao}</td>
+          <td class="tdButton">
+            <a href="#" class="btn-edit" data-id="${execucao._id}" data-descricao="${execucao.descricao}" onclick="return editarExecucaoClick(this)" title="Editar execucao">Editar</a>
+          </td>
+          <td class="tdButton">
+            <a class="text-danger" href="#" onclick="return excluirExecucaoClick('${execucao._id}')" title="Excluir este execucao">Excluir</a>
+          </td>
+        </tr>
+      `).join('');
+
+      const totalPaginas = Math.ceil(totalExecucoes / limit);
+      const pagination = document.querySelector('.pagination');
+      pagination.innerHTML = gerarPaginacao('execucao', page, totalPaginas, limit);
+    } else {
+      console.error('Erro ao carregar as execucaos!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+/**
+ * Edita uma execução existente.
+ * @param {HTMLElement} element - Elemento HTML que disparou o evento.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function editarExecucaoClick(element) {
+  const execucaoId = $(element).data('id');
+  const execucaoDescricao = $(element).data('descricao');
+
+  $('#execucaoId').val(execucaoDescricao);
+
+  $('#tituloModal').text('Editar Execução');
+  $('#subTituloModal').text('Edite as informações da execução abaixo.');
+
+  $('#execucaoForm').attr('action', '/execucao/edit/' + execucaoId);
+
+  $('#execucao').modal('show');
+
+  return false;
+}
+
+/**
+ * Registra uma nova execução.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function registrarNovaExecucaoClick() {
+  $('#execucaoId').val('');
+
+  $('#tituloModal').text('Cadastrar Execução');
+  $('#subTituloModal').text('Cadastre uma nova Execução abaixo.');
+
+  $('#execucaoForm').attr('action', '/pagPrincipal/execucao/register');
+
+  $('#execucao').modal('show');
+
+  return false;
+}
+
+/**
+ * Exclui uma execução.
+ * @param {string} id - ID da execução a ser excluída.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+async function excluirExecucaoClick(id) {
+  try {
+    const result = window.confirm("Deseja realmente excluir esta execução?");
+    if (result) {
+      const res = await fetch(`/execucao/delete/${id}`, {
+        method: 'GET'
+      });
+
+      if (res.ok) {
+        console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
+        await carregarRegistros('execucao', paginaAtual, registrosPorPag);
       } else {
         const result = await res.json();
         console.error('Erro:', result.error);

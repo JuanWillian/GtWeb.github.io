@@ -12,6 +12,7 @@ const loginController = require('./controllers/loginController.js');
 const setorController = require('./controllers/SetorController.js');
 const empresaController = require('./controllers/empresaController.js');
 const atividadeController = require('./controllers/atividadeController.js');
+const execucaoController = require('./controllers/execucaoController.js');
 
 const fs = require('node:fs');
 const https = require('https');
@@ -174,6 +175,13 @@ app.post('/pagPrincipal/atividade/register', loginRequired, atividadeController.
 app.post('/atividade/edit/:id', loginRequired, atividadeController.edit);
 app.get('/atividade/delete/:id', loginRequired, atividadeController.delete);
 app.get('/atividade/atividades', loginRequired, atividadeController.getAtividades);
+
+// Rotas da entidade Execuções
+app.post('/pagPrincipal/execucao/register', loginRequired, execucaoController.register);
+app.post('/execucao/edit/:id', loginRequired, execucaoController.edit);
+app.get('/execucao/delete/:id', loginRequired, execucaoController.delete);
+app.get('/execucao/execucoes', loginRequired, execucaoController.getExecucoes);
+
 
 app.get('*', (request, response) => {
     sendFile(request, response);

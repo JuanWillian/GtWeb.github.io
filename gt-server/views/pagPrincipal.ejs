@@ -71,7 +71,7 @@
                   <ul>
                     <li
                       data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                      onclick="formExecucao()"
+                      onclick="carregarLista('execucaoLista')"
                     >
                       <u>Execuções</u>
                     </li>
@@ -318,6 +318,58 @@
                 type="button"
                 class="btn btn-warning"
                 onclick="return botaoCancelarClick('atividade')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário das execuções -->
+    <div class="modal fade" id="execucao" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModal">Cadastrar Execuções</h1>
+              <p class="text-center lead" id="subTituloModal">
+                Cadastre uma nova Execuções abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form id="execucaoForm" onsubmit="return submitForm(event, 'execucao')">
+              <input type="hidden" id="grupoId" value="" />
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Descrição</label>
+                  <input
+                    value="<%= execucao.descricao %>"
+                    type="text"
+                    class="form-control"
+                    name="descricao"
+                    id="execucaoId"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('execucao')"
               >
                 <i class="fa fa-close"></i> Cancelar
               </button>
