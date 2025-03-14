@@ -307,6 +307,9 @@ async function carregarRegistros(entidade, page, limit) {
     case 'empresa':
       await carregarEmpresas(page, limit);
       break;
+    case 'atividade':
+      await carregarAtividades(page, limit);
+      break;  
       /*
      * TODO falta adicionar as outras entidades como opção     
      */
@@ -337,7 +340,11 @@ async function carregarFormulario(formulario) {
             console.log('Carregando empresas...');
             await atualizarRegistrosPorPag('empresa')
             await carregarRegistros("empresa", paginaAtual, registrosPorPag);
-          console.log('Empresas carregadas');  
+          case 'atividadeLista':
+            console.log('Carregando atividades...');
+            await atualizarRegistrosPorPag('atividade')
+            await carregarRegistros("atividade", paginaAtual, registrosPorPag);  
+          console.log('Atividades carregadas');  
       }
       
       /*
@@ -630,6 +637,108 @@ async function excluirEmpresaClick(id) {
       if (res.ok) {
         console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
         await carregarRegistros('empresa', paginaAtual, registrosPorPag);
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.error);
+      }
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+
+  return false;
+}
+
+// Rotinas de ATIVIDADES
+
+/**
+ * Carrega as atividades da base de dados e atualiza a tabela de atividades.
+ * @param {number} page - Número da página atual.
+ * @param {number} limit - Número de registros por página.
+ */
+async function carregarAtividades(page, limit) {
+  try {
+    const res = await fetch(`/atividade/atividades?key=${key}&page=${page}&limit=${limit}`);
+    if (res.ok) {
+      const { atividades, totalAtividades } = await res.json();
+      const tabela = document.querySelector('#atividadeFormContainer .table tbody');
+      tabela.innerHTML = atividades.map(atividade => `
+        <tr>
+          <td class="limited-width">${atividade.nome}</td>
+          <td class="tdButton">
+            <a href="#" class="btn-edit" data-id="${atividade._id}" data-nome="${atividade.nome}" onclick="return editarAtividadeClick(this)" title="Editar atividade">Editar</a>
+          </td>
+          <td class="tdButton">
+            <a class="text-danger" href="#" onclick="return excluirAtividadeClick('${atividade._id}')" title="Excluir este atividade">Excluir</a>
+          </td>
+        </tr>
+      `).join('');
+
+      const totalPaginas = Math.ceil(totalAtividades / limit);
+      const pagination = document.querySelector('.pagination');
+      pagination.innerHTML = gerarPaginacao('atividade', page, totalPaginas, limit);
+    } else {
+      console.error('Erro ao carregar as atividades!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+/**
+ * Edita uma atividade existente.
+ * @param {HTMLElement} element - Elemento HTML que disparou o evento.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function editarAtividadeClick(element) {
+  const atividadeId = $(element).data('id');
+  const atividadeNome = $(element).data('nome');
+
+  $('#atividadeId').val(atividadeNome);
+
+  $('#tituloModal').text('Editar Atividade');
+  $('#subTituloModal').text('Edite as informações da atividade abaixo.');
+
+  $('#atividadeForm').attr('action', '/atividade/edit/' + atividadeId);
+
+  $('#atividade').modal('show');
+
+  return false;
+}
+
+/**
+ * Registra uma nova atividade.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function registrarNovaAtividadeClick() {
+  $('#atividadeId').val('');
+
+  $('#tituloModal').text('Cadastrar Atividade');
+  $('#subTituloModal').text('Cadastre uma nova atividade abaixo.');
+
+  $('#atividadeForm').attr('action', '/pagPrincipal/atividade/register');
+
+  $('#atividade').modal('show');
+
+  return false;
+}
+
+/**
+ * Exclui uma atividade.
+ * @param {string} id - ID da atividade a ser excluída.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+async function excluirAtividadeClick(id) {
+  try {
+    const result = window.confirm("Deseja realmente excluir esta atividade?");
+    if (result) {
+      const res = await fetch(`/atividade/delete/${id}`, {
+        method: 'GET'
+      });
+
+      if (res.ok) {
+        console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
+        await carregarRegistros('atividade', paginaAtual, registrosPorPag);
       } else {
         const result = await res.json();
         console.error('Erro:', result.error);
