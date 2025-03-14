@@ -319,17 +319,17 @@ async function carregarRegistros(entidade, page, limit) {
 }
 
 /**
- * Carrega um formulário específico.
- * @param {string} formulario - Nome do formulário a ser carregado.
+ * Carrega um lista específico.
+ * @param {string} lista - Nome do lista a ser carregado.
  */
-async function carregarFormulario(formulario) {
+async function carregarLista(lista) {
   try {
-    const res = await fetch(`/partials/${formulario}`);
+    const res = await fetch(`/partials/${lista}`);
     if (res.ok) {
       const html = await res.text();
       document.getElementById('forms').innerHTML = html;
-      console.log(`Form carregado: ${formulario}`);
-      switch(formulario) {
+      console.log(`Form carregado: ${lista}`);
+      switch(lista) {
         case 'setorLista':
           console.log('Carregando setores...');
           await atualizarRegistrosPorPag('setor')
@@ -351,7 +351,7 @@ async function carregarFormulario(formulario) {
      * TODO falta adicionar as outras entidades como opção     
      */
     } else {
-      console.error('Erro ao carregar o formulário!');
+      console.error('Erro ao carregar o lista!');
     }
   } catch (error) {
     console.error('Erro:', error);
