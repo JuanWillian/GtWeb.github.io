@@ -42,7 +42,7 @@
                     </li>
                     <li
                       data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                      onclick="formUnidade()"
+                      onclick="carregarLista('unidadeLista')"
                     >
                       <u>Unidades</u>
                     </li>
@@ -61,7 +61,7 @@
                     <li
                       data-jstree='{"icon":"bi bi-file-earmark-fill"}'
                       onclick="formUsuario()"
-                    > 
+                    >
                       <u>Funcionários</u>
                     </li>
                   </ul>
@@ -172,8 +172,8 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="titleForm">
-              <h1 class="text-center" id="tituloModal">Cadastrar Setor</h1>
-              <p class="text-center lead" id="subTituloModal">
+              <h1 class="text-center" id="tituloModalSetor">Cadastrar Setor</h1>
+              <p class="text-center lead" id="subTituloModalSetor">
                 Cadastre um novo setor abaixo
               </p>
             </div>
@@ -232,8 +232,8 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="titleForm">
-              <h1 class="text-center" id="tituloModal">Cadastrar Empresa</h1>
-              <p class="text-center lead" id="subTituloModal">
+              <h1 class="text-center" id="tituloModalEmpresa">Cadastrar Empresa</h1>
+              <p class="text-center lead" id="subTituloModalEmpresa">
                 Cadastre uma nova empresa abaixo
               </p>
             </div>
@@ -242,7 +242,10 @@
             class="modal-body"
             style="max-height: calc(100vh - 200px); overflow-y: auto"
           >
-            <form id="empresaForm" onsubmit="return submitForm(event, 'empresa')">
+            <form
+              id="empresaForm"
+              onsubmit="return submitForm(event, 'empresa')"
+            >
               <div class="col mb-3">
                 <div class="form-group">
                   <label>Nome</label>
@@ -283,8 +286,8 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="titleForm">
-              <h1 class="text-center" id="tituloModal">Cadastrar atividade</h1>
-              <p class="text-center lead" id="subTituloModal">
+              <h1 class="text-center" id="tituloModalAtividade">Cadastrar atividade</h1>
+              <p class="text-center lead" id="subTituloModalAtividade">
                 Cadastre uma nova atividade abaixo
               </p>
             </div>
@@ -293,7 +296,10 @@
             class="modal-body"
             style="max-height: calc(100vh - 200px); overflow-y: auto"
           >
-            <form id="atividadeForm" onsubmit="return submitForm(event, 'atividade')">
+            <form
+              id="atividadeForm"
+              onsubmit="return submitForm(event, 'atividade')"
+            >
               <div class="col mb-3">
                 <div class="form-group">
                   <label>Nome</label>
@@ -334,8 +340,8 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="titleForm">
-              <h1 class="text-center" id="tituloModal">Cadastrar Execuções</h1>
-              <p class="text-center lead" id="subTituloModal">
+              <h1 class="text-center" id="tituloModalExecucao">Cadastrar Execuções</h1>
+              <p class="text-center lead" id="subTituloModalExecucao">
                 Cadastre uma nova Execuções abaixo
               </p>
             </div>
@@ -344,7 +350,10 @@
             class="modal-body"
             style="max-height: calc(100vh - 200px); overflow-y: auto"
           >
-            <form id="execucaoForm" onsubmit="return submitForm(event, 'execucao')">
+            <form
+              id="execucaoForm"
+              onsubmit="return submitForm(event, 'execucao')"
+            >
               <div class="col mb-3">
                 <div class="form-group">
                   <label>Descrição</label>
@@ -385,8 +394,8 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="titleForm">
-              <h1 class="text-center" id="tituloModal">Cadastrar Grupo</h1>
-              <p class="text-center lead" id="subTituloModal">
+              <h1 class="text-center" id="tituloModalGrupo">Cadastrar Grupo</h1>
+              <p class="text-center lead" id="subTituloModalGrupo">
                 Cadastre uma novo grupo abaixo
               </p>
             </div>
@@ -417,6 +426,84 @@
                 type="button"
                 class="btn btn-warning"
                 onclick="return botaoCancelarClick('grupo')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário das Unidades -->
+    <div class="modal fade" id="unidade" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalUnidade">Cadastrar Unidade</h1>
+              <p class="text-center lead" id="subTituloModalUnidade">
+                Cadastre uma nova unidade abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form
+              id="unidadeForm"
+              onsubmit="return submitForm(event, 'unidade')"
+            >
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Empresa</label>
+                  <select
+                    name="_empresaId"
+                    id="empresaUnidade"
+                    class="formSelectGradient"
+                    style="display: block; width: 100%;"
+                  ></select>
+                  <label>Cidade</label>
+                  <select
+                    name="_cidadeId"
+                    id="cidadeUnidade"
+                    class="formSelectGradient"
+                    style="display: block; width: 100%;"
+                  ></select>
+                  <label>Endereço</label>
+                  <input
+                    value="<%= unidade.endereco %>"
+                    type="text"
+                    class="form-control"
+                    name="endereco"
+                    id="enderecoId"
+                    required
+                    maxlength="80"
+                  />
+                  <label>Complemento</label>
+                  <input
+                    value="<%= unidade.complemento %>"
+                    type="text"
+                    class="form-control"
+                    name="complemento"
+                    id="complementoId"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('unidade')"
               >
                 <i class="fa fa-close"></i> Cancelar
               </button>

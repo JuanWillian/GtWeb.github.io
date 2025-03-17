@@ -1,9 +1,9 @@
-const Cargo = require('../models/cargoModel');
-const StatusAtividade = require('../models/statusAtividadeModel');
-const StatusUsuario = require('../models/statusUsuarioModel');
-const Cidade = require('../models/cidadeModel');
+const Cargo = require('../../../models/cargoModel');
+const StatusAtividade = require('../../../models/statusAtividadeModel');
+const StatusUsuario = require('../../../models/statusUsuarioModel');
+const Cidade = require('../../../models/cidadeModel');
 
-async function insertInitialData() {
+async function inserirDadosIniciais() {
   const cargos = [
     { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Líder' },
     { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Supervisor' },
@@ -65,4 +65,4 @@ async function insertInitialData() {
   console.log('Dados iniciais inseridos com sucesso.');
 }
 
-module.exports = insertInitialData;
+module.exports = inserirDadosIniciais;

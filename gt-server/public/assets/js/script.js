@@ -315,6 +315,9 @@ async function carregarRegistros(entidade, page, limit) {
     case 'grupo':
       await carregarGrupos(page, limit);
       break;
+    case 'unidade':
+      await carregarUnidades(page, limit);
+      break;
       /*
      * TODO falta adicionar as outras entidades como opção     
      */
@@ -354,6 +357,10 @@ async function carregarLista(lista) {
         case 'grupoLista':
           await atualizarRegistrosPorPag('grupo')
           await carregarRegistros("grupo", paginaAtual, registrosPorPag);
+          break;
+        case 'unidadeLista':
+          await atualizarRegistrosPorPag('unidade')
+          await carregarRegistros("unidade", paginaAtual, registrosPorPag);
           break;
       }
       
@@ -422,12 +429,6 @@ async function submitForm(event, nomeModal) {
   const action = form.getAttribute('action');
   const formData = new FormData(form);
   const data = Object.fromEntries(formData.entries());
-
-  if (data.nome && typeof data.nome === 'string') {
-    data.nome = data.nome.charAt(0).toUpperCase() + data.nome.slice(1);
-  } else if (data.descricao && typeof data.descricao === 'string') {
-    data.descricao = data.descricao.charAt(0).toUpperCase() + data.descricao.slice(1);
-  }
 
   data.key = key;
   try {
@@ -503,8 +504,8 @@ function editarSetorClick(element) {
   $('#setorId').val(setorNome);
   $('#setorDescricao').val(setorDescricao);
 
-  $('#tituloModal').text('Editar Setor');
-  $('#subTituloModal').text('Edite as informações do setor abaixo.');
+  $('#tituloModalSetor').text('Editar Setor');
+  $('#subTituloModalSetor').text('Edite as informações do setor abaixo.');
 
   $('#setorForm').attr('action', '/setor/edit/' + setorId);
 
@@ -521,8 +522,8 @@ function registrarNovoSetorClick() {
   $('#setorId').val('');
   $('#setorDescricao').val('');
 
-  $('#tituloModal').text('Cadastrar Setor');
-  $('#subTituloModal').text('Cadastre um novo setor abaixo.');
+  $('#tituloModalSetor').text('Cadastrar Setor');
+  $('#subTituloModalSetor').text('Cadastre um novo setor abaixo.');
 
   $('#setorForm').attr('action', '/pagPrincipal/setor/register');
 
@@ -606,8 +607,8 @@ function editarEmpresaClick(element) {
 
   $('#empresaId').val(empresaNome);
 
-  $('#tituloModal').text('Editar Empresa');
-  $('#subTituloModal').text('Edite as informações da empresa abaixo.');
+  $('#tituloModalEmpresa').text('Editar Empresa');
+  $('#subTituloModalEmpresa').text('Edite as informações da empresa abaixo.');
 
   $('#empresaForm').attr('action', '/empresa/edit/' + empresaId);
 
@@ -623,8 +624,8 @@ function editarEmpresaClick(element) {
 function registrarNovaEmpresaClick() {
   $('#empresaId').val('');
 
-  $('#tituloModal').text('Cadastrar Empresa');
-  $('#subTituloModal').text('Cadastre uma nova empresa abaixo.');
+  $('#tituloModalEmpresa').text('Cadastrar Empresa');
+  $('#subTituloModalEmpresa').text('Cadastre uma nova empresa abaixo.');
 
   $('#empresaForm').attr('action', '/pagPrincipal/empresa/register');
 
@@ -708,8 +709,8 @@ function editarAtividadeClick(element) {
 
   $('#atividadeId').val(atividadeNome);
 
-  $('#tituloModal').text('Editar Atividade');
-  $('#subTituloModal').text('Edite as informações da atividade abaixo.');
+  $('#tituloModalAtividade').text('Editar Atividade');
+  $('#subTituloModalAtividade').text('Edite as informações da atividade abaixo.');
 
   $('#atividadeForm').attr('action', '/atividade/edit/' + atividadeId);
 
@@ -725,8 +726,8 @@ function editarAtividadeClick(element) {
 function registrarNovaAtividadeClick() {
   $('#atividadeId').val('');
 
-  $('#tituloModal').text('Cadastrar Atividade');
-  $('#subTituloModal').text('Cadastre uma nova atividade abaixo.');
+  $('#tituloModalAtividade').text('Cadastrar Atividade');
+  $('#subTituloModalAtividade').text('Cadastre uma nova atividade abaixo.');
 
   $('#atividadeForm').attr('action', '/pagPrincipal/atividade/register');
 
@@ -810,8 +811,8 @@ function editarExecucaoClick(element) {
 
   $('#execucaoId').val(execucaoDescricao);
 
-  $('#tituloModal').text('Editar Execução');
-  $('#subTituloModal').text('Edite as informações da execução abaixo.');
+  $('#tituloModalExecucao').text('Editar Execução');
+  $('#subTituloModalExecucao').text('Edite as informações da execução abaixo.');
 
   $('#execucaoForm').attr('action', '/execucao/edit/' + execucaoId);
 
@@ -827,8 +828,8 @@ function editarExecucaoClick(element) {
 function registrarNovaExecucaoClick() {
   $('#execucaoId').val('');
 
-  $('#tituloModal').text('Cadastrar Execução');
-  $('#subTituloModal').text('Cadastre uma nova Execução abaixo.');
+  $('#tituloModalExecucao').text('Cadastrar Execução');
+  $('#subTituloModalExecucao').text('Cadastre uma nova Execução abaixo.');
 
   $('#execucaoForm').attr('action', '/pagPrincipal/execucao/register');
 
@@ -912,8 +913,8 @@ function editarGrupoClick(element) {
 
   $('#grupoId').val(grupoNome);
 
-  $('#tituloModal').text('Editar Grupo');
-  $('#subTituloModal').text('Edite as informações da grupo abaixo.');
+  $('#tituloModalGrupo').text('Editar Grupo');
+  $('#subTituloModalGrupo').text('Edite as informações da grupo abaixo.');
 
   $('#grupoForm').attr('action', '/grupo/edit/' + grupoId);
 
@@ -929,8 +930,8 @@ function editarGrupoClick(element) {
 function registrarNovoGrupoClick() {
   $('#grupoId').val('');
 
-  $('#tituloModal').text('Cadastrar Grupo');
-  $('#subTituloModal').text('Cadastre um nova grupo abaixo.');
+  $('#tituloModalGrupo').text('Cadastrar Grupo');
+  $('#subTituloModalGrupo').text('Cadastre um nova grupo abaixo.');
 
   $('#grupoForm').attr('action', '/pagPrincipal/grupo/register');
 
@@ -965,6 +966,162 @@ async function excluirGrupoClick(id) {
   }
 
   return false;
+}
+
+// Rotinas das Unidades
+
+/**
+ * Carrega as unidades da base de dados e atualiza a tabela de unidades.
+ * @param {number} page - Número da página atual.
+ * @param {number} limit - Número de registros por página.
+ */
+async function carregarUnidades(page, limit) {
+  try {
+    const res = await fetch(`/unidade/unidades?key=${key}&page=${page}&limit=${limit}`);
+    if (res.ok) {
+      const { unidades, totalUnidades } = await res.json();
+      const tabela = document.querySelector('#unidadeFormContainer .table tbody');
+      tabela.innerHTML = unidades.map(unidade => `
+        <tr>
+          <td class="limited-width">${unidade._empresaId.nome}</td>
+          <td class="limited-width">${unidade._cidadeId.nome}</td>
+          <td class="limited-width">${unidade.endereco}</td>
+          <td class="limited-width">${unidade.complemento}</td>
+          <td class="tdButton">
+            <a href="#" class="btn-edit" data-id="${unidade._id}" data-empresa="${unidade._empresaId._id}" data-cidade="${unidade._cidadeId._id}" data-endereco="${unidade.endereco}" data-complemento="${unidade.complemento}" onclick="return editarUnidadeClick(this)" title="Editar unidade">Editar</a>
+          </td>
+          <td class="tdButton">
+            <a class="text-danger" href="#" onclick="return excluirUnidadeClick('${unidade._id}')" title="Excluir este unidade">Excluir</a>
+          </td>
+        </tr>
+      `).join('');
+
+      const totalPaginas = Math.ceil(totalUnidades / limit);
+      const pagination = document.querySelector('.pagination');
+      pagination.innerHTML = gerarPaginacao('unidade', page, totalPaginas, limit);
+    } else {
+      console.error('Erro ao carregar as unidades!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+/**
+ * Edita uma unidade existente.
+ * @param {HTMLElement} element - Elemento HTML que disparou o evento.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function editarUnidadeClick(element) {
+  const unidadeId = $(element).data('id'); 
+  const unidadeEmpresa = $(element).data('empresa');
+  const unidadeCidade = $(element).data('cidade'); 
+  const unidadeEndereco = $(element).data('endereco');
+  const unidadeComplemento = $(element).data('complemento');
+
+  console.log("tentando editar tituloModalUnidade")
+  $('#tituloModalUnidade').text('Editar Unidade');
+  $('#subTituloModalUnidade').text('Edite as informações da Unidade abaixo.');
+
+  $('#unidadeForm').attr('action', '/unidade/edit/' + unidadeId);
+
+  carregarEmpresasSelect().then(() => {
+    $('#empresaUnidade').val(unidadeEmpresa);
+    carregarCidadesSelect().then(() => {
+      $('#cidadeUnidade').val(unidadeCidade);
+      $('#enderecoId').val(unidadeEndereco);
+      $('#complementoId').val(unidadeComplemento);
+      $('#unidade').modal('show');
+    });
+  });
+
+  return false;
+}
+
+/**
+ * Registra uma nova unidade.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function registrarNovaUnidadeClick() {
+  $('#empresaUnidade').val('');
+  $('#cidadeUnidade').val('');
+  $('#enderecoId').val('');
+  $('#complementoId').val('');
+
+  $('#tituloModalUnidade').text('Cadastrar Unidade');
+  $('#subTituloModalUnidade').text('Cadastre uma nova Unidade abaixo.');
+
+  $('#unidadeForm').attr('action', '/pagPrincipal/unidade/register');
+
+  carregarEmpresasSelect().then(() => {
+    carregarCidadesSelect().then(() => {
+      $('#unidade').modal('show');
+    });
+  });
+
+  return false;
+}
+
+/**
+ * Exclui uma unidade.
+ * @param {string} id - ID da unidade a ser excluída.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+async function excluirUnidadeClick(id) {
+  try {
+    const result = window.confirm("Deseja realmente excluir esta unidade?");
+    if (result) {
+      const res = await fetch(`/unidade/delete/${id}`, {
+        method: 'GET'
+      });
+
+      if (res.ok) {
+        console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
+        await carregarRegistros('unidade', paginaAtual, registrosPorPag);
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.error);
+      }
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+
+  return false;
+}
+
+async function carregarEmpresasSelect() {
+  try {
+    const res = await fetch(`/empresa/empresas?key=${key}`);
+    if (res.ok) {
+      const { empresas } = await res.json();
+      const select = document.getElementById('empresaUnidade');
+      select.innerHTML = empresas.map(empresa => `
+        <option value="${empresa._id}">${empresa.nome}</option>
+      `).join('');
+    } else {
+      console.error('Erro ao carregar as empresas!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+async function carregarCidadesSelect() {
+  try {
+    const res = await fetch(`/cidade/cidades?key=${key}`);
+    if (res.ok) {
+      const { cidades } = await res.json();
+      const select = document.getElementById('cidadeUnidade');
+      select.innerHTML = cidades.map(cidade => `
+        <option value="${cidade._id}">${cidade.nome}</option>
+      `).join('');
+    } else {
+      console.error('Erro ao carregar as cidades!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
 }
 
 // TELA DE LOADING

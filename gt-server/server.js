@@ -18,8 +18,9 @@ const statusUsuarioController = require('./controllers/statusUsuarioController')
 const statusAtividadeController = require('./controllers/statusAtividadeController');
 const cargoController = require('./controllers/cargoController');
 const cidadeController = require('./controllers/cidadeController');
+const unidadeController = require('./controllers/unidadeController');
 
-const insertInitialData = require('./scripts/insertInitialData.js');
+const inserirDadosIniciais = require('./public/assets/js/inserirDadosIniciais.js');
 
 const fs = require('node:fs');
 const https = require('https');
@@ -50,7 +51,7 @@ mongoose.connect(config.mongoServer, {
     useUnifiedTopology: true,
 }).then(async () => {
     console.log(`Conectado ao banco de dados MongoDB: ${config.mongoDatabase}`);
-    await insertInitialData(); // Inserir dados iniciais
+    await inserirDadosIniciais(); 
     app.emit('pronto');
 }).catch((e) => console.log(e));
 
@@ -219,6 +220,12 @@ app.post('/pagPrincipal/statusAtividade/register', loginRequired, statusAtividad
 app.post('/statusAtividade/edit/:id', loginRequired, statusAtividadeController.edit);
 app.get('/statusAtividade/delete/:id', loginRequired, statusAtividadeController.delete);
 app.get('/statusAtividade/statuses', loginRequired, statusAtividadeController.getStatuses);
+
+// Rotas da entidade Unidade
+app.post('/pagPrincipal/unidade/register', loginRequired, unidadeController.register);
+app.post('/unidade/edit/:id', loginRequired, unidadeController.edit);
+app.get('/unidade/delete/:id', loginRequired, unidadeController.delete);
+app.get('/unidade/unidades', loginRequired, unidadeController.getUnidades);
 
 app.get('*', (request, response) => {
     sendFile(request, response);

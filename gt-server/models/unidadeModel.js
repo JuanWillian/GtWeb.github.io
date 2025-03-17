@@ -1,0 +1,81 @@
+const mongoose = require('mongoose');
+const fs = require('node:fs');
+const path = require('path');
+
+const keys = JSON.parse(fs.readFileSync(path.join(__dirname, '../conf/keys.json')));
+
+const UnidadeSchema = new mongoose.Schema({
+  key: { type: String, required: true },
+  _empresaId: { type: mongoose.Schema.Types.ObjectId, ref: 'Empresa', required: true },
+  _cidadeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cidade', required: true },
+  endereco: { type: String, required: false },
+  complemento: { type: String, required: false },
+});
+
+const UnidadeModel = mongoose.model('Unidade', UnidadeSchema);
+
+function Unidade(body) {
+  this.body = body;
+  this.errors = [];
+  this.unidade = null;
+}
+
+Unidade.prototype.verificaExistencia = async function () {
+  const unidadeJaCadastrada = await UnidadeModel.findOne({
+    key: this.body.key,
+    _empresaId: this.body._empresaId,
+    _cidadeId: this.body._cidadeId,
+    endereco: this.body.endereco,
+    complemento: this.body.complemento
+  });
+  if (unidadeJaCadastrada) {
+    this.errors.push('Unidade já cadastrada.');
+    return;
+  }
+}
+
+Unidade.prototype.register = async function () {
+  this.valida();
+  await this.verificaExistencia();
+  if (this.errors.length > 0) return;
+
+  this.unidade = await UnidadeModel.create(this.body);
+};
+
+Unidade.prototype.valida = function () {
+
+  if (!keys.includes(this.body.key)) {
+    this.errors.push('Key inválida.');
+  }
+};
+
+Unidade.prototype.edit = async function (id) {
+  if (typeof id !== 'string') return;
+  this.valida();
+  await this.verificaExistencia();
+  if (this.errors.length > 0) return;
+  this.unidade = await UnidadeModel.findByIdAndUpdate(id, this.body, { new: true });
+};
+
+Unidade.buscaUnidades = async function (key, page, limit) {
+  const skip = (page - 1) * limit;
+  const unidades = await UnidadeModel.find({ key })
+    .sort({ endereco: 1 })
+    .skip(skip)
+    .limit(parseInt(limit))
+    .populate('_empresaId', 'nome')
+    .populate('_cidadeId', 'nome');
+  return unidades;
+};
+
+Unidade.delete = async function (id) {
+  if (typeof id !== 'string') return;
+  const unidade = await UnidadeModel.findOneAndDelete({ _id: id });
+  return unidade;
+};
+
+Unidade.countDocuments = async function (key) {
+  return await UnidadeModel.countDocuments({ key });
+};
+
+module.exports = Unidade;

@@ -148,7 +148,7 @@ main {
 }
 
 .tdButton {
-  max-width: 10px !important;
+  width: 10px !important;
 }
 
 .tdButton a {
