@@ -14,6 +14,12 @@ const empresaController = require('./controllers/empresaController.js');
 const atividadeController = require('./controllers/atividadeController.js');
 const execucaoController = require('./controllers/execucaoController.js');
 const grupoController = require('./controllers/grupoController.js');
+const statusUsuarioController = require('./controllers/statusUsuarioController');
+const statusAtividadeController = require('./controllers/statusAtividadeController');
+const cargoController = require('./controllers/cargoController');
+const cidadeController = require('./controllers/cidadeController');
+
+const insertInitialData = require('./scripts/insertInitialData.js');
 
 const fs = require('node:fs');
 const https = require('https');
@@ -42,8 +48,9 @@ mongoose.connect(config.mongoServer, {
     dbName: config.mongoDatabase,
     useNewUrlParser: true,
     useUnifiedTopology: true,
-}).then(() => {
+}).then(async () => {
     console.log(`Conectado ao banco de dados MongoDB: ${config.mongoDatabase}`);
+    await insertInitialData(); // Inserir dados iniciais
     app.emit('pronto');
 }).catch((e) => console.log(e));
 
@@ -189,6 +196,29 @@ app.post('/grupo/edit/:id', loginRequired, grupoController.edit);
 app.get('/grupo/delete/:id', loginRequired, grupoController.delete);
 app.get('/grupo/grupos', loginRequired, grupoController.getGrupos);
 
+// Rotas da entidade Cargo
+app.post('/pagPrincipal/cargo/register', loginRequired, cargoController.register);
+app.post('/cargo/edit/:id', loginRequired, cargoController.edit);
+app.get('/cargo/delete/:id', loginRequired, cargoController.delete);
+app.get('/cargo/cargos', loginRequired, cargoController.getCargos);
+
+// Rotas da entidade Cidade
+app.post('/pagPrincipal/cidade/register', loginRequired, cidadeController.register);
+app.post('/cidade/edit/:id', loginRequired, cidadeController.edit);
+app.get('/cidade/delete/:id', loginRequired, cidadeController.delete);
+app.get('/cidade/cidades', loginRequired, cidadeController.getCidades);
+
+// Rotas da entidade StatusUsuario
+app.post('/pagPrincipal/statusUsuario/register', loginRequired, statusUsuarioController.register);
+app.post('/statusUsuario/edit/:id', loginRequired, statusUsuarioController.edit);
+app.get('/statusUsuario/delete/:id', loginRequired, statusUsuarioController.delete);
+app.get('/statusUsuario/statuses', loginRequired, statusUsuarioController.getStatuses);
+
+// Rotas da entidade StatusAtividade
+app.post('/pagPrincipal/statusAtividade/register', loginRequired, statusAtividadeController.register);
+app.post('/statusAtividade/edit/:id', loginRequired, statusAtividadeController.edit);
+app.get('/statusAtividade/delete/:id', loginRequired, statusAtividadeController.delete);
+app.get('/statusAtividade/statuses', loginRequired, statusAtividadeController.getStatuses);
 
 app.get('*', (request, response) => {
     sendFile(request, response);

@@ -1,0 +1,67 @@
+const StatusAtividade = require('../models/statusAtividadeModel');
+const fs = require('node:fs');
+const path = require('path');
+
+const keys = JSON.parse(fs.readFileSync(path.join(__dirname, '../conf/keys.json')));
+
+exports.register = async (req, res) => {
+  try {
+    const statusAtividade = new StatusAtividade(req.body);
+    await statusAtividade.register();
+
+    if (statusAtividade.errors.length > 0) {
+      req.session.save(() => res.status(400).json({ errors: statusAtividade.errors }));
+      return;
+    }
+
+    req.session.save(() => res.status(200).json({ message: 'Status de atividade registrado com sucesso.' }));
+    return;
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao registrar status de atividade.' });
+  }
+};
+
+exports.edit = async function (req, res) {
+  try {
+    if (!req.params.id) return res.status(404).json({ error: 'Status de atividade não encontrado.' });
+    const statusAtividade = new StatusAtividade(req.body);
+    await statusAtividade.edit(req.params.id);
+
+    if (statusAtividade.errors.length > 0) {
+      req.session.save(() => res.status(400).json({ errors: statusAtividade.errors }));
+      return;
+    }
+
+    req.session.save(() => res.status(200).json({ message: 'Status de atividade editado com sucesso.' }));
+    return;
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao editar status de atividade.' });
+  }
+};
+
+exports.delete = async function (req, res) {
+  if (!req.params.id) return res.status(404).json({ error: 'Status de atividade não encontrado.' });
+
+  const statusAtividade = await StatusAtividade.delete(req.params.id);
+  if (!statusAtividade) return res.status(404).json({ error: 'Status de atividade não encontrado.' });
+
+  req.session.save(() => res.status(200).json({ message: 'Status de atividade apagado com sucesso.' }));
+  return;
+};
+
+exports.getStatuses = async (req, res) => {
+  try {
+    const { key, page = 1, limit = 10 } = req.query;
+    if (!keys.includes(key)) {
+      return res.status(401).json({ error: 'Key inválida.' });
+    }
+    const statuses = await StatusAtividade.buscaStatuses(key, page, limit);
+    const totalStatuses = await StatusAtividade.countDocuments(key);
+    res.json({ statuses, totalStatuses });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: 'Erro ao buscar statuses de atividade' });
+  }
+};
