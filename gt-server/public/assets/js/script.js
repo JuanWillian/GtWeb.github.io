@@ -1186,9 +1186,9 @@ async function carregarUnidadeMedidas(page, limit) {
         <tr>
           <td class="limited-width">${unidadeMedida.descricao}</td>
           <td class="limited-width">${unidadeMedida.sigla}</td>
-          <td class="limited-width">${unidadeMedida.podeFracionar ? 'Sim' : 'Não'}</td>
+          <td class="limited-width">${unidadeMedida.podeFracionar}</td>
           <td class="tdButton">
-            <a href="#" class="btn-edit" data-id="${unidadeMedida._id}" data-descricao="${unidadeMedida.descricao}" data-sigla="${unidadeMedida.sigla}" data-podeFracionar="${unidadeMedida.podeFracionar}" onclick="return editarUnidadeMedidaClick(this)" title="Editar unidadeMedida">Editar</a>
+            <a href="#" class="btn-edit" data-id="${unidadeMedida._id}" data-descricao="${unidadeMedida.descricao}" data-sigla="${unidadeMedida.sigla}" data-podefracionar="${unidadeMedida.podeFracionar}" onclick="return editarUnidadeMedidaClick(this)" title="Editar unidadeMedida">Editar</a>
           </td>
           <td class="tdButton">
             <a class="text-danger" href="#" onclick="return excluirUnidadeMedidaClick('${unidadeMedida._id}')" title="Excluir este unidadeMedida">Excluir</a>
@@ -1216,7 +1216,7 @@ function editarUnidadeMedidaClick(element) {
   const unidadeMedidaId = $(element).data('id');
   const unidadeMedidaDescricao = $(element).data('descricao');
   const unidadeMedidaSigla = $(element).data('sigla');
-  const unidadeMedidaPodeFracionar = $(element).data('podefracionar');
+  const unidadeMedidaPodeFracionar = $(element).data('podefracionar') === 'Sim';
 
   $('#unidadeMedidaId').val(unidadeMedidaId);
   $('#unidadeMedidaDescricao').val(unidadeMedidaDescricao);

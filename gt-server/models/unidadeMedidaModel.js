@@ -33,8 +33,8 @@ UnidadeMedida.prototype.verificarExistencia = async function () {
 }
 
 UnidadeMedida.prototype.valida = async function () {
-  await this.verificarExistencia();
   await this.cleanUp();
+  await this.verificarExistencia();
 
   if (!this.body.descricao) this.errors.push('Descrição é um campo obrigatório.');
   if (!this.body.sigla) this.errors.push('Sigla é um campo obrigatório.');
@@ -57,7 +57,7 @@ UnidadeMedida.prototype.cleanUp = async function () {
       this.body[key] = '';
     }
   }
-
+  console.log(this.body);
   this.body = {
     key: this.body.key,
     descricao: this.body.descricao,
