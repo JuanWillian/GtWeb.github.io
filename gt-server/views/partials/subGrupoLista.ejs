@@ -1,19 +1,19 @@
-<section id="unidadeFormContainer">
+<section id="subGrupoFormContainer">
   <div class="mainFormContainer">
-    <h1 class="text-center">Unidades</h1>
-    <p class="text-center lead">Gerencie seus unidades abaixo</p>
+    <h1 class="text-center">SubGrupo</h1>
+    <p class="text-center lead">Gerencie seus SubGrupo abaixo</p>
     <div class="cabecalhoForm">
       <button
         class="btn btnCadastro"
-        onclick="return registrarNovaUnidadeClick()"
-        title="Adicionar nova unidade"
+        onclick="return registrarNovoSubGrupoClick()"
+        title="Adicionar novo SubGrupo"
       >
         <i class="bi bi-plus-lg"></i>
       </button>
         <select
           id="registrosPorPag"
           class="formSelectGradient"
-          onchange="atualizarRegistrosPorPag('unidade')"
+          onchange="atualizarRegistrosPorPag('subGrupo')"
         >
           <option value="5">5</option>
           <option value="10" selected>10</option>
@@ -31,16 +31,14 @@
       >
         <thead>
           <tr>
-            <th>Empresa</th>
-            <th>Cidade</th>
-            <th>Endereço</th>
-            <th>Complemento</th>
+            <th>Grupo</th>
+            <th>Nome</th>
             <th></th>
             <th></th>
           </tr>
         </thead>
         <tbody class="table-group-divider">
-          <!-- Os dados das unidades serão preenchidos aqui -->
+          <!-- Os dados dos subGrupos serão preenchidos aqui -->
         </tbody>
       </table>
     </div>

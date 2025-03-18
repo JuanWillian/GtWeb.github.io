@@ -5,6 +5,7 @@ const Execucao = require('../models/execucaoModel');
 const Grupo = require('../models/grupoModel');
 const Unidade = require('../models/unidadeModel');
 const Cidade = require('../models/cidadeModel');
+const SubGrupo = require('../models/subGrupoModel');
 
 exports.index = async (req, res) => {
   const setores = await Setor.buscaSetores();
@@ -14,8 +15,9 @@ exports.index = async (req, res) => {
   const grupos = await Grupo.buscaGrupos();
   const unidades = await Unidade.buscaUnidades();
   const cidades = await Cidade.buscaCidades();
+  const subGrupos = await SubGrupo.buscaSubGrupos();
 
-  res.render('pagPrincipal', { setores, setor: {}, empresas, empresa: {}, atividades, atividade: {}, execucoes, execucao: {}, grupos, grupo: {}, unidades, unidade: {}, cidades });
+  res.render('pagPrincipal', { setores, setor: {}, empresas, empresa: {}, atividades, atividade: {}, execucoes, execucao: {}, grupos, grupo: {}, unidades, unidade: {}, cidades, subGrupos, subGrupo: {} });
 };
 
 exports.carregarFormulario = (req, res) => {

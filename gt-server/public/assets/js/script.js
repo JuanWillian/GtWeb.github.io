@@ -1,52 +1,4 @@
 var key = 'ad0c0749e023d44bd92c1e56ca0b3e3c';
-function formUnidade() {
-  let form = "";
-  form += '<form class="row g-3 formulario">';
-  form += ' <div class="col-md-6">';
-  form += '  <label for="nomeEmpresa">Empresa da unidade</label>';
-  form += ' <input id="nomeEmpresa" class="form-control" type="text" />';
-  form += " </div>";
-  form += ' <div class="col-md-6">';
-  form += '   <label for="cidade">Cidade</label>';
-  form += '   <select class="form-select">';
-  form += '   <option value="1">Salvador</option>';
-  form += '   <option value="2">Lauro de Freita</option>';
-  form += '   <option value="3">Feira de Santana</option>';
-  form += '   <option value="4">Jacobina</option>';
-  form += "   </select>";
-  form += " </div>";
-  form += ' <div class="col-md-6">';
-  form += '   <label for="ruaUnidade">Rua</label>';
-  form += '   <input id="rua" class="form-control" type="text" />';
-  form += " </div>";
-  form += ' <div class="col-md-6">';
-  form += '   <label for="numeroEnderecoUnidade">Número do endereço:</label>';
-  form += '   <input id="nomeEmpresa" class="form-control" type="number" />';
-  form += " </div>";
-  form += ' <div>';
-  form += '   <button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
-  form += '</div>';
-  form += "</form>";
-  document.getElementById("forms").innerHTML = form;
-}
-
-function formSetor() {
-  let form = "";
-  form += '<form class="row g-3 formulario">';
-  form += ' <div class="col-md-12">';
-  form += '  <label for="nomeSetor">Nome</label>';
-  form += ' <input id="nomeSetor" class="form-control" type="text" />';
-  form += " </div>";
-  form += '<div class="col-12">';
-  form += ' <label for="descSetor">Descrição</label>';
-  form += '<input id="descSetor" class="form-control p-5" type="text"/>';
-  form += "</div>";
-  form += ' <div>';
-  form += '   <button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
-  form += '</div>';
-  form += "</form>";
-  document.getElementById("forms").innerHTML = form;
-}
 
 function formUsuario() {
   let form = "";
@@ -92,50 +44,6 @@ function formUsuario() {
   form += '<button type="submit" class="btn btnCadastro">Cadastrar</button>';
   form += "</div>";
   form += "</form>";
-  document.getElementById("forms").innerHTML = form;
-}
-
-function formExecucao() {
-  let form = "";
-  form += '<form class="row g-3 formulario" >';
-  form += ' <div class="col-md-12">';
-  form += '   <label for="tituloExecucao">Titulo</label>';
-  form += '   <input id="tituloExecucao" class="form-control" type="text"/>';
-  form += " </div>";
-  form += ' <div class="col-12">';
-  form += '   <label for="descExecucao">Descrição</label>';
-  form += '   <input id="descExecucao" class="form-control p-5" type="text">';
-  form += "   </div>";
-  form += ' <div>';
-  form += '   <button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
-  form += '</div>';
-  form += " </form>";
-  document.getElementById("forms").innerHTML = form;
-}
-
-function formAtvd() {
-  let form = "";
-  form += '  <form class="row g-3 formulario" >';
-  form += ' <div class="col-md-12">';
-  form += ' <label for="nomeAtvd">Nome</label>';
-  form += ' <input id="nomeAtvd" class="form-control" type="text" />';
-  form += ' </div>';
-  form += ' <div class="col-12">';
-  form += '<label for="descAtvd">Descrição</label>';
-  form += '<input id="descAtvd" class="form-control p-5" type="text" />';
-  form += '  </div>';
-  form += '<div class="col-md-12">';
-  form += '<label for="localAtvd">Local</label>';
-  form += ' <select class="form-select" id="localAtvd">';
-  form += ' <option value="1">Banheiro</option>';
-  form += '<option value="2">Corredor</option>';
-  form += ' <option value="3">Ala 3</option>';
-  form += '</select>';
-  form += '</div>';
-  form += ' <div>';
-  form += '   <button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
-  form += '</div>';
-  form += '</form>';
   document.getElementById("forms").innerHTML = form;
 }
 
@@ -318,9 +226,9 @@ async function carregarRegistros(entidade, page, limit) {
     case 'unidade':
       await carregarUnidades(page, limit);
       break;
-      /*
-     * TODO falta adicionar as outras entidades como opção     
-     */
+    case 'subGrupo':
+      await carregarSubGrupos(page, limit);
+      break;
     default:
       console.error('Entidade desconhecida:', entidade);
   }
@@ -361,6 +269,10 @@ async function carregarLista(lista) {
         case 'unidadeLista':
           await atualizarRegistrosPorPag('unidade')
           await carregarRegistros("unidade", paginaAtual, registrosPorPag);
+          break;
+        case 'subGrupoLista':
+          await atualizarRegistrosPorPag('subGrupo')
+          await carregarRegistros("subGrupo", paginaAtual, registrosPorPag);
           break;
       }
       
@@ -1123,6 +1035,133 @@ async function carregarCidadesSelect() {
     console.error('Erro:', error);
   }
 }
+
+// Rotinas ds SubGrupos
+
+/**
+ * Carrega as subGrupos da base de dados e atualiza a tabela de subGrupos.
+ * @param {number} page - Número da página atual.
+ * @param {number} limit - Número de registros por página.
+ */
+async function carregarSubGrupos(page, limit) {
+  try {
+    const res = await fetch(`/subGrupo/subGrupos?key=${key}&page=${page}&limit=${limit}`);
+    if (res.ok) {
+      const { subGrupos, totalSubGrupos } = await res.json();
+      const tabela = document.querySelector('#subGrupoFormContainer .table tbody');
+      tabela.innerHTML = subGrupos.map(subGrupo => `
+        <tr>
+          <td class="limited-width">${subGrupo._grupoId.nome}</td>
+          <td class="limited-width">${subGrupo.nome}</td>
+          <td class="tdButton">
+            <a href="#" class="btn-edit" data-id="${subGrupo._id}" data-grupo="${subGrupo._grupoId._id}" data-nome="${subGrupo.nome}" onclick="return editarSubGrupoClick(this)" title="Editar subGrupo">Editar</a>
+          </td>
+          <td class="tdButton">
+            <a class="text-danger" href="#" onclick="return excluirSubGrupoClick('${subGrupo._id}')" title="Excluir este subGrupo">Excluir</a>
+          </td>
+        </tr>
+      `).join('');
+
+      const totalPaginas = Math.ceil(totalSubGrupos / limit);
+      const pagination = document.querySelector('.pagination');
+      pagination.innerHTML = gerarPaginacao('subGrupo', page, totalPaginas, limit);
+    } else {
+      console.error('Erro ao carregar os subGrupos!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+/**
+ * Edita um subGrupo existente.
+ * @param {HTMLElement} element - Elemento HTML que disparou o evento.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function editarSubGrupoClick(element) {
+  const subGrupoId = $(element).data('id'); 
+  const subGrupoGrupo = $(element).data('grupo');
+  const subGrupoNome = $(element).data('nome');
+
+  $('#tituloModalSubGrupo').text('Editar SubGrupo');
+  $('#subTituloModalSubGrupo').text('Edite os informações do SubGrupo abaixo.');
+
+  $('#subGrupoForm').attr('action', '/subGrupo/edit/' + subGrupoId);
+
+  carregarGruposNoSelect().then(() => {
+    $('#subGrupoGrupo').val(subGrupoGrupo);
+    $('#nomeId').val(subGrupoNome);
+    $('#subGrupo').modal('show');
+  });
+
+  return false;
+}
+
+/**
+ * Registra um novo subGrupo.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function registrarNovoSubGrupoClick() {
+  $('#subGrupoGrupo').val('');
+  $('#nomeId').val('');
+
+  $('#tituloModalSubGrupo').text('Cadastrar SubGrupo');
+  $('#subTituloModalSubGrupo').text('Cadastre um novo SubGrupo abaixo.');
+
+  $('#subGrupoForm').attr('action', '/pagPrincipal/subGrupo/register');
+
+  carregarGruposNoSelect().then(() => {
+    $('#subGrupo').modal('show');
+  });
+
+  return false;
+}
+
+/**
+ * Exclui um subGrupo.
+ * @param {string} id - ID da subGrupo a ser excluído.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+async function excluirSubGrupoClick(id) {
+  try {
+    const result = window.confirm("Deseja realmente excluir este subGrupo?");
+    if (result) {
+      const res = await fetch(`/subGrupo/delete/${id}`, {
+        method: 'GET'
+      });
+
+      if (res.ok) {
+        console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
+        await carregarRegistros('subGrupo', paginaAtual, registrosPorPag);
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.error);
+      }
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+
+  return false;
+}
+
+async function carregarGruposNoSelect() {
+  try {
+    const res = await fetch(`/grupo/grupos?key=${key}`);
+    if (res.ok) {
+      const { grupos } = await res.json();
+      const select = document.getElementById('subGrupoGrupo');
+      select.innerHTML = grupos.map(grupo => `
+        <option value="${grupo._id}">${grupo.nome}</option>
+      `).join('');
+    } else {
+      console.error('Erro ao carregar os grupos!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
 
 // TELA DE LOADING
 // window.addEventListener("load", () => {

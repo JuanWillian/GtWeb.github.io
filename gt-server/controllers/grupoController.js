@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
       return;
     }
 
-    req.session.save(() => res.status(200).json({ message: 'Grupo registrada com sucesso.' }));
+    req.session.save(() => res.status(200).json({ message: 'Grupo registrado com sucesso.' }));
     return;
   } catch (e) {
     console.log(e);
@@ -24,7 +24,7 @@ exports.register = async (req, res) => {
 
 exports.edit = async function (req, res) {
   try {
-    if (!req.params.id) return res.status(404).json({ error: 'Grupo não encontrada.' });
+    if (!req.params.id) return res.status(404).json({ error: 'Grupo não encontrado.' });
     const grupo = new Grupo(req.body);
     await grupo.edit(req.params.id);
 
@@ -33,7 +33,7 @@ exports.edit = async function (req, res) {
       return;
     }
 
-    req.session.save(() => res.status(200).json({ message: 'Grupo editada com sucesso.' }));
+    req.session.save(() => res.status(200).json({ message: 'Grupo editado com sucesso.' }));
     return;
   } catch (e) {
     console.log(e);
@@ -42,12 +42,12 @@ exports.edit = async function (req, res) {
 };
 
 exports.delete = async function (req, res) {
-  if (!req.params.id) return res.status(404).json({ error: 'Grupo não encontrada.' });
+  if (!req.params.id) return res.status(404).json({ error: 'Grupo não encontrado.' });
 
   const grupo = await Grupo.delete(req.params.id);
-  if (!grupo) return res.status(404).json({ error: 'Grupo não encontrada.' });
+  if (!grupo) return res.status(404).json({ error: 'Grupo não encontrado.' });
 
-  req.session.save(() => res.status(200).json({ message: 'Grupo apagada com sucesso.' }));
+  req.session.save(() => res.status(200).json({ message: 'Grupo apagado com sucesso.' }));
   return;
 };
 
@@ -65,3 +65,4 @@ exports.getGrupos = async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar grupos' });
   }
 };
+

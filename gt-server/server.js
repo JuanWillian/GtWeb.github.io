@@ -19,6 +19,7 @@ const statusAtividadeController = require('./controllers/statusAtividadeControll
 const cargoController = require('./controllers/cargoController');
 const cidadeController = require('./controllers/cidadeController');
 const unidadeController = require('./controllers/unidadeController');
+const subGrupoController = require('./controllers/subGrupoController');
 
 const inserirDadosIniciais = require('./public/assets/js/inserirDadosIniciais.js');
 
@@ -226,6 +227,12 @@ app.post('/pagPrincipal/unidade/register', loginRequired, unidadeController.regi
 app.post('/unidade/edit/:id', loginRequired, unidadeController.edit);
 app.get('/unidade/delete/:id', loginRequired, unidadeController.delete);
 app.get('/unidade/unidades', loginRequired, unidadeController.getUnidades);
+
+// Rotas da entidade SubGrupo
+app.post('/pagPrincipal/subGrupo/register', loginRequired, subGrupoController.register);
+app.post('/subGrupo/edit/:id', loginRequired, subGrupoController.edit);
+app.get('/subGrupo/delete/:id', loginRequired, subGrupoController.delete);
+app.get('/subGrupo/subGrupos', loginRequired, subGrupoController.getSubGrupos);
 
 app.get('*', (request, response) => {
     sendFile(request, response);

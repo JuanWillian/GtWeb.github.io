@@ -20,7 +20,7 @@ function Unidade(body) {
   this.unidade = null;
 }
 
-Unidade.prototype.verificaExistencia = async function () {
+Unidade.prototype.verificarExistencia = async function () {
   const unidadeJaCadastrada = await UnidadeModel.findOne({
     key: this.body.key,
     _empresaId: this.body._empresaId,
@@ -36,7 +36,7 @@ Unidade.prototype.verificaExistencia = async function () {
 
 Unidade.prototype.register = async function () {
   this.valida();
-  await this.verificaExistencia();
+  await this.verificarExistencia();
   if (this.errors.length > 0) return;
 
   this.unidade = await UnidadeModel.create(this.body);
@@ -52,7 +52,7 @@ Unidade.prototype.valida = function () {
 Unidade.prototype.edit = async function (id) {
   if (typeof id !== 'string') return;
   this.valida();
-  await this.verificaExistencia();
+  await this.verificarExistencia();
   if (this.errors.length > 0) return;
   this.unidade = await UnidadeModel.findByIdAndUpdate(id, this.body, { new: true });
 };
