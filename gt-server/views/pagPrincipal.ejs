@@ -106,7 +106,7 @@
                     </li>
                     <li
                       data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                      onclick="formGpProduto()"
+                      onclick="carregarLista('unidadeMedidaLista')"
                     >
                       <u>Unidades de medida</u>
                     </li>
@@ -571,6 +571,60 @@
                 type="button"
                 class="btn btn-warning"
                 onclick="return botaoCancelarClick('subGrupo')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário das unidades de medidas -->
+    <div class="modal fade" id="unidadeMedida" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalUnidadeMedida">Cadastrar Unidade de medidas</h1>
+              <p class="text-center lead" id="subTituloModalUnidadeMedida">
+                Cadastre uma nova Unidade de medidas abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form
+              id="unidadeMedidaForm"
+              onsubmit="return submitForm(event, 'unidadeMedida')"
+            >
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Descrição</label>
+                  <input
+                    value="<%= unidadeMedida.descricao %>"
+                    type="text"
+                    class="form-control"
+                    name="descricao"
+                    id="unidadeMedidaId"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('unidadeMedida')"
               >
                 <i class="fa fa-close"></i> Cancelar
               </button>

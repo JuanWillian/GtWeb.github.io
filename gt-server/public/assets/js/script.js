@@ -229,6 +229,9 @@ async function carregarRegistros(entidade, page, limit) {
     case 'subGrupo':
       await carregarSubGrupos(page, limit);
       break;
+    case 'unidadeMedida':
+      await carregarUnidadeMedidas(page, limit);
+      break;
     default:
       console.error('Entidade desconhecida:', entidade);
   }
@@ -273,6 +276,10 @@ async function carregarLista(lista) {
         case 'subGrupoLista':
           await atualizarRegistrosPorPag('subGrupo')
           await carregarRegistros("subGrupo", paginaAtual, registrosPorPag);
+          break;
+        case 'unidadeMedidaLista':
+          await atualizarRegistrosPorPag('unidadeMedida')
+          await carregarRegistros("unidadeMedida", paginaAtual, registrosPorPag);
           break;
       }
       
@@ -705,7 +712,7 @@ async function carregarExecucoes(page, limit) {
       const pagination = document.querySelector('.pagination');
       pagination.innerHTML = gerarPaginacao('execucao', page, totalPaginas, limit);
     } else {
-      console.error('Erro ao carregar as execucaos!');
+      console.error('Erro ao carregar as execucoes!');
     }
   } catch (error) {
     console.error('Erro:', error);
@@ -1160,6 +1167,108 @@ async function carregarGruposNoSelect() {
   } catch (error) {
     console.error('Erro:', error);
   }
+}
+
+// Rotinas de UNIDADE DE MEDIDAS
+
+/**
+ * Carrega as UNIDADE DE MEDIDAS da base de dados e atualiza a tabela de UNIDADE DE MEDIDAS.
+ * @param {number} page - Número da página atual.
+ * @param {number} limit - Número de registros por página.
+ */
+async function carregarUnidadeMedidas(page, limit) {
+  try {
+    const res = await fetch(`/unidadeMedida/unidadeMedidas?key=${key}&page=${page}&limit=${limit}`);
+    if (res.ok) {
+      const { unidadeMedidas, totalUnidadeMedida } = await res.json();
+      const tabela = document.querySelector('#unidadeMedidaFormContainer .table tbody');
+      tabela.innerHTML = unidadeMedidas.map(unidadeMedida => `
+        <tr>
+          <td class="limited-width">${unidadeMedida.descricao}</td>
+          <td class="tdButton">
+            <a href="#" class="btn-edit" data-id="${unidadeMedida._id}" data-descricao="${unidadeMedida.descricao}" onclick="return editarUnidadeMedidaClick(this)" title="Editar unidadeMedida">Editar</a>
+          </td>
+          <td class="tdButton">
+            <a class="text-danger" href="#" onclick="return excluirUnidadeMedidaClick('${unidadeMedida._id}')" title="Excluir este unidadeMedida">Excluir</a>
+          </td>
+        </tr>
+      `).join('');
+
+      const totalPaginas = Math.ceil(totalUnidadeMedida / limit);
+      const pagination = document.querySelector('.pagination');
+      pagination.innerHTML = gerarPaginacao('unidadeMedida', page, totalPaginas, limit);
+    } else {
+      console.error('Erro ao carregar as unidadeMedidas!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+/**
+ * Edita uma unidade de medida existente.
+ * @param {HTMLElement} element - Elemento HTML que disparou o evento.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function editarUnidadeMedidaClick(element) {
+  const unidadeMedidaId = $(element).data('id');
+  const unidadeMedidaDescricao = $(element).data('descricao');
+
+  $('#unidadeMedidaId').val(unidadeMedidaDescricao);
+
+  $('#tituloModalUnidadeMedida').text('Editar Unidade de medida');
+  $('#subTituloModalUnidadeMedida').text('Edite as informações da unidade de medida abaixo.');
+
+  $('#unidadeMedidaForm').attr('action', '/unidadeMedida/edit/' + unidadeMedidaId);
+
+  $('#unidadeMedida').modal('show');
+
+  return false;
+}
+
+/**
+ * Registra uma nova unidade de medida.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function registrarNovaUnidadeMedidaClick() {
+  $('#unidadeMedidaId').val('');
+
+  $('#tituloModalUnidadeMedida').text('Cadastrar Unidade de medida');
+  $('#subTituloModalUnidadeMedida').text('Cadastre uma nova Unidade de medida abaixo.');
+
+  $('#unidadeMedidaForm').attr('action', '/pagPrincipal/unidadeMedida/register');
+
+  $('#unidadeMedida').modal('show');
+
+  return false;
+}
+
+/**
+ * Exclui uma unidade de medida.
+ * @param {string} id - ID da unidade de medida a ser excluída.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+async function excluirUnidadeMedidaClick(id) {
+  try {
+    const result = window.confirm("Deseja realmente excluir esta unidade de medida?");
+    if (result) {
+      const res = await fetch(`/unidadeMedida/delete/${id}`, {
+        method: 'GET'
+      });
+
+      if (res.ok) {
+        console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
+        await carregarRegistros('unidadeMedida', paginaAtual, registrosPorPag);
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.error);
+      }
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+
+  return false;
 }
 
 

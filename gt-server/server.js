@@ -20,6 +20,7 @@ const cargoController = require('./controllers/cargoController');
 const cidadeController = require('./controllers/cidadeController');
 const unidadeController = require('./controllers/unidadeController');
 const subGrupoController = require('./controllers/subGrupoController');
+const unidadeMedidaController = require('./controllers/unidadeMedidaController');
 
 const inserirDadosIniciais = require('./public/assets/js/inserirDadosIniciais.js');
 
@@ -233,6 +234,12 @@ app.post('/pagPrincipal/subGrupo/register', loginRequired, subGrupoController.re
 app.post('/subGrupo/edit/:id', loginRequired, subGrupoController.edit);
 app.get('/subGrupo/delete/:id', loginRequired, subGrupoController.delete);
 app.get('/subGrupo/subGrupos', loginRequired, subGrupoController.getSubGrupos);
+
+// Rotas da entidade UnidadeMedida
+app.post('/pagPrincipal/unidadeMedida/register', loginRequired, unidadeMedidaController.register);
+app.post('/unidadeMedida/edit/:id', loginRequired, unidadeMedidaController.edit);
+app.get('/unidadeMedida/delete/:id', loginRequired, unidadeMedidaController.delete);
+app.get('/unidadeMedida/unidadeMedidas', loginRequired, unidadeMedidaController.getUnidadeMedidas);
 
 app.get('*', (request, response) => {
     sendFile(request, response);
