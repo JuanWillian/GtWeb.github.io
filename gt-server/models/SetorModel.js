@@ -44,12 +44,6 @@ Setor.prototype.register = async function () {
   await this.valida();
   if (this.errors.length > 0) return;
 
-  const setorExistente = await SetorModel.findOne({ nome: this.body.nome, key: this.body.key });
-  if (setorExistente) {
-    this.errors.push('Setor já cadastrado.');
-    return;
-  }
-
   this.setor = await SetorModel.create(this.body);
 };
 

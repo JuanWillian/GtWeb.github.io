@@ -40,13 +40,7 @@ Execucao.prototype.valida = async function () {
 Execucao.prototype.register = async function () {
   await this.valida();
   if (this.errors.length > 0) return;
-
-  const execucaoExistente = await execucaoModel.findOne({ descricao: this.body.descricao, key: this.body.key });
-  if (execucaoExistente) {
-    this.errors.push('Execução já cadastrada.');
-    return;
-  }
-
+  
   this.execucao = await execucaoModel.create(this.body);
 };
 

@@ -238,7 +238,9 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="titleForm">
-              <h1 class="text-center" id="tituloModalEmpresa">Cadastrar Empresa</h1>
+              <h1 class="text-center" id="tituloModalEmpresa">
+                Cadastrar Empresa
+              </h1>
               <p class="text-center lead" id="subTituloModalEmpresa">
                 Cadastre uma nova empresa abaixo
               </p>
@@ -292,7 +294,9 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="titleForm">
-              <h1 class="text-center" id="tituloModalAtividade">Cadastrar atividade</h1>
+              <h1 class="text-center" id="tituloModalAtividade">
+                Cadastrar atividade
+              </h1>
               <p class="text-center lead" id="subTituloModalAtividade">
                 Cadastre uma nova atividade abaixo
               </p>
@@ -346,7 +350,9 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="titleForm">
-              <h1 class="text-center" id="tituloModalExecucao">Cadastrar Execuções</h1>
+              <h1 class="text-center" id="tituloModalExecucao">
+                Cadastrar Execuções
+              </h1>
               <p class="text-center lead" id="subTituloModalExecucao">
                 Cadastre uma nova Execuções abaixo
               </p>
@@ -451,7 +457,9 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="titleForm">
-              <h1 class="text-center" id="tituloModalUnidade">Cadastrar Unidade</h1>
+              <h1 class="text-center" id="tituloModalUnidade">
+                Cadastrar Unidade
+              </h1>
               <p class="text-center lead" id="subTituloModalUnidade">
                 Cadastre uma nova unidade abaixo
               </p>
@@ -472,14 +480,14 @@
                     name="_empresaId"
                     id="empresaUnidade"
                     class="formSelectGradient"
-                    style="display: block; width: 100%;"
+                    style="display: block; width: 100%"
                   ></select>
                   <label>Cidade</label>
                   <select
                     name="_cidadeId"
                     id="cidadeUnidade"
                     class="formSelectGradient"
-                    style="display: block; width: 100%;"
+                    style="display: block; width: 100%"
                   ></select>
                   <label>Endereço</label>
                   <input
@@ -529,7 +537,9 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="titleForm">
-              <h1 class="text-center" id="tituloModalSubGrupo">Cadastrar SubGrupo</h1>
+              <h1 class="text-center" id="tituloModalSubGrupo">
+                Cadastrar SubGrupo
+              </h1>
               <p class="text-center lead" id="subTituloModalSubGrupo">
                 Cadastre uma novo SubGrupo abaixo
               </p>
@@ -550,7 +560,7 @@
                     name="_grupoId"
                     id="subGrupoGrupo"
                     class="formSelectGradient"
-                    style="display: block; width: 100%;"
+                    style="display: block; width: 100%"
                   ></select>
                   <label>Nome</label>
                   <input
@@ -590,9 +600,11 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="titleForm">
-              <h1 class="text-center" id="tituloModalUnidadeMedida">Cadastrar Unidade de medidas</h1>
+              <h1 class="text-center" id="tituloModalUnidadeMedida">
+                Cadastrar Unidade de Medida
+              </h1>
               <p class="text-center lead" id="subTituloModalUnidadeMedida">
-                Cadastre uma nova Unidade de medidas abaixo
+                Cadastre uma nova unidade de medida abaixo
               </p>
             </div>
           </div>
@@ -608,13 +620,28 @@
                 <div class="form-group">
                   <label>Descrição</label>
                   <input
-                    value="<%= unidadeMedida.descricao %>"
                     type="text"
                     class="form-control"
                     name="descricao"
-                    id="unidadeMedidaId"
+                    id="unidadeMedidaDescricao"
                     required
-                    maxlength="80"
+                    maxlength="150"
+                  />
+                  <label>Sigla</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="sigla"
+                    id="unidadeMedidaSigla"
+                    required
+                    maxlength="10"
+                  />
+                  <label>Pode Fracionar</label>
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    name="podeFracionar"
+                    id="unidadeMedidaPodeFracionar"
                   />
                 </div>
               </div>

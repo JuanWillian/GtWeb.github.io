@@ -42,12 +42,6 @@ Atividade.prototype.register = async function () {
   await this.valida();
   if (this.errors.length > 0) return;
 
-  const atividadeExistente = await atividadeModel.findOne({ nome: this.body.nome, key: this.body.key });
-  if (atividadeExistente) {
-    this.errors.push('Atividade já cadastrada.');
-    return;
-  }
-
   this.atividade = await atividadeModel.create(this.body);
 };
 

@@ -26,7 +26,6 @@ Unidade.prototype.verificarExistencia = async function () {
     _empresaId: this.body._empresaId,
     _cidadeId: this.body._cidadeId,
     endereco: this.body.endereco,
-    complemento: this.body.complemento
   });
   if (unidadeJaCadastrada) {
     this.errors.push('Unidade já cadastrada.');
@@ -51,7 +50,6 @@ Unidade.prototype.register = async function () {
 Unidade.prototype.edit = async function (id) {
   if (typeof id !== 'string') return;
   await this.valida();
-  await this.verificarExistencia();
   if (this.errors.length > 0) return;
   this.unidade = await UnidadeModel.findByIdAndUpdate(id, this.body, { new: true });
 };

@@ -42,12 +42,6 @@ Cargo.prototype.register = async function () {
   await this.valida();
   if (this.errors.length > 0) return;
 
-  const cargoExistente = await CargoModel.findOne({ nome: this.body.nome, key: this.body.key });
-  if (cargoExistente) {
-    this.errors.push('Cargo já cadastrado.');
-    return;
-  }
-
   this.cargo = await CargoModel.create(this.body);
 };
 

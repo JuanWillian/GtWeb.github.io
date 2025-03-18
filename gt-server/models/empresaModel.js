@@ -23,6 +23,7 @@ Empresa.prototype.verificarExistencia = async function () {
     nome: this.body.nome,
   })
   if(empresaExistente){
+    console.log("empresa existe")
     this.errors.push("Empresa já cadastrada.")
     return
   }
@@ -39,14 +40,8 @@ Empresa.prototype.valida = async function () {
 };
 
 Empresa.prototype.register = async function () {
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
-
-  const empresaExistente = await EmpresaModel.findOne({ nome: this.body.nome, key: this.body.key });
-  if (empresaExistente) {
-    this.errors.push('Empresa já cadastrada.');
-    return;
-  }
 
   this.empresa = await EmpresaModel.create(this.body);
 };
@@ -67,7 +62,7 @@ Empresa.prototype.cleanUp = function () {
 
 Empresa.prototype.edit = async function (id) {
   if (typeof id !== 'string') return;
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
   this.empresa = await EmpresaModel.findByIdAndUpdate(id, this.body, { new: true });
 };

@@ -10,16 +10,16 @@
       >
         <i class="bi bi-plus-lg"></i>
       </button>
-        <select
-          id="registrosPorPag"
-          class="formSelectGradient"
-          onchange="atualizarRegistrosPorPag('unidadeMedida')"
-        >
-          <option value="5">5</option>
-          <option value="10" selected>10</option>
-          <option value="20">20</option>
-          <option value="50">50</option>
-        </select>
+      <select
+        id="registrosPorPag"
+        class="formSelectGradient"
+        onchange="atualizarRegistrosPorPag('unidadeMedida')"
+      >
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
     </div>
     <div
       class="table-responsive"
@@ -32,6 +32,8 @@
         <thead>
           <tr>
             <th>Descrição</th>
+            <th>Sigla</th>
+            <th>Pode Fracionar</th>
             <th></th>
             <th></th>
           </tr>
@@ -42,8 +44,7 @@
       </table>
     </div>
     <nav aria-label="footer Navbar" class="footerNav">
-      <ul class="pagination ">
-      </ul>
+      <ul class="pagination"></ul>
     </nav>
   </div>
 </section>

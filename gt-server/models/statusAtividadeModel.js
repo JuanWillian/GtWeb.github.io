@@ -28,7 +28,8 @@ StatusAtividade.prototype.verificarExistencia = async function () {
   }
 }
 
-StatusAtividade.prototype.valida = function () {
+StatusAtividade.prototype.valida = async function () {
+  await this.verificarExistencia();
   this.cleanUp();
 
   if (!this.body.descricao) this.errors.push('Descrição é um campo obrigatório.');
@@ -40,12 +41,6 @@ StatusAtividade.prototype.valida = function () {
 StatusAtividade.prototype.register = async function () {
   await this.valida();
   if (this.errors.length > 0) return;
-
-  const statusExistente = await StatusAtividadeModel.findOne({ descricao: this.body.descricao, key: this.body.key });
-  if (statusExistente) {
-    this.errors.push('Status de atividade já cadastrado.');
-    return;
-  }
 
   this.statusAtividade = await StatusAtividadeModel.create(this.body);
 };

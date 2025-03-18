@@ -42,12 +42,6 @@ Cidade.prototype.register = async function () {
   await this.valida();
   if (this.errors.length > 0) return;
 
-  const cidadeExistente = await CidadeModel.findOne({ nome: this.body.nome, key: this.body.key });
-  if (cidadeExistente) {
-    this.errors.push('Cidade já cadastrada.');
-    return;
-  }
-
   this.cidade = await CidadeModel.create(this.body);
 };
 

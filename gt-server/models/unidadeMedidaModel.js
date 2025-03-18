@@ -7,6 +7,8 @@ const keys = JSON.parse(fs.readFileSync(path.join(__dirname, '../conf/keys.json'
 const UnidadeMedidaSchema = new mongoose.Schema({
   key: { type: String, required: true },
   descricao: { type: String, required: true },
+  sigla: { type: String, required: true },
+  podeFracionar: { type: String, required: true, enum: ['Sim', 'Não'] }
 });
 
 const unidadeMedidaModel = mongoose.model('UnidadeMedida', UnidadeMedidaSchema);
@@ -21,18 +23,22 @@ UnidadeMedida.prototype.verificarExistencia = async function () {
   const unidadeMedidaExistente = await unidadeMedidaModel.findOne({
     key: this.body.key,
     descricao: this.body.descricao,
-  })
-  if(unidadeMedidaExistente){
-    this.errors.push("Unidade de medida já cadastrada.")
-    return
+    sigla: this.body.sigla,
+    podeFracionar: this.body.podeFracionar
+  });
+  if (unidadeMedidaExistente) {
+    this.errors.push("Unidade de medida já cadastrada.");
+    return;
   }
 }
 
 UnidadeMedida.prototype.valida = async function () {
   await this.verificarExistencia();
-  this.cleanUp();
+  await this.cleanUp();
 
   if (!this.body.descricao) this.errors.push('Descrição é um campo obrigatório.');
+  if (!this.body.sigla) this.errors.push('Sigla é um campo obrigatório.');
+  if (this.body.podeFracionar === undefined) this.errors.push('Pode fracionar é um campo obrigatório.');
   if (!keys.includes(this.body.key)) {
     this.errors.push('Key inválida.');
   }
@@ -42,19 +48,12 @@ UnidadeMedida.prototype.register = async function () {
   await this.valida();
   if (this.errors.length > 0) return;
 
-  const UnidadeMedidaExistente = await unidadeMedidaModel.findOne({ descricao: this.body.descricao, key: this.body.key });
-  if (UnidadeMedidaExistente) {
-    this.errors.push('Unidade de medida já cadastrada.');
-    return;
-  }
-
   this.unidadeMedida = await unidadeMedidaModel.create(this.body);
 };
 
-
-UnidadeMedida.prototype.cleanUp = function () {
+UnidadeMedida.prototype.cleanUp = async function () {
   for (const key in this.body) {
-    if (typeof this.body[key] !== 'string') {
+    if (typeof this.body[key] !== 'string' && key !== 'podeFracionar') {
       this.body[key] = '';
     }
   }
@@ -62,6 +61,8 @@ UnidadeMedida.prototype.cleanUp = function () {
   this.body = {
     key: this.body.key,
     descricao: this.body.descricao,
+    sigla: this.body.sigla,
+    podeFracionar: this.body.podeFracionar === 'on' ? 'Sim' : 'Não'
   };
 };
 

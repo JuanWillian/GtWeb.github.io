@@ -17,12 +17,12 @@ function StatusUsuario(body) {
   this.statusUsuario = null;
 }
 
-StatusAtividade.prototype.verificarExistencia = async function () {
-  const statusAtividadeExistente = await StatusAtividadeModel.findOne({
+StatusUsuario.prototype.verificarExistencia = async function () {
+  const statusUsuarioExistente = await StatusUsuarioModel.findOne({
     key: this.body.key,
     descricao: this.body.descricao,
   })
-  if(statusAtividadeExistente){
+  if(statusUsuarioExistente){
     this.errors.push("Status de Atividade já cadastrada.")
     return
   }
@@ -41,12 +41,6 @@ StatusUsuario.prototype.valida = async function () {
 StatusUsuario.prototype.register = async function () {
   await this.valida();
   if (this.errors.length > 0) return;
-
-  const statusExistente = await StatusUsuarioModel.findOne({ descricao: this.body.descricao, key: this.body.key });
-  if (statusExistente) {
-    this.errors.push('Status de usuário já cadastrado.');
-    return;
-  }
 
   this.statusUsuario = await StatusUsuarioModel.create(this.body);
 };

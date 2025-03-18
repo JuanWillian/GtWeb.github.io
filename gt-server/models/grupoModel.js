@@ -42,12 +42,6 @@ Grupo.prototype.register = async function () {
   await this.valida();
   if (this.errors.length > 0) return;
 
-  const grupoExistente = await grupoModel.findOne({ nome: this.body.nome, key: this.body.key });
-  if (grupoExistente) {
-    this.errors.push('Grupo já cadastrado.');
-    return;
-  }
-
   this.grupo = await grupoModel.create(this.body);
 };
 

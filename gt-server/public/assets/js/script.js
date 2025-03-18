@@ -216,7 +216,7 @@ async function carregarRegistros(entidade, page, limit) {
       break;
     case 'atividade':
       await carregarAtividades(page, limit);
-      break;  
+      break;
     case 'execucao':
       await carregarExecucoes(page, limit);
       break;
@@ -248,7 +248,7 @@ async function carregarLista(lista) {
       const html = await res.text();
       document.getElementById('forms').innerHTML = html;
       console.log(`Form carregado: ${lista}`);
-      switch(lista) {
+      switch (lista) {
         case 'setorLista':
           await atualizarRegistrosPorPag('setor')
           await carregarRegistros("setor", paginaAtual, registrosPorPag);
@@ -282,7 +282,7 @@ async function carregarLista(lista) {
           await carregarRegistros("unidadeMedida", paginaAtual, registrosPorPag);
           break;
       }
-      
+
       /*
      * TODO falta adicionar as outras entidades como opção     
      */
@@ -932,9 +932,9 @@ async function carregarUnidades(page, limit) {
  * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
  */
 function editarUnidadeClick(element) {
-  const unidadeId = $(element).data('id'); 
+  const unidadeId = $(element).data('id');
   const unidadeEmpresa = $(element).data('empresa');
-  const unidadeCidade = $(element).data('cidade'); 
+  const unidadeCidade = $(element).data('cidade');
   const unidadeEndereco = $(element).data('endereco');
   const unidadeComplemento = $(element).data('complemento');
 
@@ -1086,7 +1086,7 @@ async function carregarSubGrupos(page, limit) {
  * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
  */
 function editarSubGrupoClick(element) {
-  const subGrupoId = $(element).data('id'); 
+  const subGrupoId = $(element).data('id');
   const subGrupoGrupo = $(element).data('grupo');
   const subGrupoNome = $(element).data('nome');
 
@@ -1185,8 +1185,10 @@ async function carregarUnidadeMedidas(page, limit) {
       tabela.innerHTML = unidadeMedidas.map(unidadeMedida => `
         <tr>
           <td class="limited-width">${unidadeMedida.descricao}</td>
+          <td class="limited-width">${unidadeMedida.sigla}</td>
+          <td class="limited-width">${unidadeMedida.podeFracionar ? 'Sim' : 'Não'}</td>
           <td class="tdButton">
-            <a href="#" class="btn-edit" data-id="${unidadeMedida._id}" data-descricao="${unidadeMedida.descricao}" onclick="return editarUnidadeMedidaClick(this)" title="Editar unidadeMedida">Editar</a>
+            <a href="#" class="btn-edit" data-id="${unidadeMedida._id}" data-descricao="${unidadeMedida.descricao}" data-sigla="${unidadeMedida.sigla}" data-podeFracionar="${unidadeMedida.podeFracionar}" onclick="return editarUnidadeMedidaClick(this)" title="Editar unidadeMedida">Editar</a>
           </td>
           <td class="tdButton">
             <a class="text-danger" href="#" onclick="return excluirUnidadeMedidaClick('${unidadeMedida._id}')" title="Excluir este unidadeMedida">Excluir</a>
@@ -1213,8 +1215,13 @@ async function carregarUnidadeMedidas(page, limit) {
 function editarUnidadeMedidaClick(element) {
   const unidadeMedidaId = $(element).data('id');
   const unidadeMedidaDescricao = $(element).data('descricao');
+  const unidadeMedidaSigla = $(element).data('sigla');
+  const unidadeMedidaPodeFracionar = $(element).data('podefracionar');
 
-  $('#unidadeMedidaId').val(unidadeMedidaDescricao);
+  $('#unidadeMedidaId').val(unidadeMedidaId);
+  $('#unidadeMedidaDescricao').val(unidadeMedidaDescricao);
+  $('#unidadeMedidaSigla').val(unidadeMedidaSigla);
+  $('#unidadeMedidaPodeFracionar').prop('checked', unidadeMedidaPodeFracionar);
 
   $('#tituloModalUnidadeMedida').text('Editar Unidade de medida');
   $('#subTituloModalUnidadeMedida').text('Edite as informações da unidade de medida abaixo.');
@@ -1232,6 +1239,9 @@ function editarUnidadeMedidaClick(element) {
  */
 function registrarNovaUnidadeMedidaClick() {
   $('#unidadeMedidaId').val('');
+  $('#unidadeMedidaDescricao').val('');
+  $('#unidadeMedidaSigla').val('');
+  $('#unidadeMedidaPodeFracionar').prop('checked', false);
 
   $('#tituloModalUnidadeMedida').text('Cadastrar Unidade de medida');
   $('#subTituloModalUnidadeMedida').text('Cadastre uma nova Unidade de medida abaixo.');
