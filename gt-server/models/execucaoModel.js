@@ -17,8 +17,28 @@ function Execucao(body) {
   this.execucao = null;
 }
 
+Execucao.prototype.verificarExistencia = async function () {
+  const execucaoExistente = await execucaoModel.findOne({
+    key: this.body.key,
+    descricao: this.body.descricao,
+  })
+  if(execucaoExistente){
+    this.errors.push("Execucao já cadastrada.")
+    return
+  }
+}
+
+Execucao.prototype.valida = async function () {
+  await this.verificarExistencia();
+  this.cleanUp();
+
+  if (!this.body.descricao) this.errors.push('Descrição é um campo obrigatório.');
+  if (!keys.includes(this.body.key)) {
+    this.errors.push('Key inválida.');
+  }
+};
 Execucao.prototype.register = async function () {
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
 
   const execucaoExistente = await execucaoModel.findOne({ descricao: this.body.descricao, key: this.body.key });
@@ -30,14 +50,6 @@ Execucao.prototype.register = async function () {
   this.execucao = await execucaoModel.create(this.body);
 };
 
-Execucao.prototype.valida = function () {
-  this.cleanUp();
-
-  if (!this.body.descricao) this.errors.push('Descrição é um campo obrigatório.');
-  if (!keys.includes(this.body.key)) {
-    this.errors.push('Key inválida.');
-  }
-};
 
 Execucao.prototype.cleanUp = function () {
   for (const key in this.body) {
@@ -54,7 +66,7 @@ Execucao.prototype.cleanUp = function () {
 
 Execucao.prototype.edit = async function (id) {
   if (typeof id !== 'string') return;
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
   this.execucao = await execucaoModel.findByIdAndUpdate(id, this.body, { new: true });
 };

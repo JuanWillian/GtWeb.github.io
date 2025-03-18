@@ -17,8 +17,29 @@ function UnidadeMedida(body) {
   this.unidadeMedida = null;
 }
 
+UnidadeMedida.prototype.verificarExistencia = async function () {
+  const unidadeMedidaExistente = await unidadeMedidaModel.findOne({
+    key: this.body.key,
+    descricao: this.body.descricao,
+  })
+  if(unidadeMedidaExistente){
+    this.errors.push("Unidade de medida já cadastrada.")
+    return
+  }
+}
+
+UnidadeMedida.prototype.valida = async function () {
+  await this.verificarExistencia();
+  this.cleanUp();
+
+  if (!this.body.descricao) this.errors.push('Descrição é um campo obrigatório.');
+  if (!keys.includes(this.body.key)) {
+    this.errors.push('Key inválida.');
+  }
+}
+
 UnidadeMedida.prototype.register = async function () {
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
 
   const UnidadeMedidaExistente = await unidadeMedidaModel.findOne({ descricao: this.body.descricao, key: this.body.key });
@@ -30,14 +51,6 @@ UnidadeMedida.prototype.register = async function () {
   this.unidadeMedida = await unidadeMedidaModel.create(this.body);
 };
 
-UnidadeMedida.prototype.valida = function () {
-  this.cleanUp();
-
-  if (!this.body.descricao) this.errors.push('Descrição é um campo obrigatório.');
-  if (!keys.includes(this.body.key)) {
-    this.errors.push('Key inválida.');
-  }
-};
 
 UnidadeMedida.prototype.cleanUp = function () {
   for (const key in this.body) {
@@ -54,7 +67,7 @@ UnidadeMedida.prototype.cleanUp = function () {
 
 UnidadeMedida.prototype.edit = async function (id) {
   if (typeof id !== 'string') return;
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
   this.unidadeMedida = await unidadeMedidaModel.findByIdAndUpdate(id, this.body, { new: true });
 };

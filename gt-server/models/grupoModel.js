@@ -17,8 +17,29 @@ function Grupo(body) {
   this.grupo = null;
 }
 
+Grupo.prototype.verificarExistencia = async function () {
+  const grupoExistente = await grupoModel.findOne({
+    key: this.body.key,
+    nome: this.body.nome,
+  })
+  if(grupoExistente){
+    this.errors.push("Grupo já cadastrado.")
+    return
+  }
+}
+
+Grupo.prototype.valida = async function () {
+  await this.verificarExistencia();
+  this.cleanUp();
+
+  if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
+  if (!keys.includes(this.body.key)) {
+    this.errors.push('Key inválida.');
+  }
+};
+
 Grupo.prototype.register = async function () {
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
 
   const grupoExistente = await grupoModel.findOne({ nome: this.body.nome, key: this.body.key });
@@ -30,14 +51,6 @@ Grupo.prototype.register = async function () {
   this.grupo = await grupoModel.create(this.body);
 };
 
-Grupo.prototype.valida = function () {
-  this.cleanUp();
-
-  if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
-  if (!keys.includes(this.body.key)) {
-    this.errors.push('Key inválida.');
-  }
-};
 
 Grupo.prototype.cleanUp = function () {
   for (const key in this.body) {
@@ -54,7 +67,7 @@ Grupo.prototype.cleanUp = function () {
 
 Grupo.prototype.edit = async function (id) {
   if (typeof id !== 'string') return;
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
   this.grupo = await grupoModel.findByIdAndUpdate(id, this.body, { new: true });
 };

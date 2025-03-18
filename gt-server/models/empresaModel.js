@@ -17,6 +17,27 @@ function Empresa(body) {
   this.empresa = null;
 }
 
+Empresa.prototype.verificarExistencia = async function () {
+  const empresaExistente = await EmpresaModel.findOne({
+    key: this.body.key,
+    nome: this.body.nome,
+  })
+  if(empresaExistente){
+    this.errors.push("Empresa já cadastrada.")
+    return
+  }
+}
+
+Empresa.prototype.valida = async function () {
+  await this.verificarExistencia();
+  this.cleanUp();
+
+  if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
+  if (!keys.includes(this.body.key)) {
+    this.errors.push('Key inválida.');
+  }
+};
+
 Empresa.prototype.register = async function () {
   this.valida();
   if (this.errors.length > 0) return;
@@ -30,14 +51,6 @@ Empresa.prototype.register = async function () {
   this.empresa = await EmpresaModel.create(this.body);
 };
 
-Empresa.prototype.valida = function () {
-  this.cleanUp();
-
-  if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
-  if (!keys.includes(this.body.key)) {
-    this.errors.push('Key inválida.');
-  }
-};
 
 Empresa.prototype.cleanUp = function () {
   for (const key in this.body) {

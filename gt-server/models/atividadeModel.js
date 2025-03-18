@@ -17,8 +17,29 @@ function Atividade(body) {
   this.atividade = null;
 }
 
+Atividade.prototype.verificarExistencia = async function () {
+  const atividadeExistente = await atividadeModel.findOne({
+    key: this.body.key,
+    nome: this.body.nome,
+  })
+  if(atividadeExistente){
+    this.errors.push("Atividade já cadastrada.")
+    return
+  }
+}
+
+Atividade.prototype.valida = async function () {
+  await this.verificarExistencia();
+  this.cleanUp();
+
+  if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
+  if (!keys.includes(this.body.key)) {
+    this.errors.push('Key inválida.');
+  }
+};
+
 Atividade.prototype.register = async function () {
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
 
   const atividadeExistente = await atividadeModel.findOne({ nome: this.body.nome, key: this.body.key });
@@ -30,14 +51,6 @@ Atividade.prototype.register = async function () {
   this.atividade = await atividadeModel.create(this.body);
 };
 
-Atividade.prototype.valida = function () {
-  this.cleanUp();
-
-  if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
-  if (!keys.includes(this.body.key)) {
-    this.errors.push('Key inválida.');
-  }
-};
 
 Atividade.prototype.cleanUp = function () {
   for (const key in this.body) {
@@ -54,7 +67,7 @@ Atividade.prototype.cleanUp = function () {
 
 Atividade.prototype.edit = async function (id) {
   if (typeof id !== 'string') return;
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
   this.atividade = await atividadeModel.findByIdAndUpdate(id, this.body, { new: true });
 };

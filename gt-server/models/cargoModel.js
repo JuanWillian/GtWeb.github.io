@@ -17,8 +17,29 @@ function Cargo(body) {
   this.cargo = null;
 }
 
+Cargo.prototype.verificarExistencia = async function () {
+  const cargoExistente = await CargoModel.findOne({
+    key: this.body.key,
+    nome: this.body.nome,
+  })
+  if(cargoExistente){
+    this.errors.push("Cargo já cadastrado.")
+    return
+  }
+}
+
+Cargo.prototype.valida = async function () {
+  await this.verificarExistencia();
+  this.cleanUp();
+
+  if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
+  if (!keys.includes(this.body.key)) {
+    this.errors.push('Key inválida.');
+  }
+};
+
 Cargo.prototype.register = async function () {
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
 
   const cargoExistente = await CargoModel.findOne({ nome: this.body.nome, key: this.body.key });
@@ -28,15 +49,6 @@ Cargo.prototype.register = async function () {
   }
 
   this.cargo = await CargoModel.create(this.body);
-};
-
-Cargo.prototype.valida = function () {
-  this.cleanUp();
-
-  if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
-  if (!keys.includes(this.body.key)) {
-    this.errors.push('Key inválida.');
-  }
 };
 
 Cargo.prototype.cleanUp = function () {
@@ -54,7 +66,7 @@ Cargo.prototype.cleanUp = function () {
 
 Cargo.prototype.edit = async function (id) {
   if (typeof id !== 'string') return;
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
   this.cargo = await CargoModel.findByIdAndUpdate(id, this.body, { new: true });
 };

@@ -34,24 +34,23 @@ Unidade.prototype.verificarExistencia = async function () {
   }
 }
 
-Unidade.prototype.register = async function () {
-  this.valida();
+Unidade.prototype.valida = async function () {
   await this.verificarExistencia();
-  if (this.errors.length > 0) return;
-
-  this.unidade = await UnidadeModel.create(this.body);
-};
-
-Unidade.prototype.valida = function () {
-
   if (!keys.includes(this.body.key)) {
     this.errors.push('Key inválida.');
   }
 };
 
+Unidade.prototype.register = async function () {
+  await this.valida();
+  if (this.errors.length > 0) return;
+
+  this.unidade = await UnidadeModel.create(this.body);
+};
+
 Unidade.prototype.edit = async function (id) {
   if (typeof id !== 'string') return;
-  this.valida();
+  await this.valida();
   await this.verificarExistencia();
   if (this.errors.length > 0) return;
   this.unidade = await UnidadeModel.findByIdAndUpdate(id, this.body, { new: true });

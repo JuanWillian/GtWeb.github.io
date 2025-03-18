@@ -18,8 +18,30 @@ function Setor(body) {
   this.setor = null;
 }
 
+Setor.prototype.verificarExistencia = async function () {
+  const setorExistente = await SetorModel.findOne({
+    key: this.body.key,
+    nome: this.body.nome,
+    descricao: this.body.descricao,
+  })
+  if(setorExistente){
+    this.errors.push("Setor já cadastrado.")
+    return
+  }
+}
+
+Setor.prototype.valida = async function () {
+  await this.verificarExistencia();
+  this.cleanUp();
+
+  if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
+  if (!keys.includes(this.body.key)) {
+    this.errors.push('Key inválida.');
+  }
+};
+
 Setor.prototype.register = async function () {
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
 
   const setorExistente = await SetorModel.findOne({ nome: this.body.nome, key: this.body.key });
@@ -31,14 +53,6 @@ Setor.prototype.register = async function () {
   this.setor = await SetorModel.create(this.body);
 };
 
-Setor.prototype.valida = function () {
-  this.cleanUp();
-
-  if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
-  if (!keys.includes(this.body.key)) {
-    this.errors.push('Key inválida.');
-  }
-};
 
 Setor.prototype.cleanUp = function () {
   for (const key in this.body) {
@@ -56,7 +70,7 @@ Setor.prototype.cleanUp = function () {
 
 Setor.prototype.edit = async function (id) {
   if (typeof id !== 'string') return;
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
   this.setor = await SetorModel.findByIdAndUpdate(id, this.body, { new: true });
 };

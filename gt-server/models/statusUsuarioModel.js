@@ -17,8 +17,29 @@ function StatusUsuario(body) {
   this.statusUsuario = null;
 }
 
+StatusAtividade.prototype.verificarExistencia = async function () {
+  const statusAtividadeExistente = await StatusAtividadeModel.findOne({
+    key: this.body.key,
+    descricao: this.body.descricao,
+  })
+  if(statusAtividadeExistente){
+    this.errors.push("Status de Atividade já cadastrada.")
+    return
+  }
+}
+
+StatusUsuario.prototype.valida = async function () {
+  await this.verificarExistencia();
+  this.cleanUp();
+
+  if (!this.body.descricao) this.errors.push('Descrição é um campo obrigatório.');
+  if (!keys.includes(this.body.key)) {
+    this.errors.push('Key inválida.');
+  }
+}
+
 StatusUsuario.prototype.register = async function () {
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
 
   const statusExistente = await StatusUsuarioModel.findOne({ descricao: this.body.descricao, key: this.body.key });
@@ -28,15 +49,6 @@ StatusUsuario.prototype.register = async function () {
   }
 
   this.statusUsuario = await StatusUsuarioModel.create(this.body);
-};
-
-StatusUsuario.prototype.valida = function () {
-  this.cleanUp();
-
-  if (!this.body.descricao) this.errors.push('Descrição é um campo obrigatório.');
-  if (!keys.includes(this.body.key)) {
-    this.errors.push('Key inválida.');
-  }
 };
 
 StatusUsuario.prototype.cleanUp = function () {
@@ -54,7 +66,7 @@ StatusUsuario.prototype.cleanUp = function () {
 
 StatusUsuario.prototype.edit = async function (id) {
   if (typeof id !== 'string') return;
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
   this.statusUsuario = await StatusUsuarioModel.findByIdAndUpdate(id, this.body, { new: true });
 };

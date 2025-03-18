@@ -17,8 +17,29 @@ function Cidade(body) {
   this.cidade = null;
 }
 
+Cidade.prototype.verificarExistencia = async function () {
+  const cidadeExistente = await CidadeModel.findOne({
+    key: this.body.key,
+    nome: this.body.nome,
+  })
+  if(cidadeExistente){
+    this.errors.push("Cidade já cadastrada.")
+    return
+  }
+}
+
+Cidade.prototype.valida = async function () {
+  await this.verificarExistencia();
+  this.cleanUp();
+
+  if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
+  if (!keys.includes(this.body.key)) {
+    this.errors.push('Key inválida.');
+  }
+};
+
 Cidade.prototype.register = async function () {
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
 
   const cidadeExistente = await CidadeModel.findOne({ nome: this.body.nome, key: this.body.key });
@@ -28,15 +49,6 @@ Cidade.prototype.register = async function () {
   }
 
   this.cidade = await CidadeModel.create(this.body);
-};
-
-Cidade.prototype.valida = function () {
-  this.cleanUp();
-
-  if (!this.body.nome) this.errors.push('Nome é um campo obrigatório.');
-  if (!keys.includes(this.body.key)) {
-    this.errors.push('Key inválida.');
-  }
 };
 
 Cidade.prototype.cleanUp = function () {
@@ -54,7 +66,7 @@ Cidade.prototype.cleanUp = function () {
 
 Cidade.prototype.edit = async function (id) {
   if (typeof id !== 'string') return;
-  this.valida();
+  await this.valida();
   if (this.errors.length > 0) return;
   this.cidade = await CidadeModel.findByIdAndUpdate(id, this.body, { new: true });
 };
