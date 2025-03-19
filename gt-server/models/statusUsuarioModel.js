@@ -22,7 +22,7 @@ StatusUsuario.prototype.verificarExistencia = async function () {
     key: this.body.key,
     descricao: this.body.descricao,
   })
-  if(statusUsuarioExistente){
+  if (statusUsuarioExistente) {
     this.errors.push("Status de Atividade já cadastrada.")
     return
   }
@@ -46,9 +46,9 @@ StatusUsuario.prototype.register = async function () {
 };
 
 StatusUsuario.prototype.cleanUp = function () {
-  for (const key in this.body) {
-    if (typeof this.body[key] !== 'string') {
-      this.body[key] = '';
+  for (const field in this.body) {
+    if (field !== 'key' && typeof this.body[field] === 'string') {
+      this.body[field] = this.body[field].charAt(0).toUpperCase() + this.body[field].slice(1).toLowerCase();
     }
   }
 

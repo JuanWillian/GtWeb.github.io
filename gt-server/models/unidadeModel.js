@@ -35,6 +35,7 @@ Unidade.prototype.verificarExistencia = async function () {
 
 Unidade.prototype.valida = async function () {
   await this.verificarExistencia();
+  this.cleanUp();
   if (!keys.includes(this.body.key)) {
     this.errors.push('Key inválida.');
   }
@@ -73,6 +74,22 @@ Unidade.delete = async function (id) {
 
 Unidade.countDocuments = async function (key) {
   return await UnidadeModel.countDocuments({ key });
+};
+
+Unidade.prototype.cleanUp = function () {
+  for (const field in this.body) {
+    if (field !== 'key' && typeof this.body[field] === 'string') {
+      this.body[field] = this.body[field].charAt(0).toUpperCase() + this.body[field].slice(1).toLowerCase();
+    }
+  }
+
+  this.body = {
+    key: this.body.key,
+    _empresaId: this.body._empresaId,
+    _cidadeId: this.body._cidadeId,
+    endereco: this.body.endereco,
+    complemento: this.body.complemento,
+  };
 };
 
 module.exports = Unidade;

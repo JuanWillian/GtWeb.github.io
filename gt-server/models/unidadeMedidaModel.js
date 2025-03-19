@@ -51,13 +51,13 @@ UnidadeMedida.prototype.register = async function () {
   this.unidadeMedida = await unidadeMedidaModel.create(this.body);
 };
 
-UnidadeMedida.prototype.cleanUp = async function () {
-  for (const key in this.body) {
-    if (typeof this.body[key] !== 'string' && key !== 'podeFracionar') {
-      this.body[key] = '';
+UnidadeMedida.prototype.cleanUp = function () {
+  for (const field in this.body) {
+    if (field !== 'key' && typeof this.body[field] === 'string' && field !== 'podeFracionar' && field !== 'sigla') {
+      this.body[field] = this.body[field].charAt(0).toUpperCase() + this.body[field].slice(1).toLowerCase();
     }
   }
-  console.log(this.body);
+
   this.body = {
     key: this.body.key,
     descricao: this.body.descricao,

@@ -22,7 +22,7 @@ Cargo.prototype.verificarExistencia = async function () {
     key: this.body.key,
     nome: this.body.nome,
   })
-  if(cargoExistente){
+  if (cargoExistente) {
     this.errors.push("Cargo já cadastrado.")
     return
   }
@@ -46,9 +46,9 @@ Cargo.prototype.register = async function () {
 };
 
 Cargo.prototype.cleanUp = function () {
-  for (const key in this.body) {
-    if (typeof this.body[key] !== 'string') {
-      this.body[key] = '';
+  for (const field in this.body) {
+    if (field !== 'key' && typeof this.body[field] === 'string') {
+      this.body[field] = this.body[field].charAt(0).toUpperCase() + this.body[field].slice(1).toLowerCase();
     }
   }
 
