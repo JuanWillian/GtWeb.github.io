@@ -9,6 +9,7 @@ async function inserirDadosIniciais() {
     { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Líder' },
     { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Supervisor' },
     { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Funcionário Padrão' },
+    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Usuário ERP' },
   ];
 
   const statusAtividades = [

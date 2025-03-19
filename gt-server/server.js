@@ -8,7 +8,6 @@ const { MongoClient } = require('mongodb');
 const mongoose = require('mongoose');
 
 const erpController = require('./controllers/erpControllers.js');
-const loginController = require('./controllers/loginController.js');
 const setorController = require('./controllers/SetorController.js');
 const empresaController = require('./controllers/empresaController.js');
 const atividadeController = require('./controllers/atividadeController.js');
@@ -22,6 +21,7 @@ const unidadeController = require('./controllers/unidadeController');
 const subGrupoController = require('./controllers/subGrupoController');
 const unidadeMedidaController = require('./controllers/unidadeMedidaController');
 const marcaController = require('./controllers/marcaController');
+const usuarioController = require('./controllers/usuarioController');
 
 const inserirDadosIniciais = require('./public/assets/js/inserirDadosIniciais.js');
 
@@ -160,15 +160,14 @@ app.use(express.text({ type: 'application/json' }));
 app.get('/pagPrincipal', loginRequired, erpController.index);
 app.get('/partials/:formulario', loginRequired, erpController.carregarFormulario);
 
-// Rotas da entidade UsuarioERP
-app.get('/index', loginController.index);
-app.post('/login/register', loginController.register);
-app.post('/login/login', loginController.login);
-app.get('/login/logout', loginController.logout);
-app.post('/getListaUsuarios', loginController.getListaUsuarios);
-app.post('/deleteUsuarios', loginController.deleteUsuarios);
-app.post('/deleteUsuario', loginController.deleteUsuario);
-app.post('/deleteAll', loginController.deleteAll);
+// Rotas da entidade Usuario
+app.get('/index', usuarioController.index);
+app.post('/usuario/login', usuarioController.login);
+app.get('/usuario/logout', usuarioController.logout);
+app.post('/usuario/register', usuarioController.register);
+app.post('/usuario/usuarios', usuarioController.getUsuarios);
+app.post('/usuario/delete/:id', usuarioController.delete);
+app.post('/usuario/edit/:id', usuarioController.edit);
 
 // Rotas da entidade Setor
 app.post('/pagPrincipal/setor/register', loginRequired, setorController.register);

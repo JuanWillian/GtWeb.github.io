@@ -46,12 +46,6 @@ Cargo.prototype.register = async function () {
 };
 
 Cargo.prototype.cleanUp = function () {
-  for (const field in this.body) {
-    if (field !== 'key' && typeof this.body[field] === 'string') {
-      this.body[field] = this.body[field].charAt(0).toUpperCase() + this.body[field].slice(1).toLowerCase();
-    }
-  }
-
   this.body = {
     key: this.body.key,
     nome: this.body.nome,
