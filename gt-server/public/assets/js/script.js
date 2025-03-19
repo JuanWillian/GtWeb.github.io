@@ -911,13 +911,14 @@ async function carregarUnidades(page, limit) {
         <tr>
           <td class="limited-width">${unidade._empresaId.nome}</td>
           <td class="limited-width">${unidade._cidadeId.nome}</td>
+          <td class="limited-width">${unidade.nome}</td> <!-- Adicionado campo nome -->
           <td class="limited-width">${unidade.endereco}</td>
           <td class="limited-width">${unidade.complemento}</td>
           <td class="tdButton">
-            <a href="#" class="btn-edit" data-id="${unidade._id}" data-empresa="${unidade._empresaId._id}" data-cidade="${unidade._cidadeId._id}" data-endereco="${unidade.endereco}" data-complemento="${unidade.complemento}" onclick="return editarUnidadeClick(this)" title="Editar unidade">Editar</a>
+            <a href="#" class="btn-edit" data-id="${unidade._id}" data-empresa="${unidade._empresaId._id}" data-cidade="${unidade._cidadeId._id}" data-nome="${unidade.nome}" data-endereco="${unidade.endereco}" data-complemento="${unidade.complemento}" onclick="return editarUnidadeClick(this)" title="Editar unidade">Editar</a>
           </td>
           <td class="tdButton">
-            <a class="text-danger" href="#" onclick="return excluirUnidadeClick('${unidade._id}')" title="Excluir este unidade">Excluir</a>
+            <a class="text-danger" href="#" onclick="return excluirUnidadeClick('${unidade._id}')" title="Excluir esta unidade">Excluir</a>
           </td>
         </tr>
       `).join('');
@@ -942,10 +943,10 @@ function editarUnidadeClick(element) {
   const unidadeId = $(element).data('id');
   const unidadeEmpresa = $(element).data('empresa');
   const unidadeCidade = $(element).data('cidade');
+  const unidadeNome = $(element).data('nome'); // Adicionado campo nome
   const unidadeEndereco = $(element).data('endereco');
   const unidadeComplemento = $(element).data('complemento');
 
-  console.log("tentando editar tituloModalUnidade")
   $('#tituloModalUnidade').text('Editar Unidade');
   $('#subTituloModalUnidade').text('Edite as informações da Unidade abaixo.');
 
@@ -955,6 +956,7 @@ function editarUnidadeClick(element) {
     $('#empresaUnidade').val(unidadeEmpresa);
     carregarCidadesSelect().then(() => {
       $('#cidadeUnidade').val(unidadeCidade);
+      $('#nomeId').val(unidadeNome); // Adicionado campo nome
       $('#enderecoId').val(unidadeEndereco);
       $('#complementoId').val(unidadeComplemento);
       $('#unidade').modal('show');
@@ -971,6 +973,7 @@ function editarUnidadeClick(element) {
 function registrarNovaUnidadeClick() {
   $('#empresaUnidade').val('');
   $('#cidadeUnidade').val('');
+  $('#nomeId').val(''); // Adicionado campo nome
   $('#enderecoId').val('');
   $('#complementoId').val('');
 

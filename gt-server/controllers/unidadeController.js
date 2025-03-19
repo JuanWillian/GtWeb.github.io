@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
       return;
     }
 
-    req.session.save(() => res.status(200).json({ message: 'Unidade registrado com sucesso.' }));
+    req.session.save(() => res.status(200).json({ message: 'Unidade registrada com sucesso.' }));
     return;
   } catch (e) {
     console.log(e);
@@ -47,22 +47,18 @@ exports.delete = async function (req, res) {
   const unidade = await Unidade.delete(req.params.id);
   if (!unidade) return res.status(404).json({ error: 'Unidade não encontrada.' });
 
-  req.session.save(() => res.status(200).json({ message: 'Unidade apagado com sucesso.' }));
+  req.session.save(() => res.status(200).json({ message: 'Unidade apagada com sucesso.' }));
   return;
 };
 
 exports.getUnidades = async (req, res) => {
   try {
-    const { key, page = 1, limit = 10 } = req.query;
-    if (!keys.includes(key)) {
-      return res.status(401).json({ error: 'Key inválida.' });
-    }
-    const unidades = await Unidade.buscaUnidades(key, page, limit);
-    const totalUnidades = await Unidade.countDocuments(key);
-    res.json({ unidades, totalUnidades });
+    const { key, page, limit } = req.query;
+    const unidades = await Unidade.buscaUnidades(key, parseInt(page), parseInt(limit));
+    res.status(200).json({ unidades });
   } catch (e) {
     console.log(e);
-    res.status(500).json({ error: 'Erro ao buscar unidades' });
+    return res.status(500).json({ error: 'Erro ao buscar unidades.' });
   }
 };
 

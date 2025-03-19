@@ -54,15 +54,9 @@
                     </li>
                     <li
                       data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                      onclick="carregarTabela('Usuarios')"
+                      onclick="carregarLista('usuarioLista')"
                     >
-                      <u>Usuários do ERP</u>
-                    </li>
-                    <li
-                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                      onclick="formUsuario()"
-                    >
-                      <u>Funcionários</u>
+                      <u>Usuários</u>
                     </li>
                   </ul>
                 </li>
@@ -481,6 +475,16 @@
             >
               <div class="col mb-3">
                 <div class="form-group">
+                  <label>Nome</label>
+                  <input
+                    value="<%= unidade.nome %>"
+                    type="text"
+                    class="form-control"
+                    name="nome"
+                    id="nomeId"
+                    required
+                    maxlength="80"
+                  />
                   <label>Empresa</label>
                   <select
                     name="_empresaId"
@@ -598,40 +602,6 @@
 
     <!-- Formulário das unidades de medidas -->
     <div class="modal fade" id="unidadeMedida" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-lg" role="document" style="overflow-y: initial !important">
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="titleForm">
-              <h1 class="text-center" id="tituloModalUnidadeMedida">Cadastrar Unidade de Medida</h1>
-              <p class="text-center lead" id="subTituloModalUnidadeMedida">Cadastre uma nova unidade de medida abaixo</p>
-            </div>
-          </div>
-          <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
-            <form id="unidadeMedidaForm" onsubmit="return submitForm(event, 'unidadeMedida')">
-              <div class="col mb-3">
-                <div class="form-group">
-                  <label for="descricao">Descrição</label>
-                  <input type="text" class="form-control" id="unidadeMedidaDescricao" name="descricao" required>
-                </div>
-                <div class="form-group">
-                  <label for="sigla">Sigla</label>
-                  <input type="text" class="form-control" id="unidadeMedidaSigla" name="sigla" required>
-                </div>
-                <div class="form-group">
-                  <label for="podeFracionar">Pode Fracionar</label>
-                  <input type="checkbox" id="unidadeMedidaPodeFracionar" name="podeFracionar">
-                </div>
-              </div>
-              <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Salvar</button>
-              <button type="button" class="btn btn-warning" onclick="return botaoCancelarClick('unidadeMedida')"><i class="fa fa-close"></i> Cancelar</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
-     <!-- Formulário das marcas -->
-     <div class="modal fade" id="marca" tabindex="-1" role="dialog">
       <div
         class="modal-dialog modal-lg"
         role="document"
@@ -640,9 +610,79 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="titleForm">
-              <h1 class="text-center" id="tituloModalMarca">
-                Cadastrar marca
+              <h1 class="text-center" id="tituloModalUnidadeMedida">
+                Cadastrar Unidade de Medida
               </h1>
+              <p class="text-center lead" id="subTituloModalUnidadeMedida">
+                Cadastre uma nova unidade de medida abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form
+              id="unidadeMedidaForm"
+              onsubmit="return submitForm(event, 'unidadeMedida')"
+            >
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label for="descricao">Descrição</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="unidadeMedidaDescricao"
+                    name="descricao"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="sigla">Sigla</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="unidadeMedidaSigla"
+                    name="sigla"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="podeFracionar">Pode Fracionar</label>
+                  <input
+                    type="checkbox"
+                    id="unidadeMedidaPodeFracionar"
+                    name="podeFracionar"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('unidadeMedida')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário das marcas -->
+    <div class="modal fade" id="marca" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalMarca">Cadastrar marca</h1>
               <p class="text-center lead" id="subTituloModalMarca">
                 Cadastre uma nova marca abaixo
               </p>
@@ -652,10 +692,7 @@
             class="modal-body"
             style="max-height: calc(100vh - 200px); overflow-y: auto"
           >
-            <form
-              id="marcaForm"
-              onsubmit="return submitForm(event, 'marca')"
-            >
+            <form id="marcaForm" onsubmit="return submitForm(event, 'marca')">
               <div class="col mb-3">
                 <div class="form-group">
                   <label>Nome</label>
@@ -685,7 +722,6 @@
         </div>
       </div>
     </div>
-
 
     <!-- Conteúdo das listas de entidades -->
     <div class="conteudo">

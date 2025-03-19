@@ -22,6 +22,7 @@ const subGrupoController = require('./controllers/subGrupoController');
 const unidadeMedidaController = require('./controllers/unidadeMedidaController');
 const marcaController = require('./controllers/marcaController');
 const usuarioController = require('./controllers/usuarioController');
+const setorPorUnidadeController = require('./controllers/setorPorUnidadeController');
 
 const inserirDadosIniciais = require('./public/assets/js/inserirDadosIniciais.js');
 
@@ -54,7 +55,7 @@ mongoose.connect(config.mongoServer, {
     useUnifiedTopology: true,
 }).then(async () => {
     console.log(`Conectado ao banco de dados MongoDB: ${config.mongoDatabase}`);
-    await inserirDadosIniciais(); 
+    await inserirDadosIniciais();
     app.emit('pronto');
 }).catch((e) => console.log(e));
 
@@ -246,6 +247,12 @@ app.post('/pagPrincipal/marca/register', loginRequired, marcaController.register
 app.post('/marca/edit/:id', loginRequired, marcaController.edit);
 app.get('/marca/delete/:id', loginRequired, marcaController.delete);
 app.get('/marca/marcas', loginRequired, marcaController.getMarcas);
+
+// Rotas da entidade SetorPorUnidade
+app.post('/pagPrincipal/setorPorUnidade/register', loginRequired, setorPorUnidadeController.register);
+app.post('/setorPorUnidade/edit/:id', loginRequired, setorPorUnidadeController.edit);
+app.get('/setorPorUnidade/delete/:id', loginRequired, setorPorUnidadeController.delete);
+app.get('/setorPorUnidade/setoresPorUnidade', loginRequired, setorPorUnidadeController.getSetoresPorUnidade);
 
 app.get('*', (request, response) => {
     sendFile(request, response);

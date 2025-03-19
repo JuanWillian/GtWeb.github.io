@@ -8,6 +8,7 @@ const UnidadeSchema = new mongoose.Schema({
   key: { type: String, required: true },
   _empresaId: { type: mongoose.Schema.Types.ObjectId, ref: 'Empresa', required: true },
   _cidadeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cidade', required: true },
+  nome: { type: String, required: true }, 
   endereco: { type: String, required: false },
   complemento: { type: String, required: false },
 });
@@ -25,6 +26,7 @@ Unidade.prototype.verificarExistencia = async function () {
     key: this.body.key,
     _empresaId: this.body._empresaId,
     _cidadeId: this.body._cidadeId,
+    nome: this.body.nome, // Adicionado campo nome
     endereco: this.body.endereco,
   });
   if (unidadeJaCadastrada) {
@@ -87,6 +89,7 @@ Unidade.prototype.cleanUp = function () {
     key: this.body.key,
     _empresaId: this.body._empresaId,
     _cidadeId: this.body._cidadeId,
+    nome: this.body.nome, 
     endereco: this.body.endereco,
     complemento: this.body.complemento,
   };
