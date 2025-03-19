@@ -232,6 +232,9 @@ async function carregarRegistros(entidade, page, limit) {
     case 'unidadeMedida':
       await carregarUnidadeMedidas(page, limit);
       break;
+    case 'marca':
+      await carregarMarcas(page, limit);
+      break;
     default:
       console.error('Entidade desconhecida:', entidade);
   }
@@ -280,6 +283,10 @@ async function carregarLista(lista) {
         case 'unidadeMedidaLista':
           await atualizarRegistrosPorPag('unidadeMedida')
           await carregarRegistros("unidadeMedida", paginaAtual, registrosPorPag);
+          break;
+        case 'marcaLista':
+          await atualizarRegistrosPorPag('marca')
+          await carregarRegistros("marca", paginaAtual, registrosPorPag);
           break;
       }
 
@@ -1281,6 +1288,107 @@ async function excluirUnidadeMedidaClick(id) {
   return false;
 }
 
+// Rotinas de MARCAS
+
+/**
+ * Carrega as marcas da base de dados e atualiza a tabela de marcas.
+ * @param {number} page - Número da página atual.
+ * @param {number} limit - Número de registros por página.
+ */
+async function carregarMarcas(page, limit) {
+  try {
+    const res = await fetch(`/marca/marcas?key=${key}&page=${page}&limit=${limit}`);
+    if (res.ok) {
+      const { marcas, totalMarcas } = await res.json();
+      const tabela = document.querySelector('#marcaFormContainer .table tbody');
+      tabela.innerHTML = marcas.map(marca => `
+        <tr>
+          <td class="limited-width">${marca.nome}</td>
+          <td class="tdButton">
+            <a href="#" class="btn-edit" data-id="${marca._id}" data-nome="${marca.nome}" onclick="return editarMarcaClick(this)" title="Editar marca">Editar</a>
+          </td>
+          <td class="tdButton">
+            <a class="text-danger" href="#" onclick="return excluirMarcaClick('${marca._id}')" title="Excluir este marca">Excluir</a>
+          </td>
+        </tr>
+      `).join('');
+
+      const totalPaginas = Math.ceil(totalMarcas / limit);
+      const pagination = document.querySelector('.pagination');
+      pagination.innerHTML = gerarPaginacao('marca', page, totalPaginas, limit);
+    } else {
+      console.error('Erro ao carregar as marcas!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+/**
+ * Edita uma marca existente.
+ * @param {HTMLElement} element - Elemento HTML que disparou o evento.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function editarMarcaClick(element) {
+  const marcaId = $(element).data('id');
+  const marcaNome = $(element).data('nome');
+
+  $('#marcaId').val(marcaNome);
+
+  $('#tituloModalMarca').text('Editar Marca');
+  $('#subTituloModalMarca').text('Edite as informações da marca abaixo.');
+
+  $('#marcaForm').attr('action', '/marca/edit/' + marcaId);
+
+  $('#marca').modal('show');
+
+  return false;
+}
+
+/**
+ * Registra uma nova marca.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function registrarNovaMarcaClick() {
+  $('#marcaId').val('');
+
+  $('#tituloModalMarca').text('Cadastrar Marca');
+  $('#subTituloModalMarca').text('Cadastre uma nova marca abaixo.');
+
+  $('#marcaForm').attr('action', '/pagPrincipal/marca/register');
+
+  $('#marca').modal('show');
+
+  return false;
+}
+
+/**
+ * Exclui uma marca.
+ * @param {string} id - ID da marca a ser excluída.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+async function excluirMarcaClick(id) {
+  try {
+    const result = window.confirm("Deseja realmente excluir esta marca?");
+    if (result) {
+      const res = await fetch(`/marca/delete/${id}`, {
+        method: 'GET'
+      });
+
+      if (res.ok) {
+        console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
+        await carregarRegistros('marca', paginaAtual, registrosPorPag);
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.error);
+      }
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+
+  return false;
+}
 
 // TELA DE LOADING
 // window.addEventListener("load", () => {

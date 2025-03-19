@@ -110,6 +110,12 @@
                     >
                       <u>Unidades de medida</u>
                     </li>
+                    <li
+                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
+                      onclick="carregarLista('marcaLista')"
+                    >
+                      <u>Marca</u>
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -623,6 +629,63 @@
         </div>
       </div>
     </div>
+
+     <!-- Formulário das marcas -->
+     <div class="modal fade" id="marca" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalMarca">
+                Cadastrar marca
+              </h1>
+              <p class="text-center lead" id="subTituloModalMarca">
+                Cadastre uma nova marca abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form
+              id="marcaForm"
+              onsubmit="return submitForm(event, 'marca')"
+            >
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Nome</label>
+                  <input
+                    value="<%= marca.nome %>"
+                    type="text"
+                    class="form-control"
+                    name="nome"
+                    id="marcaId"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('marca')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
     <!-- Conteúdo das listas de entidades -->
     <div class="conteudo">

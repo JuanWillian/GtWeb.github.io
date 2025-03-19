@@ -21,6 +21,7 @@ const cidadeController = require('./controllers/cidadeController');
 const unidadeController = require('./controllers/unidadeController');
 const subGrupoController = require('./controllers/subGrupoController');
 const unidadeMedidaController = require('./controllers/unidadeMedidaController');
+const marcaController = require('./controllers/marcaController');
 
 const inserirDadosIniciais = require('./public/assets/js/inserirDadosIniciais.js');
 
@@ -240,6 +241,12 @@ app.post('/pagPrincipal/unidadeMedida/register', loginRequired, unidadeMedidaCon
 app.post('/unidadeMedida/edit/:id', loginRequired, unidadeMedidaController.edit);
 app.get('/unidadeMedida/delete/:id', loginRequired, unidadeMedidaController.delete);
 app.get('/unidadeMedida/unidadeMedidas', loginRequired, unidadeMedidaController.getUnidadeMedidas);
+
+// Rotas da entidade Marca
+app.post('/pagPrincipal/marca/register', loginRequired, marcaController.register);
+app.post('/marca/edit/:id', loginRequired, marcaController.edit);
+app.get('/marca/delete/:id', loginRequired, marcaController.delete);
+app.get('/marca/marcas', loginRequired, marcaController.getMarcas);
 
 app.get('*', (request, response) => {
     sendFile(request, response);

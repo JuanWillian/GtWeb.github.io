@@ -2,6 +2,7 @@ const Cargo = require('../../../models/cargoModel');
 const StatusAtividade = require('../../../models/statusAtividadeModel');
 const StatusUsuario = require('../../../models/statusUsuarioModel');
 const Cidade = require('../../../models/cidadeModel');
+const UnidadeMedida = require('../../../models/unidadeMedidaModel');
 
 async function inserirDadosIniciais() {
   const cargos = [
@@ -29,6 +30,25 @@ async function inserirDadosIniciais() {
     { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Feira de Santana' },
     { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Jacobina' },
   ];
+
+  const unidadeMedidas = [
+    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Quilograma', sigla: 'Kg', podeFracionar: 'on' },
+    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Caixa', sigla: 'Cx', podeFracionar: 'off' },
+    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Vidro', sigla: 'Vd', podeFracionar: 'off' },
+    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Metro', sigla: 'Mt', podeFracionar: 'on' },
+    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Metro quadrado', sigla: 'M2', podeFracionar: 'on' },
+    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Metro cubico', sigla: 'M3', podeFracionar: 'on' },
+    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Litro', sigla: 'Lt', podeFracionar: 'off' },
+    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Peca', sigla: 'Pc', podeFracionar: 'off' },
+  ];
+
+  for (const unidadeMedida of unidadeMedidas) {
+    const unidadeMedidaInstance = new UnidadeMedida(unidadeMedida);
+    await unidadeMedidaInstance.register();
+    if (unidadeMedidaInstance.errors.length > 0) {
+      console.log(`Erro ao inserir unidade de medida: ${unidadeMedidaInstance.errors.join(', ')}`);
+    }
+  }
 
   for (const cargo of cargos) {
     const cargoInstance = new Cargo(cargo);

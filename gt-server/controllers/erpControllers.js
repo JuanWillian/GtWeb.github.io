@@ -7,6 +7,7 @@ const Unidade = require('../models/unidadeModel');
 const Cidade = require('../models/cidadeModel');
 const SubGrupo = require('../models/subGrupoModel');
 const UnidadeMedida = require('../models/unidadeMedidaModel');
+const Marca = require('../models/marcaModel');
 
 exports.index = async (req, res) => {
   const setores = await Setor.buscaSetores();
@@ -18,8 +19,9 @@ exports.index = async (req, res) => {
   const cidades = await Cidade.buscaCidades();
   const subGrupos = await SubGrupo.buscaSubGrupos();
   const unidadeMedidas = await UnidadeMedida.buscaUnidadeMedidas();
+  const marcas = await Marca.buscaMarcas();
 
-  res.render('pagPrincipal', { setores, setor: {}, empresas, empresa: {}, atividades, atividade: {}, execucoes, execucao: {}, grupos, grupo: {}, unidades, unidade: {}, cidades, subGrupos, subGrupo: {}, unidadeMedidas, unidadeMedida: {} });
+  res.render('pagPrincipal', { setores, setor: {}, empresas, empresa: {}, atividades, atividade: {}, execucoes, execucao: {}, grupos, grupo: {}, unidades, unidade: {}, cidades, subGrupos, subGrupo: {}, unidadeMedidas, unidadeMedida: {}, marcas, marca: {} });
 };
 
 exports.carregarFormulario = (req, res) => {
