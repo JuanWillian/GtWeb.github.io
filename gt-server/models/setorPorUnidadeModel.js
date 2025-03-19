@@ -39,10 +39,11 @@ SetorPorUnidade.prototype.valida = async function () {
 };
 
 SetorPorUnidade.prototype.register = async function () {
-  await this.valida();
-  if (this.errors.length > 0) return;
-
-  this.setorPorUnidade = await SetorPorUnidadeModel.create(this.body);
+  try {
+    this.setorPorUnidade = await SetorPorUnidadeModel.create(this.body);
+  } catch (e) {
+    this.errors.push('Erro ao registrar Setor por Unidade.');
+  }
 };
 
 SetorPorUnidade.prototype.edit = async function (id) {
@@ -85,6 +86,10 @@ SetorPorUnidade.prototype.cleanUp = function () {
     _setorId: this.body._setorId,
     _unidadeId: this.body._unidadeId,
   };
+};
+
+SetorPorUnidade.findOne = async function (query) {
+  return await SetorPorUnidadeModel.findOne(query);
 };
 
 module.exports = SetorPorUnidade;

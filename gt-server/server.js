@@ -166,7 +166,7 @@ app.get('/index', usuarioController.index);
 app.post('/usuario/login', usuarioController.login);
 app.get('/usuario/logout', usuarioController.logout);
 app.post('/usuario/register', usuarioController.register);
-app.post('/usuario/usuarios', usuarioController.getUsuarios);
+app.get('/usuario/usuarios', loginRequired, usuarioController.getUsuarios);
 app.post('/usuario/delete/:id', usuarioController.delete);
 app.post('/usuario/edit/:id', usuarioController.edit);
 
@@ -249,10 +249,11 @@ app.get('/marca/delete/:id', loginRequired, marcaController.delete);
 app.get('/marca/marcas', loginRequired, marcaController.getMarcas);
 
 // Rotas da entidade SetorPorUnidade
-app.post('/pagPrincipal/setorPorUnidade/register', loginRequired, setorPorUnidadeController.register);
+app.post('/pagPrincipal/setorPorUnidade/register', setorPorUnidadeController.register);
 app.post('/setorPorUnidade/edit/:id', loginRequired, setorPorUnidadeController.edit);
 app.get('/setorPorUnidade/delete/:id', loginRequired, setorPorUnidadeController.delete);
 app.get('/setorPorUnidade/setoresPorUnidade', loginRequired, setorPorUnidadeController.getSetoresPorUnidade);
+app.post('/setorPorUnidade/setoresPorUnidade', loginRequired, setorPorUnidadeController.registerOrFind);
 
 app.get('*', (request, response) => {
     sendFile(request, response);

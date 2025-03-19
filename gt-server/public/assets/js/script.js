@@ -1,52 +1,5 @@
 var key = 'ad0c0749e023d44bd92c1e56ca0b3e3c';
 
-function formUsuario() {
-  let form = "";
-  form += ' <form class="row g-3 formulario">';
-  form += '<div class="col-md-6">';
-  form += '<label for="nome" class="form-label">Nome</label>';
-  form +=
-    ' <input type="text" class="form-control" id="nome" placeholder="Insira o nome"/>';
-  form += "</div>";
-  form += '<div class="col-md-6">';
-  form += '<label for="sobrenome" class="form-label">Sobrenome</label>';
-  form +=
-    ' <input type="text" class="form-control" id="sobrenome" placeholder="Insira o sobrenome" />';
-  form += "</div>";
-  form += '<div class="col-md-6">';
-  form += '<label for="email" class="form-label">Email</label>';
-  form +=
-    ' <input type="email" class="form-control" id="email" placeholder="Insira o E-mail"/>';
-  form += "</div>";
-
-  form += '<div class="col-md-6">';
-  form += '<label for="usuario" class="form-label">Usuário</label>';
-  form +=
-    ' <input type="text" class="form-control" id="usuario" placeholder="Insira o nome de usuário" />';
-  form += "</div>";
-
-  form += '<div class="col-md-6">';
-  form += '<label for="senha" class="form-label">Senha</label>';
-  form +=
-    ' <input type="password" class="form-control" id="senha" placeholder="Insira a senha"/>';
-  form += "</div>";
-
-  form += ' <div class="col-md-6" style="margin-top:24px">';
-  form += '   <label for="cargo">Cargo</label>';
-  form += '   <select class="form-select">';
-  form += '   <option value="1">Líder</option>';
-  form += '   <option value="2">Supervisor</option>';
-  form += '   <option value="3">Funcionário Padrão</option>';
-  form += "   </select>";
-  form += " </div>";
-
-  form += '<div class="col-12">';
-  form += '<button type="submit" class="btn btnCadastro">Cadastrar</button>';
-  form += "</div>";
-  form += "</form>";
-  document.getElementById("forms").innerHTML = form;
-}
-
 function formGpProduto() {
   let form = "";
   form += ' <form class="row g-3 formulario" >';
@@ -85,106 +38,6 @@ function formGpProduto() {
   form += "";
 
   document.getElementById("forms").innerHTML = form;
-}
-
-function formUsuarioERP() {
-  let form = "";
-  form += '<form class="row g-3 formulario" id="usuarioERPForm">';
-  form += '<div class="col-md-6">';
-  form += '<label for="usuarioERP" class="form-label">Usuário ERP</label>';
-  form += '<input type="text" class="form-control" id="usuarioERP" name="usuario" placeholder="Insira o usuário ERP"/>';
-  form += '</div>';
-  form += '<div class="col-md-6">';
-  form += '<label for="senhaERP" class="form-label">Senha ERP</label>';
-  form += '<input type="password" class="form-control" id="senhaERP" name="senha" placeholder="Insira a senha ERP"/>';
-  form += '</div>';
-  form += '<div class="col-12 botoesForm">';
-  form += '<button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
-  form += '<button class="btn btnCadastro mt-2" onclick="carregarTabela(`Usuarios`)">Voltar</button>';
-  form += '</div>';
-  form += '</form>';
-
-  document.getElementById("forms").innerHTML = form;
-
-  document.getElementById("usuarioERPForm").addEventListener("submit", async function (event) {
-    event.preventDefault();
-    const usuario = document.getElementById("usuarioERP").value;
-    const password = document.getElementById("senhaERP").value;
-    try {
-      const res = await fetch(`/login/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ key, usuario, password })
-      });
-
-    } catch (error) {
-      console.error('Erro:', error);
-    }
-  });
-}
-
-// Rotinas de Usuários ERP
-/**
- * Carrega entidades da base de dados e atualiza a tabela de usuários.
- * @param {string} entidade - Nome da entidade a ser carregada.
- * @return {Promise<void>}
- */
-async function carregarEntidades(entidade) {
-  try {
-    const res = await fetch(`/getLista${entidade}?key=${key}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    if (res.ok) {
-      const usuarios = await res.json();
-      const tbody = document.querySelector("#tabelaUsuarios tbody");
-      tbody.innerHTML = '';
-
-      usuarios.forEach(usuario => {
-        const tr = document.createElement('tr');
-        const tdNome = document.createElement('td');
-        tdNome.innerHTML = usuario.usuario;
-
-        tr.appendChild(tdNome);
-        tbody.appendChild(tr);
-      });
-    } else {
-      console.error('Erro ao carregar usuários!');
-    }
-  } catch (error) {
-    console.error('Erro:', error);
-  }
-}
-
-/**
- * Carrega a tabela de uma entidade específica.
- * @param {string} entidade - Nome da entidade a ser carregada.
- * @return {void}
- */
-function carregarTabela(entidade) {
-  let form = '';
-  form += '<div class="mainFormContainer ">';
-  form += '<div class="cabecalhoForm ">';
-  form += '<button class="btn btnCadastro " onclick="formUsuarioERP()"><i class="bi bi-plus-lg"></i></button>';
-  form += '<button class="btn btnCadastro " ><i class="bi bi-trash-fill"></i></button>';
-  form += '</div>';
-
-  form += '<table id="tabelaUsuarios" class="table table-striped">';
-  form += '<thead >';
-  form += '<tr>';
-  form += '<th>Nome</th>';
-  form += '</tr>';
-  form += '</thead>';
-  form += '<tbody class="table-group-divider">';
-  form += '</tbody>';
-  form += '</table>';
-  form += '</div>';
-  document.getElementById("forms").innerHTML = form;
-  carregarEntidades(entidade);
 }
 
 let paginaAtual = 1;
@@ -234,6 +87,9 @@ async function carregarRegistros(entidade, page, limit) {
       break;
     case 'marca':
       await carregarMarcas(page, limit);
+      break;
+    case 'usuario':
+      await carregarUsuarios(page, limit);
       break;
     default:
       console.error('Entidade desconhecida:', entidade);
@@ -288,6 +144,11 @@ async function carregarLista(lista) {
           await atualizarRegistrosPorPag('marca')
           await carregarRegistros("marca", paginaAtual, registrosPorPag);
           break;
+        case 'usuarioLista':
+          await atualizarRegistrosPorPag('usuario')
+          await carregarRegistros("usuario", paginaAtual, registrosPorPag);
+          break;
+
       }
 
       /*
@@ -1391,6 +1252,270 @@ async function excluirMarcaClick(id) {
   }
 
   return false;
+}
+
+// Rotina de USUÁRIOS
+
+async function submitUsuarioForm(event) {
+  event.preventDefault();
+
+  const unidadeId = $('#usuarioUnidade').val();
+  const setorId = $('#usuarioSetor').val();
+  const key = 'ad0c0749e023d44bd92c1e56ca0b3e3c'; // Certifique-se de que a chave está correta
+
+  if (!key || !setorId || !unidadeId) {
+    console.error('Dados incompletos:', { key, setorId, unidadeId });
+    return;
+  }
+
+  try {
+    console.log('Enviando dados para /setorPorUnidade/setoresPorUnidade:', { key, _setorId: setorId, _unidadeId: unidadeId });
+    const res = await fetch('/setorPorUnidade/setoresPorUnidade', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ key, _setorId: setorId, _unidadeId: unidadeId })
+    });
+
+    if (res.ok) {
+      const { setorPorUnidade } = await res.json();
+      $('#usuarioSetorPorUnidadeId').val(setorPorUnidade._id);
+
+      const form = event.target;
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      // Ajustar o JSON para o formato correto
+      const usuarioData = {
+        key: key,
+        nome: data.nome,
+        sobreNome: data.sobreNome,
+        email: data.email,
+        usuario: data.usuario,
+        password: data.password,
+        _cargoId: data._cargoId,
+        _setorPorUnidadeId: setorPorUnidade._id
+      };
+
+      console.log('Enviando dados para', form.getAttribute('action'), usuarioData);
+      const action = form.getAttribute('action');
+      const response = await fetch(action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(usuarioData)
+      });
+
+      if (response.ok) {
+        console.log('Usuário salvo com sucesso.');
+        $('#usuarioModal').modal('hide');
+        await carregarRegistros('usuario', paginaAtual, registrosPorPag);
+      } else {
+        const result = await response.json();
+        console.error('Erro ao salvar usuário:', result.error);
+      }
+    } else {
+      const result = await res.json();
+      console.error('Erro ao buscar ou criar SetorPorUnidade:', result.error);
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+/**
+ * Registra um novo usuário.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function registrarNovoUsuarioClick() {
+  $('#usuarioNome').val('');
+  $('#usuarioSobrenome').val('');
+  $('#usuarioEmail').val('');
+  $('#usuarioUsuario').val('');
+  $('#usuarioSenha').val('');
+  $('#usuarioCargo').val('');
+  $('#usuarioUnidade').val('');
+  $('#usuarioSetor').val('');
+  $('#usuarioSetorPorUnidadeId').val('');
+
+  $('#tituloModalUsuario').text('Cadastrar Usuário');
+  $('#usuarioForm').attr('action', '/usuario/register');
+
+  carregarCargosSelect().then(() => {
+    carregarUnidadesSelect().then(() => {
+      carregarSetoresSelect().then(() => {
+        $('#usuarioModal').modal('show');
+      });
+    });
+  });
+
+  return false;
+}
+
+/**
+ * Edita um usuário existente.
+ * @param {HTMLElement} element - Elemento HTML que disparou o evento.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+function editarUsuarioClick(element) {
+  const usuarioId = $(element).data('id');
+  const usuarioNome = $(element).data('nome');
+  const usuarioSobrenome = $(element).data('sobrenome');
+  const usuarioEmail = $(element).data('email');
+  const usuarioUsuario = $(element).data('usuario');
+  const usuarioCargo = $(element).data('cargo');
+  const usuarioUnidade = $(element).data('unidade');
+  const usuarioSetor = $(element).data('setor');
+  const usuarioSetorPorUnidadeId = $(element).data('setorporunidadeid');
+
+  $('#usuarioNome').val(usuarioNome);
+  $('#usuarioSobrenome').val(usuarioSobrenome);
+  $('#usuarioEmail').val(usuarioEmail);
+  $('#usuarioUsuario').val(usuarioUsuario);
+  $('#usuarioSenha').val('');
+  $('#usuarioCargo').val(usuarioCargo);
+  $('#usuarioUnidade').val(usuarioUnidade);
+  $('#usuarioSetor').val(usuarioSetor);
+  $('#usuarioSetorPorUnidadeId').val(usuarioSetorPorUnidadeId);
+
+  $('#tituloModalUsuario').text('Editar Usuário');
+  $('#usuarioForm').attr('action', '/usuario/edit/' + usuarioId);
+
+  carregarCargosSelect().then(() => {
+    carregarUnidadesSelect().then(() => {
+      carregarSetoresSelect().then(() => {
+        $('#usuarioModal').modal('show');
+      });
+    });
+  });
+
+  return false;
+}
+
+
+async function carregarUsuarios(page, limit) {
+  try {
+    const res = await fetch(`/usuario/usuarios?key=${key}&page=${page}&limit=${limit}`);
+    if (res.ok) {
+      const { usuarios, totalUsuarios } = await res.json();
+      const tabela = document.querySelector('#usuarioFormContainer .table tbody');
+      tabela.innerHTML = usuarios.map(usuario => `
+        <tr>
+          <td class="limited-width">${usuario.nome}</td>
+          <td class="limited-width">${usuario.sobreNome}</td>
+          <td class="limited-width">${usuario.email}</td>
+          <td class="limited-width">${usuario.usuario}</td>
+          <td class="limited-width">${usuario._cargoId ? usuario._cargoId.nome : ''}</td>
+          <td class="limited-width">${usuario._setorPorUnidadeId && usuario._setorPorUnidadeId._unidadeId ? usuario._setorPorUnidadeId._unidadeId.nome : ''}</td>
+          <td class="limited-width">${usuario._setorPorUnidadeId && usuario._setorPorUnidadeId._setorId ? usuario._setorPorUnidadeId._setorId.nome : ''}</td>
+          <td class="tdButton">
+            <a href="#" class="btn-edit" data-id="${usuario._id}" data-nome="${usuario.nome}" data-sobrenome="${usuario.sobreNome}" data-email="${usuario.email}" data-usuario="${usuario.usuario}" data-cargo="${usuario._cargoId ? usuario._cargoId._id : ''}" data-unidade="${usuario._setorPorUnidadeId && usuario._setorPorUnidadeId._unidadeId ? usuario._setorPorUnidadeId._unidadeId._id : ''}" data-setor="${usuario._setorPorUnidadeId && usuario._setorPorUnidadeId._setorId ? usuario._setorPorUnidadeId._setorId._id : ''}" data-setorporunidadeid="${usuario._setorPorUnidadeId ? usuario._setorPorUnidadeId._id : ''}" onclick="return editarUsuarioClick(this)" title="Editar usuário">Editar</a>
+          </td>
+          <td class="tdButton">
+            <a class="text-danger" href="#" onclick="return excluirUsuarioClick('${usuario._id}')" title="Excluir este usuário">Excluir</a>
+          </td>
+        </tr>
+      `).join('');
+
+      const totalPaginas = Math.ceil(totalUsuarios / limit);
+      const pagination = document.querySelector('.pagination');
+      pagination.innerHTML = gerarPaginacao('usuario', page, totalPaginas, limit);
+    } else {
+      console.error('Erro ao carregar os usuários!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+/**
+ * Exclui um usuário existente.
+ * @param {string} id - ID do usuário a ser excluído.
+ * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
+ */
+async function excluirUsuarioClick(id) {
+  try {
+    const result = window.confirm("Deseja realmente excluir este usuário?");
+    if (result) {
+      const res = await fetch(`/usuario/delete/${id}`, {
+        method: 'GET'
+      });
+
+      if (res.ok) {
+        console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
+        await carregarRegistros('usuario', paginaAtual, registrosPorPag);
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.error);
+      }
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+
+  return false;
+}
+
+/**
+ * Carrega os cargos no select.
+ */
+async function carregarCargosSelect() {
+  try {
+    const res = await fetch(`/cargo/cargos?key=${key}`);
+    if (res.ok) {
+      const { cargos } = await res.json();
+      const select = document.getElementById('usuarioCargo');
+      select.innerHTML = cargos.map(cargo => `
+        <option value="${cargo._id}">${cargo.nome}</option>
+      `).join('');
+    } else {
+      console.error('Erro ao carregar os cargos!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+/**
+ * Carrega as unidades no select.
+ */
+async function carregarUnidadesSelect() {
+  try {
+    const res = await fetch(`/unidade/unidades?key=${key}`);
+    if (res.ok) {
+      const { unidades } = await res.json();
+      const select = document.getElementById('usuarioUnidade');
+      select.innerHTML = unidades.map(unidade => `
+        <option value="${unidade._id}">${unidade.nome}</option>
+      `).join('');
+    } else {
+      console.error('Erro ao carregar as unidades!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+/**
+ * Carrega os setores no select.
+ */
+async function carregarSetoresSelect() {
+  try {
+    const res = await fetch(`/setor/setores?key=${key}`);
+    if (res.ok) {
+      const { setores } = await res.json();
+      const select = document.getElementById('usuarioSetor');
+      select.innerHTML = setores.map(setor => `
+        <option value="${setor._id}">${setor.nome}</option>
+      `).join('');
+    } else {
+      console.error('Erro ao carregar os setores!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
 }
 
 // TELA DE LOADING

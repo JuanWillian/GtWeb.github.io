@@ -12,6 +12,7 @@ const UsuarioSchema = new mongoose.Schema({
   usuario: { type: String, required: true },
   password: { type: String, required: true },
   _cargoId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cargo', required: true },
+  _setorPorUnidadeId: { type: mongoose.Schema.Types.ObjectId, ref: 'SetorPorUnidade', required: true },
 });
 
 const UsuarioModel = mongoose.model('Usuario', UsuarioSchema);
@@ -43,7 +44,8 @@ Usuario.prototype.valida = async function () {
 
 Usuario.prototype.login = async function () {
   try {
-    this.user = await UsuarioModel.findOne({ usuario: this.body.usuario }).populate('_cargoId', 'nome');
+    this.user = await UsuarioModel.findOne({ usuario: this.body.usuario })
+      .populate('_cargoId', 'nome')
 
     if (!this.user) {
       this.errors.push('Usuário não existe.');
@@ -86,10 +88,17 @@ Usuario.prototype.edit = async function (id) {
 Usuario.buscaUsuarios = async function (key, page, limit) {
   const skip = (page - 1) * limit;
   const usuarios = await UsuarioModel.find({ key })
-    .sort({ endereco: 1 })
+    .sort({ nome: 1 })
     .skip(skip)
     .limit(parseInt(limit))
     .populate('_cargoId', 'nome')
+    .populate({
+      path: '_setorPorUnidadeId',
+      populate: [
+        { path: '_unidadeId', select: 'nome' },
+        { path: '_setorId', select: 'nome' }
+      ]
+    });
   return usuarios;
 };
 
@@ -118,6 +127,7 @@ Usuario.prototype.cleanUp = function () {
     usuario: this.body.usuario,
     password: this.body.password,
     _cargoId: this.body._cargoId,
+    _setorPorUnidadeId: this.body._setorPorUnidadeId,
   };
 };
 

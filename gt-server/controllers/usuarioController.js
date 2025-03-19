@@ -6,42 +6,41 @@ const keys = JSON.parse(fs.readFileSync(path.join(__dirname, '../conf/keys.json'
 
 exports.index = (req, res) => {
   if (req.session.user) {
-      return res.redirect('/pagPrincipal');
-    }
-    return res.render('index');
+    return res.redirect('/pagPrincipal');
+  }
+  return res.render('index');
 };
-
 
 exports.login = async function (req, res) {
   const { usuario, password } = req.body;
 
   try {
-      console.log(`Tentando encontrar usuário: ${usuario} com a senha: ${password}`);
+    console.log(`Tentando encontrar usuário: ${usuario} com a senha: ${password}`);
 
-      const usuarioLogin = new Usuario(req.body);
-      await usuarioLogin.login();
-      if (usuarioLogin.errors.length > 0) {
-          console.log(usuarioLogin.errors);
-          req.flash('error', usuarioLogin.errors);
-          req.session.save(function () {
-              return res.redirect('back');
-          });
-          return;
-      }
-
-      req.session.user = usuarioLogin.user;
-      console.log('Usuário logado com sucesso.');
-      req.session.save(function (err) {
-          if (err) {
-              console.log('Erro ao salvar a sessão:', err);
-              req.flash('error', 'Erro ao salvar a sessão.');
-              res.writeHead(500, { 'Content-Type': 'text/plain' });
-              res.write('500 Internal Server Error');
-              res.end();
-              return;
-          }
-          return res.redirect('/pagPrincipal');
+    const usuarioLogin = new Usuario(req.body);
+    await usuarioLogin.login();
+    if (usuarioLogin.errors.length > 0) {
+      console.log(usuarioLogin.errors);
+      req.flash('error', usuarioLogin.errors);
+      req.session.save(function () {
+        return res.redirect('back');
       });
+      return;
+    }
+
+    req.session.user = usuarioLogin.user;
+    console.log('Usuário logado com sucesso.');
+    req.session.save(function (err) {
+      if (err) {
+        console.log('Erro ao salvar a sessão:', err);
+        req.flash('error', 'Erro ao salvar a sessão.');
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.write('500 Internal Server Error');
+        res.end();
+        return;
+      }
+      return res.redirect('/pagPrincipal');
+    });
   } catch (e) {
     return res.status(500).json({ error: 'Erro ao efetuar login.' });
   }

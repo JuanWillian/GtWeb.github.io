@@ -61,3 +61,30 @@ exports.getSetoresPorUnidade = async (req, res) => {
     return res.status(500).json({ error: 'Erro ao buscar Setores por Unidade.' });
   }
 };
+
+exports.registerOrFind = async (req, res) => {
+  try {
+    const { key, _setorId, _unidadeId } = req.body;
+    if (!key || !_setorId || !_unidadeId) {
+      return res.status(400).json({ error: 'Dados incompletos.' });
+    }
+
+    let setorPorUnidade = await SetorPorUnidade.findOne({ key, _setorId, _unidadeId });
+
+    if (!setorPorUnidade) {
+      const setorPorUnidadeInstance = new SetorPorUnidade(req.body);
+      await setorPorUnidadeInstance.register();
+
+      if (setorPorUnidadeInstance.errors.length > 0) {
+        return res.status(400).json({ errors: setorPorUnidadeInstance.errors });
+      }
+
+      setorPorUnidade = setorPorUnidadeInstance.setorPorUnidade;
+    }
+
+    res.status(200).json({ setorPorUnidade });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao buscar ou criar SetorPorUnidade.' });
+  }
+};
