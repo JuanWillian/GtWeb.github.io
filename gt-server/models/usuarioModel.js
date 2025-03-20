@@ -9,7 +9,7 @@ const UsuarioSchema = new mongoose.Schema({
   nome: { type: String, required: true },
   sobreNome: { type: String, required: true },
   email: { type: String, required: false },
-  usuario: { type: String, required: true },
+  usuario: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   _cargoId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cargo', required: true },
   _setorPorUnidadeId: { type: mongoose.Schema.Types.ObjectId, ref: 'SetorPorUnidade', required: true },
@@ -27,9 +27,10 @@ Usuario.prototype.verificarExistencia = async function () {
   const usuarioJaCadastrado = await UsuarioModel.findOne({
     key: this.body.key,
     usuario: this.body.usuario,
+
   });
   if (usuarioJaCadastrado) {
-    this.errors.push('Usuario já cadastrado.');
+    this.errors.push('Usuário já cadastrado.');
     return;
   }
 }
@@ -66,7 +67,6 @@ Usuario.prototype.login = async function () {
       return;
     }
   } catch (error) {
-    console.error('Erro ao tentar fazer login:', error);
     this.errors.push('Erro ao tentar fazer login.');
   }
 }
@@ -79,10 +79,23 @@ Usuario.prototype.register = async function () {
 };
 
 Usuario.prototype.edit = async function (id) {
-  if (typeof id !== 'string') return;
-  await this.valida();
-  if (this.errors.length > 0) return;
-  this.usuario = await UsuarioModel.findByIdAndUpdate(id, this.body, { new: true });
+  try {
+    if (typeof id !== 'string') return;
+    this.cleanUp();
+    if (!keys.includes(this.body.key)) {
+      this.errors.push('Key inválida.');
+    }
+    if (this.errors.length > 0) return;
+
+    this.usuario = await UsuarioModel.findByIdAndUpdate(id, this.body, { new: true });
+  } catch (error) {
+
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.usuario) {
+      this.errors.push('O nome de usuário já está em uso.');
+    } else {
+      this.errors.push('Erro ao tentar editar usuário.');
+    }
+  }
 };
 
 Usuario.buscaUsuarios = async function (key, page, limit) {

@@ -1,4 +1,4 @@
-var key = 'ad0c0749e023d44bd92c1e56ca0b3e3c';
+
 
 function formGpProduto() {
   let form = "";
@@ -42,6 +42,12 @@ function formGpProduto() {
 
 let paginaAtual = 1;
 let registrosPorPag = 10;
+
+async function getKey() {
+  const response = await fetch('/get-key');
+  const data = await response.json();
+  return data.key;
+}
 
 /**
  * Fecha um modal.
@@ -217,7 +223,7 @@ async function submitForm(event, nomeModal) {
   const formData = new FormData(form);
   const data = Object.fromEntries(formData.entries());
 
-  data.key = key;
+  data.key = await getKey();
   try {
     const res = await fetch(action, {
       method: 'POST',
@@ -249,6 +255,7 @@ async function submitForm(event, nomeModal) {
  * @param {number} limit - Número de registros por página.
  */
 async function carregarSetores(page, limit) {
+  const key = await getKey();
   try {
     const res = await fetch(`/setor/setores?key=${key}&page=${page}&limit=${limit}`);
     if (res.ok) {
@@ -355,6 +362,7 @@ async function excluirSetorClick(id) {
  * @param {number} limit - Número de registros por página.
  */
 async function carregarEmpresas(page, limit) {
+  const key = await getKey();
   try {
     const res = await fetch(`/empresa/empresas?key=${key}&page=${page}&limit=${limit}`);
     if (res.ok) {
@@ -457,6 +465,7 @@ async function excluirEmpresaClick(id) {
  * @param {number} limit - Número de registros por página.
  */
 async function carregarAtividades(page, limit) {
+  const key = await getKey();
   try {
     const res = await fetch(`/atividade/atividades?key=${key}&page=${page}&limit=${limit}`);
     if (res.ok) {
@@ -559,6 +568,7 @@ async function excluirAtividadeClick(id) {
  * @param {number} limit - Número de registros por página.
  */
 async function carregarExecucoes(page, limit) {
+  const key = await getKey();
   try {
     const res = await fetch(`/execucao/execucoes?key=${key}&page=${page}&limit=${limit}`);
     if (res.ok) {
@@ -661,6 +671,7 @@ async function excluirExecucaoClick(id) {
  * @param {number} limit - Número de registros por página.
  */
 async function carregarGrupos(page, limit) {
+  const key = await getKey();
   try {
     const res = await fetch(`/grupo/grupos?key=${key}&page=${page}&limit=${limit}`);
     if (res.ok) {
@@ -763,6 +774,7 @@ async function excluirGrupoClick(id) {
  * @param {number} limit - Número de registros por página.
  */
 async function carregarUnidades(page, limit) {
+  const key = await getKey();
   try {
     const res = await fetch(`/unidade/unidades?key=${key}&page=${page}&limit=${limit}`);
     if (res.ok) {
@@ -881,6 +893,7 @@ async function excluirUnidadeClick(id) {
 }
 
 async function carregarEmpresasSelect() {
+  const key = await getKey();
   try {
     const res = await fetch(`/empresa/empresas?key=${key}`);
     if (res.ok) {
@@ -898,6 +911,7 @@ async function carregarEmpresasSelect() {
 }
 
 async function carregarCidadesSelect() {
+  const key = await getKey();
   try {
     const res = await fetch(`/cidade/cidades?key=${key}`);
     if (res.ok) {
@@ -922,6 +936,7 @@ async function carregarCidadesSelect() {
  * @param {number} limit - Número de registros por página.
  */
 async function carregarSubGrupos(page, limit) {
+  const key = await getKey();
   try {
     const res = await fetch(`/subGrupo/subGrupos?key=${key}&page=${page}&limit=${limit}`);
     if (res.ok) {
@@ -1024,6 +1039,7 @@ async function excluirSubGrupoClick(id) {
 }
 
 async function carregarGruposNoSelect() {
+  const key = await getKey();
   try {
     const res = await fetch(`/grupo/grupos?key=${key}`);
     if (res.ok) {
@@ -1048,6 +1064,7 @@ async function carregarGruposNoSelect() {
  * @param {number} limit - Número de registros por página.
  */
 async function carregarUnidadeMedidas(page, limit) {
+  const key = await getKey();
   try {
     const res = await fetch(`/unidadeMedida/unidadeMedidas?key=${key}&page=${page}&limit=${limit}`);
     if (res.ok) {
@@ -1160,6 +1177,7 @@ async function excluirUnidadeMedidaClick(id) {
  * @param {number} limit - Número de registros por página.
  */
 async function carregarMarcas(page, limit) {
+  const key = await getKey();
   try {
     const res = await fetch(`/marca/marcas?key=${key}&page=${page}&limit=${limit}`);
     if (res.ok) {
@@ -1261,12 +1279,7 @@ async function submitUsuarioForm(event) {
 
   const unidadeId = $('#usuarioUnidade').val();
   const setorId = $('#usuarioSetor').val();
-  const key = 'ad0c0749e023d44bd92c1e56ca0b3e3c'; // Certifique-se de que a chave está correta
-
-  if (!key || !setorId || !unidadeId) {
-    console.error('Dados incompletos:', { key, setorId, unidadeId });
-    return;
-  }
+  const key = await getKey();
 
   try {
     console.log('Enviando dados para /setorPorUnidade/setoresPorUnidade:', { key, _setorId: setorId, _unidadeId: unidadeId });
@@ -1280,13 +1293,11 @@ async function submitUsuarioForm(event) {
 
     if (res.ok) {
       const { setorPorUnidade } = await res.json();
-      $('#usuarioSetorPorUnidadeId').val(setorPorUnidade._id);
 
       const form = event.target;
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
 
-      // Ajustar o JSON para o formato correto
       const usuarioData = {
         key: key,
         nome: data.nome,
@@ -1298,7 +1309,6 @@ async function submitUsuarioForm(event) {
         _setorPorUnidadeId: setorPorUnidade._id
       };
 
-      console.log('Enviando dados para', form.getAttribute('action'), usuarioData);
       const action = form.getAttribute('action');
       const response = await fetch(action, {
         method: 'POST',
@@ -1315,13 +1325,16 @@ async function submitUsuarioForm(event) {
       } else {
         const result = await response.json();
         console.error('Erro ao salvar usuário:', result.error);
+        window.alert('Erro: ' + result.errors.join('\n'));
       }
     } else {
       const result = await res.json();
       console.error('Erro ao buscar ou criar SetorPorUnidade:', result.error);
+      window.alert('Erro: ' + result.errors.join('\n'));
     }
   } catch (error) {
     console.error('Erro:', error);
+    window.alert('Erro: ' + error.message);
   }
 }
 
@@ -1338,7 +1351,6 @@ function registrarNovoUsuarioClick() {
   $('#usuarioCargo').val('');
   $('#usuarioUnidade').val('');
   $('#usuarioSetor').val('');
-  $('#usuarioSetorPorUnidadeId').val('');
 
   $('#tituloModalUsuario').text('Cadastrar Usuário');
   $('#usuarioForm').attr('action', '/usuario/register');
@@ -1368,24 +1380,21 @@ function editarUsuarioClick(element) {
   const usuarioCargo = $(element).data('cargo');
   const usuarioUnidade = $(element).data('unidade');
   const usuarioSetor = $(element).data('setor');
-  const usuarioSetorPorUnidadeId = $(element).data('setorporunidadeid');
 
   $('#usuarioNome').val(usuarioNome);
   $('#usuarioSobrenome').val(usuarioSobrenome);
   $('#usuarioEmail').val(usuarioEmail);
   $('#usuarioUsuario').val(usuarioUsuario);
-  $('#usuarioSenha').val('');
-  $('#usuarioCargo').val(usuarioCargo);
-  $('#usuarioUnidade').val(usuarioUnidade);
-  $('#usuarioSetor').val(usuarioSetor);
-  $('#usuarioSetorPorUnidadeId').val(usuarioSetorPorUnidadeId);
 
   $('#tituloModalUsuario').text('Editar Usuário');
   $('#usuarioForm').attr('action', '/usuario/edit/' + usuarioId);
 
   carregarCargosSelect().then(() => {
+    $('#usuarioCargo').val(usuarioCargo);
     carregarUnidadesSelect().then(() => {
+      $('#usuarioUnidade').val(usuarioUnidade);
       carregarSetoresSelect().then(() => {
+        $('#usuarioSetor').val(usuarioSetor);
         $('#usuarioModal').modal('show');
       });
     });
@@ -1396,6 +1405,7 @@ function editarUsuarioClick(element) {
 
 
 async function carregarUsuarios(page, limit) {
+  const key = await getKey();
   try {
     const res = await fetch(`/usuario/usuarios?key=${key}&page=${page}&limit=${limit}`);
     if (res.ok) {
@@ -1440,7 +1450,7 @@ async function excluirUsuarioClick(id) {
     const result = window.confirm("Deseja realmente excluir este usuário?");
     if (result) {
       const res = await fetch(`/usuario/delete/${id}`, {
-        method: 'GET'
+        method: 'POST'
       });
 
       if (res.ok) {
@@ -1462,6 +1472,7 @@ async function excluirUsuarioClick(id) {
  * Carrega os cargos no select.
  */
 async function carregarCargosSelect() {
+  const key = await getKey();
   try {
     const res = await fetch(`/cargo/cargos?key=${key}`);
     if (res.ok) {
@@ -1482,6 +1493,7 @@ async function carregarCargosSelect() {
  * Carrega as unidades no select.
  */
 async function carregarUnidadesSelect() {
+  const key = await getKey();
   try {
     const res = await fetch(`/unidade/unidades?key=${key}`);
     if (res.ok) {
@@ -1502,6 +1514,7 @@ async function carregarUnidadesSelect() {
  * Carrega os setores no select.
  */
 async function carregarSetoresSelect() {
+  const key = await getKey();
   try {
     const res = await fetch(`/setor/setores?key=${key}`);
     if (res.ok) {

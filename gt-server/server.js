@@ -4,6 +4,7 @@
  * Este serviço fornece suporte para servir arquivos e dados para a aplicação Gt Web.
  */
 
+
 const { MongoClient } = require('mongodb');
 const mongoose = require('mongoose');
 
@@ -32,6 +33,8 @@ const path = require('path');
 const mime = require('mime-types');
 const express = require('express');
 const app = express();
+
+require('dotenv').config({ path: path.resolve(__dirname, 'conf', '.env') });
 
 const config = JSON.parse(fs.readFileSync(__dirname + '/conf/config.json'));
 
@@ -154,6 +157,10 @@ async function sendFile(request, response) {
 }
 
 app.use(express.text({ type: 'application/json' }));
+
+app.get('/get-key', (req, res) => {
+    res.json({ key: process.env.KEY_1 });
+});
 
 /**
  * Listeners do servidor HTTP.
