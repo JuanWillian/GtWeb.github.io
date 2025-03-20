@@ -10,6 +10,12 @@ const SetorSchema = new mongoose.Schema({
   descricao: { type: String, required: false, default: '' },
 });
 
+SetorSchema.pre('findOneAndDelete', async function (next) {
+  const setorId = this.getQuery()["_id"];
+  await mongoose.model('SetorPorUnidade').deleteMany({ _setorId: setorId });
+  next();
+});
+
 const SetorModel = mongoose.model('Setor', SetorSchema);
 
 function Setor(body) {

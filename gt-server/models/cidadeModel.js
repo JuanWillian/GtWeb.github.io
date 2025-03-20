@@ -9,6 +9,12 @@ const CidadeSchema = new mongoose.Schema({
   nome: { type: String, required: true },
 });
 
+CidadeSchema.pre('findOneAndDelete', async function (next) {
+  const cidadeId = this.getQuery()["_id"];
+  await mongoose.model('Unidade').deleteMany({ _cidadeId: cidadeId });
+  next();
+});
+
 const CidadeModel = mongoose.model('Cidade', CidadeSchema);
 
 function Cidade(body) {

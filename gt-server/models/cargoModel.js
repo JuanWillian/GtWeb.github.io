@@ -9,6 +9,12 @@ const CargoSchema = new mongoose.Schema({
   nome: { type: String, required: true },
 });
 
+CargoSchema.pre('findOneAndDelete', async function (next) {
+  const cargoId = this.getQuery()["_id"];
+  await mongoose.model('Usuario').deleteMany({ _cargoId: cargoId });
+  next();
+});
+
 const CargoModel = mongoose.model('Cargo', CargoSchema);
 
 function Cargo(body) {

@@ -8,9 +8,23 @@ const UnidadeSchema = new mongoose.Schema({
   key: { type: String, required: true },
   _empresaId: { type: mongoose.Schema.Types.ObjectId, ref: 'Empresa', required: true },
   _cidadeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cidade', required: true },
-  nome: { type: String, required: true }, 
+  nome: { type: String, required: true },
   endereco: { type: String, required: false },
   complemento: { type: String, required: false },
+});
+
+UnidadeSchema.pre('findOneAndDelete', async function (next) {
+  const unidadeId = this.getQuery()["_id"];
+  await mongoose.model('SetorPorUnidade').deleteMany({ _unidadeId: unidadeId });
+  next();
+});
+
+UnidadeSchema.pre('deleteMany', async function (next) {
+  const query = this.getQuery();
+  const unidadeDocs = await mongoose.model('Unidade').find(query);
+  const unidadeIds = unidadeDocs.map(doc => doc._id);
+  await mongoose.model('SetorPorUnidade').deleteMany({ _unidadeId: { $in: unidadeIds } });
+  next();
 });
 
 const UnidadeModel = mongoose.model('Unidade', UnidadeSchema);
@@ -26,7 +40,7 @@ Unidade.prototype.verificarExistencia = async function () {
     key: this.body.key,
     _empresaId: this.body._empresaId,
     _cidadeId: this.body._cidadeId,
-    nome: this.body.nome, // Adicionado campo nome
+    nome: this.body.nome,
     endereco: this.body.endereco,
   });
   if (unidadeJaCadastrada) {
@@ -89,7 +103,7 @@ Unidade.prototype.cleanUp = function () {
     key: this.body.key,
     _empresaId: this.body._empresaId,
     _cidadeId: this.body._cidadeId,
-    nome: this.body.nome, 
+    nome: this.body.nome,
     endereco: this.body.endereco,
     complemento: this.body.complemento,
   };

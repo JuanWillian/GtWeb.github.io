@@ -10,6 +10,20 @@ const SetorPorUnidadeSchema = new mongoose.Schema({
   _unidadeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unidade', required: true },
 });
 
+SetorPorUnidadeSchema.pre('findOneAndDelete', async function (next) {
+  const setorPorUnidadeId = this.getQuery()["_id"];
+  await mongoose.model('Usuario').deleteMany({ _setorPorUnidadeId: setorPorUnidadeId });
+  next();
+});
+
+SetorPorUnidadeSchema.pre('deleteMany', async function (next) {
+  const query = this.getQuery();
+  const setorPorUnidadeDocs = await mongoose.model('SetorPorUnidade').find(query);
+  const setorPorUnidadeIds = setorPorUnidadeDocs.map(doc => doc._id);
+  await mongoose.model('Usuario').deleteMany({ _setorPorUnidadeId: { $in: setorPorUnidadeIds } });
+  next();
+});
+
 const SetorPorUnidadeModel = mongoose.model('SetorPorUnidade', SetorPorUnidadeSchema);
 
 function SetorPorUnidade(body) {

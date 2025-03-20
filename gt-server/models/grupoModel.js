@@ -9,6 +9,12 @@ const GrupoSchema = new mongoose.Schema({
   nome: { type: String, required: true },
 });
 
+GrupoSchema.pre('findOneAndDelete', async function (next) {
+  const grupoId = this.getQuery()["_id"];
+  await mongoose.model('SubGrupo').deleteMany({ _grupoId: grupoId });
+  next();
+});
+
 const grupoModel = mongoose.model('Grupo', GrupoSchema);
 
 function Grupo(body) {
