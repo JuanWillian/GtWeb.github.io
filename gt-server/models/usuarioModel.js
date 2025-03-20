@@ -61,7 +61,7 @@ Usuario.prototype.login = async function () {
       return;
     }
 
-    if (this.user._cargoId.nome !== 'Usuário ERP') {
+    if (this.user._cargoId.nome !== 'Gerente') {
       this.errors.push('Cargo inválido.');
       this.user = null;
       return;
