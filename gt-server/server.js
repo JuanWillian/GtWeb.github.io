@@ -24,6 +24,7 @@ const unidadeMedidaController = require('./controllers/unidadeMedidaController')
 const marcaController = require('./controllers/marcaController');
 const usuarioController = require('./controllers/usuarioController');
 const setorPorUnidadeController = require('./controllers/setorPorUnidadeController');
+const produtoController = require('./controllers/produtoController');
 
 const inserirDadosIniciais = require('./public/assets/js/inserirDadosIniciais.js');
 
@@ -261,6 +262,12 @@ app.post('/setorPorUnidade/edit/:id', loginRequired, setorPorUnidadeController.e
 app.get('/setorPorUnidade/delete/:id', loginRequired, setorPorUnidadeController.delete);
 app.get('/setorPorUnidade/setoresPorUnidade', loginRequired, setorPorUnidadeController.getSetoresPorUnidade);
 app.post('/setorPorUnidade/setoresPorUnidade', loginRequired, setorPorUnidadeController.registerOrFind);
+
+// Rotas da entidade Produto
+app.post('/pagPrincipal/produto/register', loginRequired, produtoController.register);
+app.post('/produto/edit/:id', loginRequired, produtoController.edit);
+app.get('/produto/delete/:id', loginRequired, produtoController.delete);
+app.get('/produto/produtos', loginRequired, produtoController.getProdutos);
 
 app.get('*', (request, response) => {
     sendFile(request, response);

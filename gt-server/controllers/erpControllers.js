@@ -10,6 +10,7 @@ const UnidadeMedida = require('../models/unidadeMedidaModel');
 const Marca = require('../models/marcaModel');
 const Usuario = require('../models/usuarioModel');
 const SetorPorUnidade = require('../models/setorPorUnidadeModel');
+const Produto = require('../models/produtoModel');
 
 exports.index = async (req, res) => {
   const setores = await Setor.buscaSetores();
@@ -24,8 +25,9 @@ exports.index = async (req, res) => {
   const marcas = await Marca.buscaMarcas();
   const usuarios = await Usuario.buscaUsuarios();
   const setoresPorUnidade = await SetorPorUnidade.buscaSetoresPorUnidade();
+  const produtos = await Produto.buscaProdutos();
 
-  res.render('pagPrincipal', { setores, setor: {}, empresas, empresa: {}, atividades, atividade: {}, execucoes, execucao: {}, grupos, grupo: {}, unidades, unidade: {}, cidades, subGrupos, subGrupo: {}, unidadeMedidas, unidadeMedida: {}, marcas, marca: {}, setoresPorUnidade, setorPorUnidade: {}, usuarios, usuario: {} });
+  res.render('pagPrincipal', { setores, setor: {}, empresas, empresa: {}, atividades, atividade: {}, execucoes, execucao: {}, grupos, grupo: {}, unidades, unidade: {}, cidades, subGrupos, subGrupo: {}, unidadeMedidas, unidadeMedida: {}, marcas, marca: {}, setoresPorUnidade, setorPorUnidade: {}, usuarios, usuario: {}, produtos, produto: {} });
 };
 
 exports.carregarFormulario = (req, res) => {

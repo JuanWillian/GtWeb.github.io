@@ -9,6 +9,12 @@ const MarcaSchema = new mongoose.Schema({
   nome: { type: String, required: true },
 });
 
+MarcaSchema.pre('findOneAndDelete', async function (next) {
+  const marcaId = this.getQuery()["_id"];
+  await mongoose.model('Produto').deleteMany({ _marcaId: marcaId });
+  next();
+});
+
 const marcaModel = mongoose.model('Marca', MarcaSchema);
 
 function Marca(body) {
@@ -21,10 +27,10 @@ Marca.prototype.verificarExistencia = async function () {
   const marcaExistente = await marcaModel.findOne({
     key: this.body.key,
     nome: this.body.nome,
-  })
+  });
   if (marcaExistente) {
-    this.errors.push("Marca já cadastrada.")
-    return
+    this.errors.push("Marca já cadastrada.");
+    return;
   }
 }
 
@@ -44,7 +50,6 @@ Marca.prototype.register = async function () {
 
   this.marca = await marcaModel.create(this.body);
 };
-
 
 Marca.prototype.cleanUp = function () {
   for (const field in this.body) {

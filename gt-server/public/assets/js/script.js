@@ -1,45 +1,3 @@
-
-
-function formGpProduto() {
-  let form = "";
-  form += ' <form class="row g-3 formulario" >';
-  form += '<div class="col-md-6">';
-  form += '<label for="subGrupo">Sub-Grupo</label>';
-  form += ' <select class="form-select">';
-  form += ' <option value="1">Alvejante</option>';
-  form += ' <option value="2">Água sanitária</option>';
-  form += " </select>";
-  form += "</div>";
-  form += ' <div class="col-md-6">';
-  form += '<label for="nomeGrupo">Nome</label>';
-  form += ' <input id="nomeGrupo" class="form-control" type="text">';
-  form += "</div>";
-  form += '<div class="col-md-12">';
-  form += ' <label for="descGrupo">Descrição</label>';
-  form += ' <input id="descGrupo" class="form-control p-2" type="text">';
-  form += "</div>";
-  form += '<div class="col-md-6">';
-  form += '<label for="localAtvd">Unidade de medida</label>';
-  form += ' <select class="form-select">';
-  form += ' <option value="1">Litro(l)</option>';
-  form += ' <option value="2">Militro(ml)</option>';
-  form += ' <option value="3">Kilograma(kg)</option>';
-  form += ' <option value="4">Grama(g)</option>';
-  form += " </select>";
-  form += "</div>";
-  form += ' <div class="col-md-6">';
-  form += '   <label for="qtd">Quantidade em estoque:</label>';
-  form += '   <input id="qtdProd" class="form-control" type="number" />';
-  form += " </div>";
-  form += ' <div>';
-  form += '   <button type="submit" class="btn btnCadastro mt-2">Cadastrar</button>';
-  form += '</div>';
-  form += "</form>";
-  form += "";
-
-  document.getElementById("forms").innerHTML = form;
-}
-
 let paginaAtual = 1;
 let registrosPorPag = 10;
 
@@ -97,6 +55,9 @@ async function carregarRegistros(entidade, page, limit) {
     case 'usuario':
       await carregarUsuarios(page, limit);
       break;
+    case 'produto':
+      await carregarProdutos(page, limit);
+      break;
     default:
       console.error('Entidade desconhecida:', entidade);
   }
@@ -153,6 +114,10 @@ async function carregarLista(lista) {
         case 'usuarioLista':
           await atualizarRegistrosPorPag('usuario')
           await carregarRegistros("usuario", paginaAtual, registrosPorPag);
+          break;
+        case 'produtoLista':
+          await atualizarRegistrosPorPag('produto')
+          await carregarRegistros("produto", paginaAtual, registrosPorPag);
           break;
 
       }
@@ -1057,7 +1022,6 @@ async function carregarGruposNoSelect() {
 }
 
 // Rotinas de UNIDADE DE MEDIDAS
-
 /**
  * Carrega as UNIDADE DE MEDIDAS da base de dados e atualiza a tabela de UNIDADE DE MEDIDAS.
  * @param {number} page - Número da página atual.
@@ -1530,6 +1494,183 @@ async function carregarSetoresSelect() {
     console.error('Erro:', error);
   }
 }
+
+// Rotinas ds Produtos
+/**
+ * Carrega as produtos da base de dados e atualiza a tabela de produtos.
+ * @param {number} page - Número da página atual.
+ * @param {number} limit - Número de registros por página.
+ */
+async function carregarProdutos(page, limit) {
+  const key = await getKey();
+  try {
+    const res = await fetch(`/produto/produtos?key=${key}&page=${page}&limit=${limit}`);
+    if (res.ok) {
+      const { produtos, totalProdutos } = await res.json();
+      const tabela = document.querySelector('#produtoFormContainer .table tbody');
+      tabela.innerHTML = produtos.map(produto => `
+        <tr>
+          <td class="limited-width">${produto._marcaId.nome}</td>
+          <td class="limited-width">${produto._subGrupoId.nome}</td>
+          <td class="limited-width">${produto.nome}</td>
+          <td class="limited-width">${produto.descricao}</td>
+          <td class="limited-width">${produto._unidadeMedidaId.sigla}</td>
+          <td class="limited-width">${produto.quantidadeEstoque}</td>
+          <td class="limited-width">${produto.valorUnitario}</td>
+          <td class="tdButton">
+            <a href="#" class="btn-edit" data-id="${produto._id}" data-marca="${produto._marcaId._id}" data-subgrupo="${produto._subGrupoId._id}" data-nome="${produto.nome}" data-descricao="${produto.descricao}" data-unidade="${produto._unidadeMedidaId._id}" data-quantidade="${produto.quantidadeEstoque}" data-valor="${produto.valorUnitario}" onclick="return editarProdutoClick(this)" title="Editar produto">Editar</a>
+          </td>
+          <td class="tdButton">
+            <a class="text-danger" href="#" onclick="return excluirProdutoClick('${produto._id}')" title="Excluir este produto">Excluir</a>
+          </td>
+      </tr>
+      `).join('');
+
+      const totalPaginas = Math.ceil(totalProdutos / limit);
+      const pagination = document.querySelector('.pagination');
+      pagination.innerHTML = gerarPaginacao('produto', page, totalPaginas, limit);
+    } else {
+      console.error('Erro ao carregar os produtos!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+async function carregarSubGruposNoSelect() {
+  const key = await getKey();
+  try {
+    const res = await fetch(`/subGrupo/subGrupos?key=${key}`);
+    if (res.ok) {
+      const { subGrupos } = await res.json();
+      const select = document.getElementById('produtoSubGrupo');
+      select.innerHTML = subGrupos.map(subGrupo => `
+        <option value="${subGrupo._id}">${subGrupo.nome}</option>
+      `).join('');
+    } else {
+      console.error('Erro ao carregar os subGrupos!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+async function carregarUnidadeMedidasNoSelect() {
+  const key = await getKey();
+  try {
+    const res = await fetch(`/unidadeMedida/unidadeMedidas?key=${key}`);
+    if (res.ok) {
+      const { unidadeMedidas } = await res.json();
+      const select = document.getElementById('produtoUnidadeMedida');
+      select.innerHTML = unidadeMedidas.map(unidadeMedida => `
+        <option value="${unidadeMedida._id}">${unidadeMedida.sigla}</option>
+      `).join('');
+    } else {
+      console.error('Erro ao carregar as unidadeMedidas!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+async function carregarMarcasNoSelect() {
+  const key = await getKey();
+  try {
+    const res = await fetch(`/marca/marcas?key=${key}`);
+    if (res.ok) {
+      const { marcas } = await res.json();
+      const select = document.getElementById('produtoMarca');
+      select.innerHTML = marcas.map(marca => `
+        <option value="${marca._id}">${marca.nome}</option>
+      `).join('');
+    } else {
+      console.error('Erro ao carregar as marcas!');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
+
+function editarProdutoClick(element) {
+  const produtoId = $(element).data('id');
+  const produtoMarca = $(element).data('marca');
+  const produtoSubGrupo = $(element).data('subgrupo');
+  const produtoNome = $(element).data('nome');
+  const produtoDescricao = $(element).data('descricao');
+  const produtoUnidade = $(element).data('unidade');
+  const produtoQuantidade = $(element).data('quantidade');
+  const produtoValor = $(element).data('valor');
+
+  $('#tituloModalProduto').text('Editar Produto');
+  $('#subTituloModalProduto').text('Edite as informações do Produto abaixo.');
+
+  $('#produtoForm').attr('action', '/produto/edit/' + produtoId);
+
+  carregarMarcasNoSelect().then(() => {
+    $('#produtoMarca').val(produtoMarca);
+    carregarSubGruposNoSelect().then(() => {
+      $('#produtoSubGrupo').val(produtoSubGrupo);
+      carregarUnidadeMedidasNoSelect().then(() => {
+        $('#produtoNome').val(produtoNome);
+        $('#produtoDescricao').val(produtoDescricao);
+        $('#produtoUnidadeMedida').val(produtoUnidade);
+        $('#quantidadeEstoqueId').val(produtoQuantidade);
+        $('#valorUnitarioProduto').val(produtoValor);
+        $('#produto').modal('show');
+      });
+    });
+  });
+
+  return false;
+}
+
+function registrarNovoProdutoClick() {
+  $('#produtoMarca').val('');
+  $('#produtoSubGrupo').val('');
+  $('#produtoNome').val('');
+  $('#produtoDescricao').val('');
+  $('#produtoUnidadeMedida').val('');
+  $('#quantidadeEstoqueId').val('');
+  $('#valorUnitarioProduto').val('');
+
+  $('#tituloModalProduto').text('Cadastrar Produto');
+  $('#subTituloModalProduto').text('Cadastre um novo Produto abaixo.');
+
+  $('#produtoForm').attr('action', '/pagPrincipal/produto/register');
+
+  carregarMarcasNoSelect().then(() => {
+    carregarSubGruposNoSelect().then(() => {
+      carregarUnidadeMedidasNoSelect().then(() => {
+        $('#produto').modal('show');
+      });
+    });
+  });
+
+  return false;
+}
+
+async function excluirProdutoClick(id) {
+  try {
+    const result = window.confirm("Deseja realmente excluir este produto?");
+    if (result) {
+      const res = await fetch(`/produto/delete/${id}`, {
+        method: 'GET'
+      });
+
+      if (res.ok) {
+        console.log('Tentando carregar registros...', paginaAtual, registrosPorPag);
+        await carregarRegistros('produto', paginaAtual, registrosPorPag);
+      } else {
+        const result = await res.json();
+        console.error('Erro:', result.error);
+      }
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+
+  return false;
+}
+
 
 // TELA DE LOADING
 // window.addEventListener("load", () => {

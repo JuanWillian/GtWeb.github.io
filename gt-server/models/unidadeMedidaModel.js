@@ -11,6 +11,20 @@ const UnidadeMedidaSchema = new mongoose.Schema({
   podeFracionar: { type: String, required: true, enum: ['Sim', 'Não'] }
 });
 
+UnidadeMedidaSchema.pre('findOneAndDelete', async function (next) {
+  const unidadeMedidaId = this.getQuery()["_id"];
+  await mongoose.model('Produto').deleteMany({ _unidadeMedidaId: unidadeMedidaId });
+  next();
+});
+
+UnidadeMedidaSchema.pre('deleteMany', async function (next) {
+  const query = this.getQuery();
+  const unidadeMedidaDocs = await mongoose.model('UnidadeMedida').find(query);
+  const unidadeMedidaIds = unidadeMedidaDocs.map(doc => doc._id);
+  await mongoose.model('Produto').deleteMany({ _unidadeMedidaId: { $in: unidadeMedidaIds } });
+  next();
+});
+
 const unidadeMedidaModel = mongoose.model('UnidadeMedida', UnidadeMedidaSchema);
 
 function UnidadeMedida(body) {
