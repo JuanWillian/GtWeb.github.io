@@ -15,7 +15,7 @@ main {
 .sidebar {
   width: 400px;
   height: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
   position: fixed;
   border-right: 2px solid rgba(0, 0, 0, 0.3);
 }
@@ -82,11 +82,8 @@ main {
     width: 100%;
   }
 }
-
-#forms {
-  padding: 30px;
-}
 */
+
 .btnCadastro {
   background-color: var(--cor-principal-gt) !important ;
   color: #fff !important;
@@ -97,7 +94,7 @@ main {
 }
 
 #forms .table {
-  border-radius: 0px 0px 5px 5px  !important;
+  border-radius: 0px 0px 5px 5px !important;
   overflow: hidden !important;
 }
 
@@ -106,19 +103,22 @@ main {
   justify-content: center;
   align-items: center;
   gap: 5px;
-  background: linear-gradient(360deg, rgba(230,230,230,0.9) 0%, rgba(255,255,255,1) 100%);
   height: 50px;
   padding: 10px;
   border-radius: 5px 5px 0 0;
+  margin-bottom: 5px;
 }
 
 .botoesForm {
   display: flex;
   gap: 10px;
- 
 }
 .cabecalhoForm button {
-  background: linear-gradient(349deg, rgba(182,182,182,0.7) 0%, rgba(255,255,255,1) 100%) !important;
+  background: linear-gradient(
+    349deg,
+    rgba(182, 182, 182, 0.7) 0%,
+    rgba(255, 255, 255, 1) 100%
+  ) !important;
   color: #000000 !important;
 
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
@@ -127,6 +127,95 @@ main {
   background-color: #858585 !important;
   color: #fff;
 }
+
 .mainFormContainer {
+  padding: 5px;
+  background: linear-gradient(
+    360deg,
+    rgba(200, 200, 200, 0.9) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  border-radius: 5px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* modais */
+.titleForm {
+  flex-direction: column;
+}
+.modal-header {
+  justify-content: center;
+}
+
+.tdButton {
+  width: 10px !important;
+}
+
+.tdButton a {
+  text-decoration: none !important;
+  font-weight: 600;
+}
+
+.limited-width {
+  max-width: 100px; /* Adjust the value as needed */
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+
+/* select */
+.formSelectGradient {
+  height: 38px;
+  width: 60px;
+  border: none;
+  border-radius: 5px;
+  background: linear-gradient(
+    349deg,
+    rgba(182, 182, 182, 0.7) 0%,
+    rgba(255, 255, 255, 1) 100%
+  ) !important;
+  color: #000000 !important;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  padding: 0px 0px 0px 10px;
+}
+.formSelectGradient:hover {
+  background-color: #858585 !important;
+  color: #fff;
+}
+
+/* footer navbar */
+.footerNav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  height: 100%;
+}
+
+.pagination {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  margin-bottom: 0px !important;
+  border-radius: 5px !important;
+  --bs-pagination-color: #000000 !important;
+  --bs-pagination-bg: linear-gradient(
+    349deg,
+    rgba(182, 182, 182, 0.7) 0%,
+    rgba(255, 255, 255, 1) 100%
+  ) !important;
+  --bs-pagination-border-color: rgba(0,0,0,0.1) !important;
+  --bs-pagination-hover-color: white !important;
+  --bs-pagination-hover-bg: #adadad !important;
+  --bs-pagination-active-bg: var(--cor-principal-gt) !important;
+
+
+  --bs-pagination-hover-border-color: rgba(0,0,0,0.1) !important;
+}
+
+.pagination .page-item {
+  background: linear-gradient(
+    349deg,
+    rgba(182, 182, 182, 0.7) 0%,
+    rgba(255, 255, 255, 1) 100%
+  ) !important;
+  color: #000000 !important;
 }

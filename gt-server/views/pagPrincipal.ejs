@@ -1,33 +1,6 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Web</title>
-
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
-  </head>
-  <body>
-    <main>
-      <!-- <div id="telaDeLoading">
+<%- include('includes/head') %>
+<main>
+  <!-- <div id="telaDeLoading">
         <img
           class="logoLoading"
           src="./assets/img/logoAuroraPNG.png"
@@ -39,209 +12,957 @@
           <div class="loading-bar"></div>
         </div>
       </div> -->
-      <div class="d-flex justify-content-between">
-        <!-- Sidebar fixo à esquerda com borda à direita e fundo branco -->
-        <div id="sidebar" class="sidebar fixed-start bg-white p-3">
-          <section>
-            <div class="d-flex justify-content-between align-items-center">
-              <img
-                src="assets/img/GtLogo.jpg"
-                alt=""
-                class="fotoGt"
-                width="200"
-              />
-              <div class="logout">
-                <form action="/login/logout" method="GET">
-                  <a href="/login/logout" class="btn btn-danger"
-                    ><i class="bi bi-box-arrow-left"></i
-                  ></a>
-                </form>
-              </div>
-            </div>
-            <div id="jstree">
+  <div class="d-flex justify-content-between">
+    <!-- Sidebar fixo à esquerda com borda à direita e fundo branco -->
+    <div id="sidebar" class="sidebar fixed-start bg-white p-3">
+      <section>
+        <div class="d-flex justify-content-between align-items-center">
+          <img src="assets/img/GtLogo.jpg" alt="" class="fotoGt" width="200" />
+          <div class="logout">
+            <form action="/usuario/logout" method="GET">
+              <a href="/usuario/logout" class="btn btn-danger"
+                ><i class="bi bi-box-arrow-left"></i
+              ></a>
+            </form>
+          </div>
+        </div>
+        <div id="jstree">
+          <ul>
+            <li>
+              Cadastros
               <ul>
-                <li>
-                  Cadastros
-                  <ul>
-                    <li id="child_node_1">
-                      Empresa
-                      <ul>
-                        <li
-                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                          onclick="formUnidade()"
-                        >
-                          <u>Unidades</u>
-                        </li>
-                        <li
-                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                          onclick="formSetor()"
-                        >
-                          <u>Setores</u>
-                        </li>
-                        <li
-                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                          onclick="carregarTabela('Usuarios')"
-                        >
-                          <u>Usuários do ERP</u>
-                        </li>
-                        <li
-                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                          onclick="formUsuario()"
-                        >
-                          <u>Usuário</u>
-                        </li>
-                      </ul>
-                    </li>
-                    <li>
-                      Atividades Laborais
-                      <ul>
-                        <li
-                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                          onclick="formExecucao()"
-                        >
-                          <u>Execuções</u>
-                        </li>
-                        <li
-                          onclick="formAtvd()"
-                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                        >
-                          <u>Atividades</u>
-                        </li>
-                      </ul>
-                    </li>
-                    <li>
-                      Almoxarifado
-                      <ul>
-                        <li
-                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                          onclick="formSetor()"
-                        >
-                          <u>Grupo de produto</u>
-                        </li>
-                        <li
-                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                          onclick="formSetor()"
-                        >
-                          <u>Subgrupo de produto</u>
-                        </li>
-                        <li
-                          data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                          onclick="formGpProduto()"
-                        >
-                          <u>Produto</u>
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  Estoque
+                <li id="child_node_1">
+                  Empresarial
                   <ul>
                     <li
                       data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                      onclick="formEntradaProduto()"
+                      onclick="carregarLista('empresaLista')"
                     >
-                      <u>Entrada de Produtos</u>
+                      <u>Empresas</u>
                     </li>
                     <li
                       data-jstree='{"icon":"bi bi-file-earmark-fill"}'
-                      onclick="formBaixaProduto()"
+                      onclick="carregarLista('unidadeLista')"
                     >
-                      <u>Baixa de Produtos</u>
+                      <u>Unidades</u>
+                    </li>
+                    <li
+                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
+                      onclick="carregarLista('setorLista')"
+                    >
+                      <u>Setores</u>
+                    </li>
+                    <li
+                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
+                      onclick="carregarLista('usuarioLista')"
+                    >
+                      <u>Usuários</u>
                     </li>
                   </ul>
                 </li>
                 <li>
-                  Dashboard
+                  Atividades Laborais
                   <ul>
-                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
-                      <u>Estado de atividades por usuário</u>
+                    <li
+                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
+                      onclick="carregarLista('execucaoLista')"
+                    >
+                      <u>Execuções</u>
                     </li>
-                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
-                      <u>Estado de atividades por setor</u>
-                    </li>
-                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
-                      <u>Estado de status de atividades</u>
+                    <li
+                      onclick="carregarLista('atividadeLista')"
+                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
+                    >
+                      <u>Atividades</u>
                     </li>
                   </ul>
                 </li>
                 <li>
-                  Relatórios
+                  Almoxarifado
                   <ul>
-                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
-                      <u>Atividades por Usuário</u>
+                    <li
+                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
+                      onclick="carregarLista('grupoLista')"
+                    >
+                      <u>Grupo de produto</u>
                     </li>
-                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
-                      <u>Atividades por Setor</u>
+                    <li
+                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
+                      onclick="carregarLista('subGrupoLista')"
+                    >
+                      <u>Subgrupo de produto</u>
                     </li>
-                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
-                      <u>Status de Atividades</u>
+                    <li
+                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
+                      onclick="carregarLista('produtoLista')"
+                    >
+                      <u>Produto</u>
                     </li>
-                    <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
-                      <u>Material Utilizado</u>
+                    <li
+                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
+                      onclick="carregarLista('unidadeMedidaLista')"
+                    >
+                      <u>Unidades de medida</u>
+                    </li>
+                    <li
+                      data-jstree='{"icon":"bi bi-file-earmark-fill"}'
+                      onclick="carregarLista('marcaLista')"
+                    >
+                      <u>Marca</u>
                     </li>
                   </ul>
                 </li>
               </ul>
-            </div>
-          </section>
+            </li>
+            <li>
+              Estoque
+              <ul>
+                <li
+                  data-jstree='{"icon":"bi bi-file-earmark-fill"}'
+                  onclick="formEntradaProduto()"
+                >
+                  <u>Entrada de Produtos</u>
+                </li>
+                <li
+                  data-jstree='{"icon":"bi bi-file-earmark-fill"}'
+                  onclick="formBaixaProduto()"
+                >
+                  <u>Baixa de Produtos</u>
+                </li>
+              </ul>
+            </li>
+            <li>
+              Dashboard
+              <ul>
+                <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
+                  <u>Estado de atividades por usuário</u>
+                </li>
+                <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
+                  <u>Estado de atividades por setor</u>
+                </li>
+                <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
+                  <u>Estado de status de atividades</u>
+                </li>
+              </ul>
+            </li>
+            <li>
+              Relatórios
+              <ul>
+                <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
+                  <u>Atividades por Usuário</u>
+                </li>
+                <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
+                  <u>Atividades por Setor</u>
+                </li>
+                <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
+                  <u>Status de Atividades</u>
+                </li>
+                <li data-jstree='{"icon":"bi bi-file-earmark-fill"}'>
+                  <u>Material Utilizado</u>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
-        <!---->
+      </section>
+    </div>
+    <!---->
 
-        <div class="conteudo">
-          <%- include('includes/messages'); %>
-          <section id="forms">
-            <div class="msgOForms"></div>
-          </section>
+    <!-- Formulário de setores -->
+    <div class="modal fade" id="setor" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalSetor">Cadastrar Setor</h1>
+              <p class="text-center lead" id="subTituloModalSetor">
+                Cadastre um novo setor abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form id="setorForm" onsubmit="return submitForm(event, 'setor')">
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Nome</label>
+                  <input
+                    value="<%= setor.nome %>"
+                    type="text"
+                    class="form-control"
+                    name="nome"
+                    id="setorId"
+                    required
+                    maxlength="80"
+                  />
+                  <label>Descrição</label>
+                  <textarea
+                    class="form-control"
+                    name="descricao"
+                    id="setorDescricao"
+                    maxlength="150"
+                  >
+                  <%= setor.descricao %></textarea
+                  >
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('setor')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </main>
+    </div>
 
-    <script src="assets/js/script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
-    <script>
-      $(function () {
-        $("#jstree").jstree({
-          core: {
-            themes: {
-              responsive: false,
-            },
-          },
-          types: {
-            default: {
-              icon: "bi bi-folder-fill text-warning", // Ícone de pasta
-            },
-          },
-          plugins: ["types"],
-        });
+    <!-- Formulário das empresas -->
+    <div class="modal fade" id="empresa" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalEmpresa">
+                Cadastrar Empresa
+              </h1>
+              <p class="text-center lead" id="subTituloModalEmpresa">
+                Cadastre uma nova empresa abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form
+              id="empresaForm"
+              onsubmit="return submitForm(event, 'empresa')"
+            >
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Nome</label>
+                  <input
+                    value="<%= empresa.nome %>"
+                    type="text"
+                    class="form-control"
+                    name="nome"
+                    id="empresaId"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('empresa')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        $("#jstree").on("changed.jstree", function (e, data) {
-          console.log(data.selected);
-        });
+    <!-- Formulário das atividades -->
+    <div class="modal fade" id="atividade" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalAtividade">
+                Cadastrar atividade
+              </h1>
+              <p class="text-center lead" id="subTituloModalAtividade">
+                Cadastre uma nova atividade abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form
+              id="atividadeForm"
+              onsubmit="return submitForm(event, 'atividade')"
+            >
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Nome</label>
+                  <input
+                    value="<%= atividade.nome %>"
+                    type="text"
+                    class="form-control"
+                    name="nome"
+                    id="atividadeId"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('atividade')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        $("button").on("click", function () {
-          $("#jstree").jstree(true).select_node("child_node_1");
-          $("#jstree").jstree("select_node", "child_node_1");
-          $.jstree.reference("#jstree").select_node("child_node_1");
-        });
-      });
+    <!-- Formulário das execuções -->
+    <div class="modal fade" id="execucao" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalExecucao">
+                Cadastrar Execuções
+              </h1>
+              <p class="text-center lead" id="subTituloModalExecucao">
+                Cadastre uma nova Execuções abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form
+              id="execucaoForm"
+              onsubmit="return submitForm(event, 'execucao')"
+            >
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Descrição</label>
+                  <input
+                    value="<%= execucao.descricao %>"
+                    type="text"
+                    class="form-control"
+                    name="descricao"
+                    id="execucaoId"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('execucao')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      // TELA DE LOADING
-      // window.addEventListener("load", () => {
-      //   const loadingScreen = document.getElementById("telaDeLoading");
-      //   const mainContent = document.getElementById("main-content");
+    <!-- Formulário das grupos -->
+    <div class="modal fade" id="grupo" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalGrupo">Cadastrar Grupo</h1>
+              <p class="text-center lead" id="subTituloModalGrupo">
+                Cadastre uma novo grupo abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form id="grupoForm" onsubmit="return submitForm(event, 'grupo')">
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Nome</label>
+                  <input
+                    value="<%= grupo.nome %>"
+                    type="text"
+                    class="form-control"
+                    name="nome"
+                    id="grupoId"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('grupo')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      //   setTimeout(() => {
-      //     loadingScreen.style.display = "none";
-      //     mainContent.style.display = "block";
-      //   }, 2000);
-      // });
-    </script>
-  </body>
-</html>
+    <!-- Formulário das Unidades -->
+    <div class="modal fade" id="unidade" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalUnidade">
+                Cadastrar Unidade
+              </h1>
+              <p class="text-center lead" id="subTituloModalUnidade">
+                Cadastre uma nova unidade abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form
+              id="unidadeForm"
+              onsubmit="return submitForm(event, 'unidade')"
+            >
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Nome</label>
+                  <input
+                    value="<%= unidade.nome %>"
+                    type="text"
+                    class="form-control"
+                    name="nome"
+                    id="nomeId"
+                    required
+                    maxlength="80"
+                  />
+                  <label>Empresa</label>
+                  <select
+                    name="_empresaId"
+                    id="empresaUnidade"
+                    class="formSelectGradient"
+                    style="display: block; width: 100%"
+                  ></select>
+                  <label>Cidade</label>
+                  <select
+                    name="_cidadeId"
+                    id="cidadeUnidade"
+                    class="formSelectGradient"
+                    style="display: block; width: 100%"
+                  ></select>
+                  <label>Endereço</label>
+                  <input
+                    value="<%= unidade.endereco %>"
+                    type="text"
+                    class="form-control"
+                    name="endereco"
+                    id="enderecoId"
+                    required
+                    maxlength="80"
+                  />
+                  <label>Complemento</label>
+                  <input
+                    value="<%= unidade.complemento %>"
+                    type="text"
+                    class="form-control"
+                    name="complemento"
+                    id="complementoId"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('unidade')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário dos SubGrupos -->
+    <div class="modal fade" id="subGrupo" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalSubGrupo">
+                Cadastrar Subgrupo
+              </h1>
+              <p class="text-center lead" id="subTituloModalSubGrupo">
+                Cadastre um novo Subgrupo abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form
+              id="subGrupoForm"
+              onsubmit="return submitForm(event, 'subGrupo')"
+            >
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Grupo</label>
+                  <select
+                    name="_grupoId"
+                    id="subGrupoGrupo"
+                    class="formSelectGradient"
+                    style="display: block; width: 100%"
+                  ></select>
+                  <label>Nome</label>
+                  <input
+                    value="<%= subGrupo.nome %>"
+                    type="text"
+                    class="form-control"
+                    name="nome"
+                    id="nomeId"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('subGrupo')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário das unidades de medidas -->
+    <div class="modal fade" id="unidadeMedida" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalUnidadeMedida">
+                Cadastrar Unidade de Medida
+              </h1>
+              <p class="text-center lead" id="subTituloModalUnidadeMedida">
+                Cadastre uma nova unidade de medida abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form
+              id="unidadeMedidaForm"
+              onsubmit="return submitForm(event, 'unidadeMedida')"
+            >
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label for="descricao">Descrição</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="unidadeMedidaDescricao"
+                    name="descricao"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="sigla">Sigla</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="unidadeMedidaSigla"
+                    name="sigla"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="podeFracionar">Pode Fracionar</label>
+                  <input
+                    type="checkbox"
+                    id="unidadeMedidaPodeFracionar"
+                    name="podeFracionar"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('unidadeMedida')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário das marcas -->
+    <div class="modal fade" id="marca" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalMarca">Cadastrar marca</h1>
+              <p class="text-center lead" id="subTituloModalMarca">
+                Cadastre uma nova marca abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form id="marcaForm" onsubmit="return submitForm(event, 'marca')">
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Nome</label>
+                  <input
+                    value="<%= marca.nome %>"
+                    type="text"
+                    class="form-control"
+                    name="nome"
+                    id="marcaId"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('marca')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Usuário -->
+    <div class="modal fade" id="usuarioModal" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalUsuario">
+                Cadastrar Usuário
+              </h1>
+              <p class="text-center lead" id="subTituloModalUsuario">
+                Cadastre um novo usuário abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form id="usuarioForm" onsubmit="return submitUsuarioForm(event)">
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label for="usuarioNome">Nome</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="usuarioNome"
+                    name="nome"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="usuarioSobrenome">Sobrenome</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="usuarioSobrenome"
+                    name="sobreNome"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="usuarioEmail">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="usuarioEmail"
+                    name="email"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="usuarioUsuario">Usuário</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="usuarioUsuario"
+                    name="usuario"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="usuarioSenha">Senha</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="usuarioSenha"
+                    name="password"
+                    required
+                    maxlength="80"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="usuarioCargo">Cargo</label>
+                  <select
+                    class="formSelectGradient"
+                    id="usuarioCargo"
+                    name="_cargoId"
+                    style="display: block; width: 100%"
+                    required
+                  ></select>
+                </div>
+                <div class="form-group">
+                  <label for="usuarioUnidade">Unidade</label>
+                  <select
+                    class="formSelectGradient"
+                    id="usuarioUnidade"
+                    name="unidade"
+                    style="display: block; width: 100%"
+                    required
+                  ></select>
+                </div>
+                <div class="form-group">
+                  <label for="usuarioSetor">Setor</label>
+                  <select
+                    class="formSelectGradient"
+                    id="usuarioSetor"
+                    name="setor"
+                    style="display: block; width: 100%"
+                    required
+                  ></select>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('usuarioModal')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário dos Produtos -->
+    <div class="modal fade" id="produto" tabindex="-1" role="dialog">
+      <div
+        class="modal-dialog modal-lg"
+        role="document"
+        style="overflow-y: initial !important"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="titleForm">
+              <h1 class="text-center" id="tituloModalProduto">
+                Cadastrar Produto
+              </h1>
+              <p class="text-center lead" id="subTituloModalProduto">
+                Cadastre um novo Produto abaixo
+              </p>
+            </div>
+          </div>
+          <div
+            class="modal-body"
+            style="max-height: calc(100vh - 200px); overflow-y: auto"
+          >
+            <form
+              id="produtoForm"
+              onsubmit="return submitForm(event, 'produto')"
+            >
+              <div class="col mb-3">
+                <div class="form-group">
+                  <label>Marca</label>
+                  <select
+                    name="_marcaId"
+                    id="produtoMarca"
+                    class="formSelectGradient"
+                    style="display: block; width: 100%"
+                  ></select>
+
+                  <label>Subgrupo</label>
+                  <select
+                    name="_subGrupoId"
+                    id="produtoSubGrupo"
+                    class="formSelectGradient"
+                    style="display: block; width: 100%"
+                  ></select>
+
+                  <label>Nome</label>
+                  <input
+                    value="<%= produto.nome %>"
+                    type="text"
+                    class="form-control"
+                    name="nome"
+                    id="produtoNome"
+                    required
+                    maxlength="80"
+                  />
+
+                  <label>Descrição</label>
+                  <textarea
+                    class="form-control"
+                    name="descricao"
+                    id="produtoDescricao"
+                    required
+                    maxlength="150"
+                  >
+<%= produto.descricao %></textarea
+                  >
+
+                  <label>Unidade de Medida</label>
+                  <select
+                    name="_unidadeMedidaId"
+                    id="produtoUnidadeMedida"
+                    class="formSelectGradient"
+                    style="display: block; width: 100%"
+                  ></select>
+
+                  <label>Qtd Estoque</label>
+                  <input
+                    value="<%= produto.quantidadeEstoque %>"
+                    type="number"
+                    class="form-control"
+                    name="quantidadeEstoque"
+                    id="quantidadeEstoqueId"
+                    required
+                  />
+                  <label>Valor Unitário (R$)</label>
+                  <input
+                    value="<%= produto.valorUnitario %>"
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    name="valorUnitario"
+                    id="valorUnitarioProduto"
+                    required
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                onclick="return botaoCancelarClick('produto')"
+              >
+                <i class="fa fa-close"></i> Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conteúdo das listas de entidades -->
+    <div class="conteudo">
+      <section id="forms"></section>
+    </div>
+  </div>
+</main>
+
+<%- include('includes/footer') %>

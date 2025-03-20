@@ -1,22 +1,43 @@
 /**
- * Aurora Gt File Server.
+ * Servidor de Arquivos Aurora Gt.
  *
- * This service provides support for to serv file and data for Gt Web application.
+ * Este serviço fornece suporte para servir arquivos e dados para a aplicação Gt Web.
  */
+
+
 const { MongoClient } = require('mongodb');
 const mongoose = require('mongoose');
 
 const erpController = require('./controllers/erpControllers.js');
-const loginController = require('./controllers/loginController.js');
+const setorController = require('./controllers/SetorController.js');
+const empresaController = require('./controllers/empresaController.js');
+const atividadeController = require('./controllers/atividadeController.js');
+const execucaoController = require('./controllers/execucaoController.js');
+const grupoController = require('./controllers/grupoController.js');
+const statusUsuarioController = require('./controllers/statusUsuarioController');
+const statusAtividadeController = require('./controllers/statusAtividadeController');
+const cargoController = require('./controllers/cargoController');
+const cidadeController = require('./controllers/cidadeController');
+const unidadeController = require('./controllers/unidadeController');
+const subGrupoController = require('./controllers/subGrupoController');
+const unidadeMedidaController = require('./controllers/unidadeMedidaController');
+const marcaController = require('./controllers/marcaController');
+const usuarioController = require('./controllers/usuarioController');
+const setorPorUnidadeController = require('./controllers/setorPorUnidadeController');
+const produtoController = require('./controllers/produtoController');
+
+const inserirDadosIniciais = require('./public/assets/js/inserirDadosIniciais.js');
 
 const fs = require('node:fs');
 const https = require('https');
 const path = require('path');
 const mime = require('mime-types');
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 
-var config = JSON.parse(fs.readFileSync(__dirname + '/conf/config.json'));
+require('dotenv').config({ path: path.resolve(__dirname, 'conf', '.env') });
+
+const config = JSON.parse(fs.readFileSync(__dirname + '/conf/config.json'));
 
 const host = 'localhost';
 const port = config.fileServerPort || 5000;
@@ -28,18 +49,21 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-var repositoryPath = __dirname + '/' + config.repositoryPath;
-var httpsKeyFile = __dirname + '/' + config.httpsKeyFile;
-var httpsCertFile = __dirname + '/' + config.httpsCertFile;
+const repositoryPath = __dirname + '/' + config.repositoryPath;
+const httpsKeyFile = __dirname + '/' + config.httpsKeyFile;
+const httpsCertFile = __dirname + '/' + config.httpsCertFile;
 
 mongoose.connect(config.mongoServer, {
-    dbName: config.mongoDatabase
-}).then(() => {
-    console.log(`Connected to MongoDB database: ${config.mongoDatabase}`);
+    dbName: config.mongoDatabase,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(async () => {
+    console.log(`Conectado ao banco de dados MongoDB: ${config.mongoDatabase}`);
+    await inserirDadosIniciais();
     app.emit('pronto');
 }).catch((e) => console.log(e));
 
-//sessões de login
+// Sessões de login
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const { middlewareGlobal, loginRequired } = require('./middlewares/middleware');
@@ -50,7 +74,7 @@ const sessionOptions = session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 360,
         httpOnly: true
     }
 });
@@ -72,21 +96,21 @@ const options = {
     cert: fs.readFileSync(httpsCertFile)
 };
 
-var currentDate = new Date();
+const currentDate = new Date();
 
 /**
- * Formats a JavaScript Date object into a string with the format "YYYY-MM-DD HH:mm:ss".
+ * Formata um objeto Date do JavaScript em uma string no formato "YYYY-MM-DD HH:mm:ss".
  *
- * @param {Date} date - The date to format.
- * @returns {string} - The formatted date and time string.
+ * @param {Date} date - A data a ser formatada.
+ * @returns {string} - A string da data e hora formatada.
  */
 function formatDateHour(date) {
-    var day = '' + date.getDate();
-    var month = '' + (date.getMonth() + 1);
-    var year = '' + date.getFullYear();
-    var hour = '' + date.getHours();
-    var minute = '' + date.getMinutes();
-    var second = '' + date.getSeconds();
+    let day = '' + date.getDate();
+    let month = '' + (date.getMonth() + 1);
+    let year = '' + date.getFullYear();
+    let hour = '' + date.getHours();
+    let minute = '' + date.getMinutes();
+    let second = '' + date.getSeconds();
 
     if (day.length < 2) {
         day = '0' + day;
@@ -108,25 +132,24 @@ function formatDateHour(date) {
 }
 
 /**
- * Handles the request to send a file to the client.
+ * Lida com a requisição para enviar um arquivo para o cliente.
  *
- * @param {Object} request - The HTTP request object.
- * @param {Object} response - The HTTP response object.
+ * @param {Object} request - O objeto de requisição HTTP.
+ * @param {Object} response - O objeto de resposta HTTP.
  */
 async function sendFile(request, response) {
-    var pathname = request.path;
-
-    var mimeType = mime.lookup(repositoryPath + pathname)
+    const pathname = request.path;
+    const mimeType = mime.lookup(repositoryPath + pathname);
 
     try {
-        var fileContents = fs.readFileSync(repositoryPath + pathname);
-        console.log('Sending file "' + repositoryPath + pathname + '"...');
+        const fileContents = fs.readFileSync(repositoryPath + pathname);
+        console.log('Enviando arquivo "' + repositoryPath + pathname + '"...');
 
         response.writeHead(200, { 'Content-Type': mimeType });
         response.write(fileContents);
         response.end();
     } catch (e) {
-        console.log('Error: File not found!');
+        console.log('Erro: Arquivo não encontrado!');
 
         response.writeHead(404, { 'Content-Type': 'text/plain' });
         response.write('404 Not Found');
@@ -136,37 +159,130 @@ async function sendFile(request, response) {
 
 app.use(express.text({ type: 'application/json' }));
 
-/**
- * The HTTP server listeners.
- */
-app.get('/pagPrincipal', loginRequired, (request, response) => {
-    response.render('pagPrincipal');
+app.get('/get-key', (req, res) => {
+    res.json({ key: process.env.KEY_1 });
 });
 
-app.get('/index', loginController.index);
-app.post('/login/register', loginController.register);
-app.post('/login/login', loginController.login);
-app.get('/login/logout', loginController.logout);
+/**
+ * Listeners do servidor HTTP.
+ */
+app.get('/pagPrincipal', loginRequired, erpController.index);
+app.get('/partials/:formulario', loginRequired, erpController.carregarFormulario);
 
-app.post('/getListaUsuarios', erpController.getListaUsuarios);
-app.post('/deleteUsuarios', erpController.deleteUsuarios);
-app.post('/deleteUsuario', erpController.deleteUsuario);
-app.post('/deleteAll', erpController.deleteAll);
+// Rotas da entidade Usuario
+app.get('/index', usuarioController.index);
+app.post('/usuario/login', usuarioController.login);
+app.get('/usuario/logout', usuarioController.logout);
+app.post('/usuario/register', usuarioController.register);
+app.get('/usuario/usuarios', loginRequired, usuarioController.getUsuarios);
+app.post('/usuario/delete/:id', usuarioController.delete);
+app.post('/usuario/edit/:id', usuarioController.edit);
+
+// Rotas da entidade Setor
+app.post('/pagPrincipal/setor/register', loginRequired, setorController.register);
+app.post('/setor/edit/:id', loginRequired, setorController.edit);
+app.get('/setor/delete/:id', loginRequired, setorController.delete);
+app.get('/setor/setores', loginRequired, setorController.getSetores);
+
+// Rotas da entidade Empresa
+app.post('/pagPrincipal/empresa/register', loginRequired, empresaController.register);
+app.post('/empresa/edit/:id', loginRequired, empresaController.edit);
+app.get('/empresa/delete/:id', loginRequired, empresaController.delete);
+app.get('/empresa/empresas', loginRequired, empresaController.getEmpresas);
+
+// Rotas da entidade Atividades
+app.post('/pagPrincipal/atividade/register', loginRequired, atividadeController.register);
+app.post('/atividade/edit/:id', loginRequired, atividadeController.edit);
+app.get('/atividade/delete/:id', loginRequired, atividadeController.delete);
+app.get('/atividade/atividades', loginRequired, atividadeController.getAtividades);
+
+// Rotas da entidade Execuções
+app.post('/pagPrincipal/execucao/register', loginRequired, execucaoController.register);
+app.post('/execucao/edit/:id', loginRequired, execucaoController.edit);
+app.get('/execucao/delete/:id', loginRequired, execucaoController.delete);
+app.get('/execucao/execucoes', loginRequired, execucaoController.getExecucoes);
+
+// Rotas da entidade Execuções
+app.post('/pagPrincipal/grupo/register', loginRequired, grupoController.register);
+app.post('/grupo/edit/:id', loginRequired, grupoController.edit);
+app.get('/grupo/delete/:id', loginRequired, grupoController.delete);
+app.get('/grupo/grupos', loginRequired, grupoController.getGrupos);
+
+// Rotas da entidade Cargo
+app.post('/pagPrincipal/cargo/register', loginRequired, cargoController.register);
+app.post('/cargo/edit/:id', loginRequired, cargoController.edit);
+app.get('/cargo/delete/:id', loginRequired, cargoController.delete);
+app.get('/cargo/cargos', loginRequired, cargoController.getCargos);
+
+// Rotas da entidade Cidade
+app.post('/pagPrincipal/cidade/register', loginRequired, cidadeController.register);
+app.post('/cidade/edit/:id', loginRequired, cidadeController.edit);
+app.get('/cidade/delete/:id', loginRequired, cidadeController.delete);
+app.get('/cidade/cidades', loginRequired, cidadeController.getCidades);
+
+// Rotas da entidade StatusUsuario
+app.post('/pagPrincipal/statusUsuario/register', loginRequired, statusUsuarioController.register);
+app.post('/statusUsuario/edit/:id', loginRequired, statusUsuarioController.edit);
+app.get('/statusUsuario/delete/:id', loginRequired, statusUsuarioController.delete);
+app.get('/statusUsuario/statuses', loginRequired, statusUsuarioController.getStatuses);
+
+// Rotas da entidade StatusAtividade
+app.post('/pagPrincipal/statusAtividade/register', loginRequired, statusAtividadeController.register);
+app.post('/statusAtividade/edit/:id', loginRequired, statusAtividadeController.edit);
+app.get('/statusAtividade/delete/:id', loginRequired, statusAtividadeController.delete);
+app.get('/statusAtividade/statuses', loginRequired, statusAtividadeController.getStatuses);
+
+// Rotas da entidade Unidade
+app.post('/pagPrincipal/unidade/register', loginRequired, unidadeController.register);
+app.post('/unidade/edit/:id', loginRequired, unidadeController.edit);
+app.get('/unidade/delete/:id', loginRequired, unidadeController.delete);
+app.get('/unidade/unidades', loginRequired, unidadeController.getUnidades);
+
+// Rotas da entidade SubGrupo
+app.post('/pagPrincipal/subGrupo/register', loginRequired, subGrupoController.register);
+app.post('/subGrupo/edit/:id', loginRequired, subGrupoController.edit);
+app.get('/subGrupo/delete/:id', loginRequired, subGrupoController.delete);
+app.get('/subGrupo/subGrupos', loginRequired, subGrupoController.getSubGrupos);
+
+// Rotas da entidade UnidadeMedida
+app.post('/pagPrincipal/unidadeMedida/register', loginRequired, unidadeMedidaController.register);
+app.post('/unidadeMedida/edit/:id', loginRequired, unidadeMedidaController.edit);
+app.get('/unidadeMedida/delete/:id', loginRequired, unidadeMedidaController.delete);
+app.get('/unidadeMedida/unidadeMedidas', loginRequired, unidadeMedidaController.getUnidadeMedidas);
+
+// Rotas da entidade Marca
+app.post('/pagPrincipal/marca/register', loginRequired, marcaController.register);
+app.post('/marca/edit/:id', loginRequired, marcaController.edit);
+app.get('/marca/delete/:id', loginRequired, marcaController.delete);
+app.get('/marca/marcas', loginRequired, marcaController.getMarcas);
+
+// Rotas da entidade SetorPorUnidade
+app.post('/pagPrincipal/setorPorUnidade/register', setorPorUnidadeController.register);
+app.post('/setorPorUnidade/edit/:id', loginRequired, setorPorUnidadeController.edit);
+app.get('/setorPorUnidade/delete/:id', loginRequired, setorPorUnidadeController.delete);
+app.get('/setorPorUnidade/setoresPorUnidade', loginRequired, setorPorUnidadeController.getSetoresPorUnidade);
+app.post('/setorPorUnidade/setoresPorUnidade', loginRequired, setorPorUnidadeController.registerOrFind);
+
+// Rotas da entidade Produto
+app.post('/pagPrincipal/produto/register', loginRequired, produtoController.register);
+app.post('/produto/edit/:id', loginRequired, produtoController.edit);
+app.get('/produto/delete/:id', loginRequired, produtoController.delete);
+app.get('/produto/produtos', loginRequired, produtoController.getProdutos);
 
 app.get('*', (request, response) => {
     sendFile(request, response);
 });
 
 /**
- * Creates the HTTP server.
+ * Cria o servidor HTTP.
  */
 const server = https.createServer(options, app);
 
 /**
- * Starts the HTTP server.
+ * Inicia o servidor HTTP.
  */
 app.on('pronto', () => {
     server.listen(port, host, () => {
-        console.log(`The server is running on https://${host}:${port}.`);
+        console.log(`O servidor está rodando em https://${host}:${port}.`);
     });
-})
+});
