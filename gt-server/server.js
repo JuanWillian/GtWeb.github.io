@@ -3,9 +3,6 @@
  *
  * Este serviço fornece suporte para servir arquivos e dados para a aplicação Gt Web.
  */
-
-
-const { MongoClient } = require('mongodb');
 const mongoose = require('mongoose');
 
 const erpController = require('./controllers/erpControllers.js');
@@ -74,7 +71,7 @@ const sessionOptions = session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 360,
+        maxAge: 1000 * 60 * 60 * 24 * 180,
         httpOnly: true
     }
 });
@@ -97,7 +94,6 @@ const options = {
 };
 
 const currentDate = new Date();
-
 /**
  * Formata um objeto Date do JavaScript em uma string no formato "YYYY-MM-DD HH:mm:ss".
  *
