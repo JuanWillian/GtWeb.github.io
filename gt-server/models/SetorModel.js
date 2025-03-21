@@ -28,7 +28,6 @@ Setor.prototype.verificarExistencia = async function () {
   const setorExistente = await SetorModel.findOne({
     key: this.body.key,
     nome: this.body.nome,
-    descricao: this.body.descricao,
   })
   if (setorExistente) {
     this.errors.push("Setor já cadastrado.")
