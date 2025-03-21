@@ -50,6 +50,7 @@ const repositoryPath = __dirname + '/' + config.repositoryPath;
 const httpsKeyFile = __dirname + '/' + config.httpsKeyFile;
 const httpsCertFile = __dirname + '/' + config.httpsCertFile;
 
+// conexão com o banco
 mongoose.connect(config.mongoServer, {
     dbName: config.mongoDatabase,
     useNewUrlParser: true,
@@ -78,6 +79,7 @@ const sessionOptions = session({
 app.use(sessionOptions);
 app.use(middlewareGlobal);
 
+// mensagens flash
 const flash = require('connect-flash');
 
 app.use(flash());
