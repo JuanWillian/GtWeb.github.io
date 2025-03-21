@@ -171,8 +171,8 @@ app.post('/usuario/login', usuarioController.login);
 app.get('/usuario/logout', usuarioController.logout);
 app.post('/usuario/register', usuarioController.register);
 app.get('/usuario/usuarios', loginRequired, usuarioController.getUsuarios);
-app.post('/usuario/delete/:id', usuarioController.delete);
-app.post('/usuario/edit/:id', usuarioController.edit);
+app.post('/usuario/delete/:id', loginRequired, usuarioController.delete);
+app.post('/usuario/edit/:id', loginRequired, usuarioController.edit);
 
 // Rotas da entidade Setor
 app.post('/pagPrincipal/setor/register', loginRequired, setorController.register);
