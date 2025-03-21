@@ -42,13 +42,18 @@ exports.edit = async function (req, res) {
 };
 
 exports.delete = async function (req, res) {
-  if (!req.params.id) return res.status(404).json({ error: 'Grupo não encontrado.' });
+  try {
+    if (!req.params.id) return res.status(404).json({ error: 'Grupo não encontrado.' });
 
-  const grupo = await Grupo.delete(req.params.id);
-  if (!grupo) return res.status(404).json({ error: 'Grupo não encontrado.' });
+    const grupo = await Grupo.delete(req.params.id);
+    if (!grupo) return res.status(404).json({ error: 'Grupo não encontrado.' });
 
-  req.session.save(() => res.status(200).json({ message: 'Grupo apagado com sucesso.' }));
-  return;
+    req.session.save(() => res.status(200).json({ message: 'Grupo apagado com sucesso.' }));
+    return;
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao apagar grupo.' });
+  } 
 };
 
 exports.getGrupos = async (req, res) => {

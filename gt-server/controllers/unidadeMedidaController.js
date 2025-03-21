@@ -42,13 +42,18 @@ exports.edit = async function (req, res) {
 };
 
 exports.delete = async function (req, res) {
-  if (!req.params.id) return res.status(404).json({ error: 'Unidade de medida não encontrada.' });
-
-  const unidadeMedida = await UnidadeMedida.delete(req.params.id);
-  if (!unidadeMedida) return res.status(404).json({ error: 'Unidade de medida não encontrada.' });
-
-  req.session.save(() => res.status(200).json({ message: 'Unidade de medida apagada com sucesso.' }));
-  return;
+  try {
+    if (!req.params.id) return res.status(404).json({ error: 'Unidade de medida não encontrada.' });
+  
+    const unidadeMedida = await UnidadeMedida.delete(req.params.id);
+    if (!unidadeMedida) return res.status(404).json({ error: 'Unidade de medida não encontrada.' });
+  
+    req.session.save(() => res.status(200).json({ message: 'Unidade de medida apagada com sucesso.' }));
+    return;
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao apagar unidade de medida.' });
+  } 
 };
 
 exports.getUnidadeMedidas = async (req, res) => {

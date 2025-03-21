@@ -42,13 +42,18 @@ exports.edit = async function (req, res) {
 };
 
 exports.delete = async function (req, res) {
-  if (!req.params.id) return res.status(404).json({ error: 'Marca não encontrada.' });
-
-  const marca = await Marca.delete(req.params.id);
-  if (!marca) return res.status(404).json({ error: 'Marca não encontrada.' });
-
-  req.session.save(() => res.status(200).json({ message: 'Marca apagada com sucesso.' }));
-  return;
+  try {
+    if (!req.params.id) return res.status(404).json({ error: 'Marca não encontrada.' });
+  
+    const marca = await Marca.delete(req.params.id);
+    if (!marca) return res.status(404).json({ error: 'Marca não encontrada.' });
+  
+    req.session.save(() => res.status(200).json({ message: 'Marca apagada com sucesso.' }));
+    return;
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao apagar marca.' });
+  } 
 };
 
 exports.getMarcas = async (req, res) => {

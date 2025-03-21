@@ -42,13 +42,18 @@ exports.edit = async function (req, res) {
 };
 
 exports.delete = async function (req, res) {
-  if (!req.params.id) return res.status(404).json({ error: 'SubGrupo não encontrado.' });
-
-  const subGrupo = await SubGrupo.delete(req.params.id);
-  if (!subGrupo) return res.status(404).json({ error: 'SubGrupo não encontrado.' });
-
-  req.session.save(() => res.status(200).json({ message: 'SubGrupo apagado com sucesso.' }));
-  return;
+  try {
+    if (!req.params.id) return res.status(404).json({ error: 'SubGrupo não encontrado.' });
+  
+    const subGrupo = await SubGrupo.delete(req.params.id);
+    if (!subGrupo) return res.status(404).json({ error: 'SubGrupo não encontrado.' });
+  
+    req.session.save(() => res.status(200).json({ message: 'SubGrupo apagado com sucesso.' }));
+    return;
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao apagar subgrupo.' });
+  } 
 };
 
 exports.getSubGrupos = async (req, res) => {

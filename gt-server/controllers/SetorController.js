@@ -42,13 +42,18 @@ exports.edit = async function (req, res) {
 };
 
 exports.delete = async function (req, res) {
-  if (!req.params.id) return res.status(404).json({ error: 'Setor não encontrado.' });
-
-  const setor = await Setor.delete(req.params.id);
-  if (!setor) return res.status(404).json({ error: 'Setor não encontrado.' });
-
-  req.session.save(() => res.status(200).json({ message: 'Setor apagado com sucesso.' }));
-  return;
+  try {
+    if (!req.params.id) return res.status(404).json({ error: 'Setor não encontrado.' });
+  
+    const setor = await Setor.delete(req.params.id);
+    if (!setor) return res.status(404).json({ error: 'Setor não encontrado.' });
+  
+    req.session.save(() => res.status(200).json({ message: 'Setor apagado com sucesso.' }));
+    return;
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao apagar setor.' });
+  } 
 };
 
 exports.getSetores = async (req, res) => {

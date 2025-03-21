@@ -42,13 +42,18 @@ exports.edit = async function (req, res) {
 };
 
 exports.delete = async function (req, res) {
-  if (!req.params.id) return res.status(404).json({ error: 'Cidade não encontrada.' });
+  try {
+    if (!req.params.id) return res.status(404).json({ error: 'Cidade não encontrada.' });
 
-  const cidade = await Cidade.delete(req.params.id);
-  if (!cidade) return res.status(404).json({ error: 'Cidade não encontrada.' });
+    const cidade = await Cidade.delete(req.params.id);
+    if (!cidade) return res.status(404).json({ error: 'Cidade não encontrada.' });
 
-  req.session.save(() => res.status(200).json({ message: 'Cidade apagada com sucesso.' }));
-  return;
+    req.session.save(() => res.status(200).json({ message: 'Cidade apagada com sucesso.' }));
+    return;
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao apagar cidade.' });
+  }
 };
 
 exports.getCidades = async (req, res) => {

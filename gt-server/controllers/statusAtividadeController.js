@@ -42,13 +42,18 @@ exports.edit = async function (req, res) {
 };
 
 exports.delete = async function (req, res) {
-  if (!req.params.id) return res.status(404).json({ error: 'Status de atividade não encontrado.' });
-
-  const statusAtividade = await StatusAtividade.delete(req.params.id);
-  if (!statusAtividade) return res.status(404).json({ error: 'Status de atividade não encontrado.' });
-
-  req.session.save(() => res.status(200).json({ message: 'Status de atividade apagado com sucesso.' }));
-  return;
+  try {
+    if (!req.params.id) return res.status(404).json({ error: 'Status de atividade não encontrado.' });
+  
+    const statusAtividade = await StatusAtividade.delete(req.params.id);
+    if (!statusAtividade) return res.status(404).json({ error: 'Status de atividade não encontrado.' });
+  
+    req.session.save(() => res.status(200).json({ message: 'Status de atividade apagado com sucesso.' }));
+    return;
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao apagar Status de atividade.' });
+  } 
 };
 
 exports.getStatuses = async (req, res) => {

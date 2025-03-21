@@ -5,10 +5,15 @@ const path = require('path');
 const keys = JSON.parse(fs.readFileSync(path.join(__dirname, '../conf/keys.json')));
 
 exports.index = (req, res) => {
-  if (req.session.user) {
-    return res.redirect('/pagPrincipal');
+  try {
+    if (req.session.user) {
+      return res.redirect('/pagPrincipal');
+    }
+    return res.render('index');
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao carregar página.' });
   }
-  return res.render('index');
 };
 
 exports.login = async function (req, res) {
@@ -47,8 +52,13 @@ exports.login = async function (req, res) {
 };
 
 exports.logout = function (req, res) {
-  req.session.destroy();
-  res.redirect('/index');
+  try {
+    req.session.destroy();
+    res.redirect('/index');
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao efetuar logout.' });
+  }
 };
 
 exports.register = async (req, res) => {
@@ -89,13 +99,18 @@ exports.edit = async function (req, res) {
 };
 
 exports.delete = async function (req, res) {
-  if (!req.params.id) return res.status(404).json({ error: 'Usuario não encontrado.' });
-
-  const usuario = await Usuario.delete(req.params.id);
-  if (!usuario) return res.status(404).json({ error: 'Usuario não encontrado.' });
-
-  req.session.save(() => res.status(200).json({ message: 'Usuario apagado com sucesso.' }));
-  return;
+  try {
+    if (!req.params.id) return res.status(404).json({ error: 'Usuario não encontrado.' });
+  
+    const usuario = await Usuario.delete(req.params.id);
+    if (!usuario) return res.status(404).json({ error: 'Usuario não encontrado.' });
+  
+    req.session.save(() => res.status(200).json({ message: 'Usuario apagado com sucesso.' }));
+    return;
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao apagar usuario.' });
+  }
 };
 
 exports.getUsuarios = async (req, res) => {

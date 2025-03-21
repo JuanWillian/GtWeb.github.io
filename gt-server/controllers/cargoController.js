@@ -42,13 +42,17 @@ exports.edit = async function (req, res) {
 };
 
 exports.delete = async function (req, res) {
-  if (!req.params.id) return res.status(404).json({ error: 'Cargo não encontrado.' });
+  try {if (!req.params.id) return res.status(404).json({ error: 'Cargo não encontrado.' });
 
-  const cargo = await Cargo.delete(req.params.id);
-  if (!cargo) return res.status(404).json({ error: 'Cargo não encontrado.' });
+    const cargo = await Cargo.delete(req.params.id);
+    if (!cargo) return res.status(404).json({ error: 'Cargo não encontrado.' });
 
-  req.session.save(() => res.status(200).json({ message: 'Cargo apagado com sucesso.' }));
-  return;
+    req.session.save(() => res.status(200).json({ message: 'Cargo apagado com sucesso.' }));
+    return;
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao apagar cargo.' });
+  }
 };
 
 exports.getCargos = async (req, res) => {

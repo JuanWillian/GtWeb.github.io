@@ -42,13 +42,18 @@ exports.edit = async function (req, res) {
 };
 
 exports.delete = async function (req, res) {
-  if (!req.params.id) return res.status(404).json({ error: 'Execução não encontrada.' });
+  try {
+    if (!req.params.id) return res.status(404).json({ error: 'Execução não encontrada.' });
 
-  const execucao = await Execucao.delete(req.params.id);
-  if (!execucao) return res.status(404).json({ error: 'Execução não encontrada.' });
+    const execucao = await Execucao.delete(req.params.id);
+    if (!execucao) return res.status(404).json({ error: 'Execução não encontrada.' });
 
-  req.session.save(() => res.status(200).json({ message: 'Execução apagada com sucesso.' }));
-  return;
+    req.session.save(() => res.status(200).json({ message: 'Execução apagada com sucesso.' }));
+    return;
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Erro ao apagar Execução.' });
+  }  
 };
 
 exports.getExecucoes = async (req, res) => {
