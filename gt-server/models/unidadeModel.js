@@ -9,7 +9,7 @@ const UnidadeSchema = new mongoose.Schema({
   _empresaId: { type: mongoose.Schema.Types.ObjectId, ref: 'Empresa', required: true },
   _cidadeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cidade', required: true },
   nome: { type: String, required: true },
-  endereco: { type: String, required: false },
+  endereco: { type: String, required: true },
   complemento: { type: String, required: false },
 });
 

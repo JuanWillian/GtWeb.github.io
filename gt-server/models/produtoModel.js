@@ -9,7 +9,7 @@ const ProdutoSchema = new mongoose.Schema({
   _marcaId: { type: mongoose.Schema.Types.ObjectId, ref: "Marca", required: true },
   _subGrupoId: { type: mongoose.Schema.Types.ObjectId, ref: "SubGrupo", required: true },
   nome: { type: "String", required: true },
-  descricao: { type: "String", required: true },
+  descricao: { type: "String", required: false },
   _unidadeMedidaId: { type: mongoose.Schema.Types.ObjectId, ref: "UnidadeMedida", required: true },
   quantidadeEstoque: { type: Number, required: true },
   valorUnitario: { type: Number, required: true },
