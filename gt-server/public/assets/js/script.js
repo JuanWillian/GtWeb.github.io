@@ -857,7 +857,7 @@ async function excluirUnidadeClick(id) {
 async function carregarEmpresasSelect() {
   const key = await getKey();
   try {
-    const res = await fetch(`/empresa/empresas?key=${key}`);
+    const res = await fetch(`/empresa/empresas?key=${key}&page=1&limit=1000`);
     if (res.ok) {
       const { empresas } = await res.json();
       const select = document.getElementById('empresaUnidade');
@@ -875,7 +875,7 @@ async function carregarEmpresasSelect() {
 async function carregarCidadesSelect() {
   const key = await getKey();
   try {
-    const res = await fetch(`/cidade/cidades?key=${key}`);
+    const res = await fetch(`/cidade/cidades?key=${key}&page=1&limit=1000`);
     if (res.ok) {
       const { cidades } = await res.json();
       const select = document.getElementById('cidadeUnidade');
@@ -1001,7 +1001,7 @@ async function excluirSubGrupoClick(id) {
 async function carregarGruposNoSelect() {
   const key = await getKey();
   try {
-    const res = await fetch(`/grupo/grupos?key=${key}`);
+    const res = await fetch(`/grupo/grupos?key=${key}&page=1&limit=1000`);
     if (res.ok) {
       const { grupos } = await res.json();
       const select = document.getElementById('subGrupoGrupo');
@@ -1015,7 +1015,7 @@ async function carregarGruposNoSelect() {
     console.error('Erro:', error);
   }
 }
- 
+
 /**Rotinas de unidade de medidas
  * Carrega as unidade de medidas da base de dados e atualiza a tabela de unidade de medidas.
  * @param {number} page - Número da página atual.
@@ -1440,7 +1440,7 @@ async function excluirUsuarioClick(id) {
 async function carregarCargosSelect() {
   const key = await getKey();
   try {
-    const res = await fetch(`/cargo/cargos?key=${key}`);
+    const res = await fetch(`/cargo/cargos?key=${key}&page=1&limit=1000`);
     if (res.ok) {
       const { cargos } = await res.json();
       const select = document.getElementById('usuarioCargo');
@@ -1461,7 +1461,7 @@ async function carregarCargosSelect() {
 async function carregarUnidadesSelect() {
   const key = await getKey();
   try {
-    const res = await fetch(`/unidade/unidades?key=${key}`);
+    const res = await fetch(`/unidade/unidades?key=${key}&page=1&limit=1000`);
     if (res.ok) {
       const { unidades } = await res.json();
       const select = document.getElementById('usuarioUnidade');
@@ -1482,7 +1482,7 @@ async function carregarUnidadesSelect() {
 async function carregarSetoresSelect() {
   const key = await getKey();
   try {
-    const res = await fetch(`/setor/setores?key=${key}`);
+    const res = await fetch(`/setor/setores?key=${key}&page=1&limit=1000`); 
     if (res.ok) {
       const { setores } = await res.json();
       const select = document.getElementById('usuarioSetor');
@@ -1548,7 +1548,7 @@ async function carregarProdutos(page, limit) {
 async function carregarSubGruposNoSelect() {
   const key = await getKey();
   try {
-    const res = await fetch(`/subGrupo/subGrupos?key=${key}`);
+    const res = await fetch(`/subGrupo/subGrupos?key=${key}&page=1&limit=1000`);
     if (res.ok) {
       const { subGrupos } = await res.json();
       const select = document.getElementById('produtoSubGrupo');
@@ -1574,7 +1574,7 @@ async function carregarSubGruposNoSelect() {
 async function carregarUnidadeMedidasNoSelect() {
   const key = await getKey();
   try {
-    const res = await fetch(`/unidadeMedida/unidadeMedidas?key=${key}`);
+    const res = await fetch(`/unidadeMedida/unidadeMedidas?key=${key}&page=1&limit=1000`);
     if (res.ok) {
       const { unidadeMedidas } = await res.json();
       const select = document.getElementById('produtoUnidadeMedida');
@@ -1599,7 +1599,7 @@ async function carregarUnidadeMedidasNoSelect() {
 async function carregarMarcasNoSelect() {
   const key = await getKey();
   try {
-    const res = await fetch(`/marca/marcas?key=${key}`);
+    const res = await fetch(`/marca/marcas?key=${key}&page=1&limit=1000`);
     if (res.ok) {
       const { marcas } = await res.json();
       const select = document.getElementById('produtoMarca');
