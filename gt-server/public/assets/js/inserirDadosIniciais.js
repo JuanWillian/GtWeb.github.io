@@ -3,44 +3,49 @@ const StatusAtividade = require('../../../models/statusAtividadeModel');
 const StatusUsuario = require('../../../models/statusUsuarioModel');
 const Cidade = require('../../../models/cidadeModel');
 const UnidadeMedida = require('../../../models/unidadeMedidaModel');
+require('dotenv').config();
 
+/**
+ * Insere dados iniciais no banco de dados.
+ */
 async function inserirDadosIniciais() {
+  const key = process.env.KEY_1;
   const cargos = [
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Líder' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Supervisor' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Funcionário Padrão' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Gerente' },
+    { key: key, nome: 'Líder' },
+    { key: key, nome: 'Supervisor' },
+    { key: key, nome: 'Funcionário Padrão' },
+    { key: key, nome: 'Gerente' },
   ];
 
   const statusAtividades = [
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'A fazer' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Em andamento' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Realizado' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Concluído' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Inconformidade' },
+    { key: key, descricao: 'A fazer' },
+    { key: key, descricao: 'Em andamento' },
+    { key: key, descricao: 'Realizado' },
+    { key: key, descricao: 'Concluído' },
+    { key: key, descricao: 'Inconformidade' },
   ];
 
   const statusUsuarios = [
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Livre' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Ocupado' },
+    { key: key, descricao: 'Livre' },
+    { key: key, descricao: 'Ocupado' },
   ];
 
   const cidades = [
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Salvador' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Lauro de Freitas' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Feira de Santana' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', nome: 'Jacobina' },
+    { key: key, nome: 'Salvador' },
+    { key: key, nome: 'Lauro de Freitas' },
+    { key: key, nome: 'Feira de Santana' },
+    { key: key, nome: 'Jacobina' },
   ];
 
   const unidadeMedidas = [
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Quilograma', sigla: 'Kg', podeFracionar: 'on' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Caixa', sigla: 'Cx', podeFracionar: 'off' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Vidro', sigla: 'Vd', podeFracionar: 'off' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Metro', sigla: 'Mt', podeFracionar: 'on' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Metro quadrado', sigla: 'M2', podeFracionar: 'on' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Metro cubico', sigla: 'M3', podeFracionar: 'on' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Litro', sigla: 'Lt', podeFracionar: 'off' },
-    { key: 'ad0c0749e023d44bd92c1e56ca0b3e3c', descricao: 'Peca', sigla: 'Pc', podeFracionar: 'off' },
+    { key: key, descricao: 'Quilograma', sigla: 'Kg', podeFracionar: 'on' },
+    { key: key, descricao: 'Caixa', sigla: 'Cx', podeFracionar: 'off' },
+    { key: key, descricao: 'Vidro', sigla: 'Vd', podeFracionar: 'off' },
+    { key: key, descricao: 'Metro', sigla: 'Mt', podeFracionar: 'on' },
+    { key: key, descricao: 'Metro quadrado', sigla: 'M2', podeFracionar: 'on' },
+    { key: key, descricao: 'Metro cubico', sigla: 'M3', podeFracionar: 'on' },
+    { key: key, descricao: 'Litro', sigla: 'Lt', podeFracionar: 'off' },
+    { key: key, descricao: 'Peca', sigla: 'Pc', podeFracionar: 'off' },
   ];
 
   for (const unidadeMedida of unidadeMedidas) {

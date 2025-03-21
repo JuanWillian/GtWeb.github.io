@@ -1,10 +1,23 @@
 let paginaAtual = 1;
 let registrosPorPag = 10;
 
+/**
+ * Busca uma chave do servidor.
+ *
+ * Esta função envia uma solicitação GET para o endpoint '/get-key' e retorna a chave da resposta.
+ *
+ * @returns {Promise<string>} Uma promessa que resolve para a chave como uma string.
+ * @throws {Error} Se a solicitação fetch falhar ou a resposta não estiver em formato JSON.
+ */
 async function getKey() {
-  const response = await fetch('/get-key');
-  const data = await response.json();
-  return data.key;
+  try {
+    const response = await fetch('/get-key');
+    const data = await response.json();
+    return data.key;
+  } catch (error) {
+    console.error('Erro:', error);
+    throw error;
+  }
 }
 
 /**
@@ -121,10 +134,6 @@ async function carregarLista(lista) {
           break;
 
       }
-
-      /*
-     * TODO falta adicionar as outras entidades como opção     
-     */
     } else {
       console.error('Erro ao carregar o lista!');
     }
@@ -212,9 +221,7 @@ async function submitForm(event, nomeModal) {
   }
 }
 
-// Rotinas de SETORES
-
-/**
+/** Rotinas de SETORES
  * Carrega os setores da base de dados e atualiza a tabela de setores.
  * @param {number} page - Número da página atual.
  * @param {number} limit - Número de registros por página.
@@ -319,9 +326,7 @@ async function excluirSetorClick(id) {
   return false;
 }
 
-// Rotinas de EMPRESAS
-
-/**
+/**Rotinas de EMPRESAS
  * Carrega as empresas da base de dados e atualiza a tabela de empresas.
  * @param {number} page - Número da página atual.
  * @param {number} limit - Número de registros por página.
@@ -422,9 +427,7 @@ async function excluirEmpresaClick(id) {
   return false;
 }
 
-// Rotinas de ATIVIDADES
-
-/**
+/**Rotinas de ATIVIDADES
  * Carrega as atividades da base de dados e atualiza a tabela de atividades.
  * @param {number} page - Número da página atual.
  * @param {number} limit - Número de registros por página.
@@ -525,9 +528,7 @@ async function excluirAtividadeClick(id) {
   return false;
 }
 
-// Rotinas de EXECUÇÕES
-
-/**
+/**Rotinas de EXECUÇÕES
  * Carrega as EXECUÇÕES da base de dados e atualiza a tabela de EXECUÇÕES.
  * @param {number} page - Número da página atual.
  * @param {number} limit - Número de registros por página.
@@ -628,9 +629,7 @@ async function excluirExecucaoClick(id) {
   return false;
 }
 
-// Rotinas de ATIVIDADES
-
-/**
+/**Rotinas de ATIVIDADES
  * Carrega as grupos da base de dados e atualiza a tabela de grupos.
  * @param {number} page - Número da página atual.
  * @param {number} limit - Número de registros por página.
@@ -731,9 +730,7 @@ async function excluirGrupoClick(id) {
   return false;
 }
 
-// Rotinas das Unidades
-
-/**
+/**Rotinas das Unidades
  * Carrega as unidades da base de dados e atualiza a tabela de unidades.
  * @param {number} page - Número da página atual.
  * @param {number} limit - Número de registros por página.
@@ -893,9 +890,7 @@ async function carregarCidadesSelect() {
   }
 }
 
-// Rotinas ds SubGrupos
-
-/**
+/**Rotinas ds SubGrupos
  * Carrega as subGrupos da base de dados e atualiza a tabela de subGrupos.
  * @param {number} page - Número da página atual.
  * @param {number} limit - Número de registros por página.
@@ -1020,10 +1015,9 @@ async function carregarGruposNoSelect() {
     console.error('Erro:', error);
   }
 }
-
-// Rotinas de UNIDADE DE MEDIDAS
-/**
- * Carrega as UNIDADE DE MEDIDAS da base de dados e atualiza a tabela de UNIDADE DE MEDIDAS.
+ 
+/**Rotinas de unidade de medidas
+ * Carrega as unidade de medidas da base de dados e atualiza a tabela de unidade de medidas.
  * @param {number} page - Número da página atual.
  * @param {number} limit - Número de registros por página.
  */
@@ -1133,9 +1127,7 @@ async function excluirUnidadeMedidaClick(id) {
   return false;
 }
 
-// Rotinas de MARCAS
-
-/**
+/**Rotinas de MARCAS
  * Carrega as marcas da base de dados e atualiza a tabela de marcas.
  * @param {number} page - Número da página atual.
  * @param {number} limit - Número de registros por página.
@@ -1236,8 +1228,12 @@ async function excluirMarcaClick(id) {
   return false;
 }
 
-// Rotina de USUÁRIOS
-
+/**Rotina de USUÁRIOS
+ * Função assíncrona para enviar o formulário de usuário.
+ * 
+ * @param {Event} event - O evento de submissão do formulário.
+ * @throws {Error} - Lança um erro se ocorrer algum problema durante as requisições.
+ */
 async function submitUsuarioForm(event) {
   event.preventDefault();
 
@@ -1303,7 +1299,7 @@ async function submitUsuarioForm(event) {
 }
 
 /**
- * Registra um novo usuário.
+ * Abre o modal de registro de um novo usuário.
  * @return {boolean} - Retorna false para evitar o comportamento padrão do link.
  */
 function registrarNovoUsuarioClick() {
@@ -1368,6 +1364,12 @@ function editarUsuarioClick(element) {
 }
 
 
+/**
+ * Carrega a lista de usuários e atualiza a tabela e paginação na interface.
+ *
+ * @param {number} page - O número da página atual.
+ * @param {number} limit - O número de usuários por página.
+ */
 async function carregarUsuarios(page, limit) {
   const key = await getKey();
   try {
@@ -1495,8 +1497,7 @@ async function carregarSetoresSelect() {
   }
 }
 
-// Rotinas ds Produtos
-/**
+/**Rotinas ds Produtos
  * Carrega as produtos da base de dados e atualiza a tabela de produtos.
  * @param {number} page - Número da página atual.
  * @param {number} limit - Número de registros por página.
@@ -1536,6 +1537,14 @@ async function carregarProdutos(page, limit) {
     console.error('Erro:', error);
   }
 }
+
+
+/**
+ * Carrega os subgrupos em um elemento <select> no DOM.
+ * 
+ * Esta função obtém uma chave através da função `getKey`, faz uma requisição
+ * para buscar os subgrupos e popula um elemento <select> com os subgrupos recebidos.
+ */
 async function carregarSubGruposNoSelect() {
   const key = await getKey();
   try {
@@ -1554,6 +1563,14 @@ async function carregarSubGruposNoSelect() {
   }
 }
 
+/**
+ * Carrega as unidades de medida em um elemento <select> no DOM.
+ * 
+ * Esta função obtém uma chave de API através da função `getKey`, 
+ * faz uma requisição para buscar as unidades de medida e, 
+ * se bem-sucedida, popula um elemento <select> com as opções 
+ * correspondentes.
+ */
 async function carregarUnidadeMedidasNoSelect() {
   const key = await getKey();
   try {
@@ -1572,6 +1589,13 @@ async function carregarUnidadeMedidasNoSelect() {
   }
 }
 
+/**
+ * Função assíncrona para carregar as marcas em um elemento <select> no DOM.
+ * 
+ * Esta função obtém uma chave de acesso através da função `getKey()`, faz uma requisição
+ * à API para buscar as marcas disponíveis e popula um elemento <select> com as opções
+ * correspondentes.
+*/
 async function carregarMarcasNoSelect() {
   const key = await getKey();
   try {
